@@ -3,13 +3,14 @@
 Updated: 2026-11-01
 
 ## Now
-- Plan reviewed: docs/PLAN.md + docs/PLAN_REVIEW.md. Waiting on layout decisions.
+- Layout, env, pace decided. Waiting on OK to install uv + Ollama.
 
 ## Queue
-a. Decide layout + env; restructure folders.
-b. Install uv + Ollama; pull a small model; measure speed.
-c. Phase 01: Python for Java devs, lesson 1.
+a. Install uv; `uv init`; commit pyproject + lock.
+b. Install Ollama; pull a small model; measure speed.
+c. Phase 01 + 02 lesson 1: Python basics by calling the LLM.
 
 ## Done
+- 2026-11-01 — decided: name, layout, uv, pace.
 - 2026-11-01 — plan review: 10 changes, saved in docs.
 - 2026-11-01 — skeleton: README, CLAUDE.md, docs, .gitignore.

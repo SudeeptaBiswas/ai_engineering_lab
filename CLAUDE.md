@@ -4,12 +4,13 @@
 Hands-on AI engineering lab — part of the 2026 career transition.
 
 ## How to run
-Not set yet. Add here once the first code lands.
+Python via uv (`pyproject.toml` + `uv.lock`). Commands added once uv is set up.
 
 ## Where things live
 - `docs/STATUS.md` — current state + task queue. Read first each session.
+- `docs/PLAN.md` — phases, stack, how we work.
 - `docs/DECISIONS.md` — requirement changes and why.
-- `labs/` — one folder per experiment, each with its own short README.
+- `NN_phase_name/` — one top-level folder per phase, each with a short README.
 
 ## Must never break
 - Files stay small: aim under 150 lines. Split before growing.

@@ -52,6 +52,15 @@ Hours are rough estimates, not measured. (*) = added in the review.
 | Tracing | Langfuse (self-hosted, open-source) |
 | Tests | pytest |
 
-## Repo layout (pending decision, see review)
-Top-level numbered folders `01_python_fundamentals/` … `10_capstone/`,
-plus `docs/`, `resources/`, `pyproject.toml`.
+## Repo layout (decided)
+Repo stays `ai_engineering_lab`. One top-level folder per phase,
+created when the phase starts: `01_python_fundamentals/` … `10_capstone/`.
+Plus `docs/`, `resources/`, `pyproject.toml`, `uv.lock`.
+
+## How we work
+- One main phase at a time. Each phase builds on the one before.
+- Overlap at the edges in small pieces:
+  - 01 + 02 together: learn Python by calling a local LLM.
+  - 05 evals inside 04: score each RAG step as you build it.
+  - 09 Java bridge: small side task whenever a service exists.
+- Each session: one small piece → test → commit → push.
