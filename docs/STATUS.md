@@ -3,12 +3,13 @@
 Updated: 2026-11-01
 
 ## Now
-- Repo skeleton in place. No code yet.
+- Plan reviewed: docs/PLAN.md + docs/PLAN_REVIEW.md. Waiting on layout decisions.
 
 ## Queue
-a. Pick the first lab topic.
-b. Set Python version + env (venv or uv).
-c. Add first lab under `labs/`.
+a. Decide layout + env; restructure folders.
+b. Install uv + Ollama; pull a small model; measure speed.
+c. Phase 01: Python for Java devs, lesson 1.
 
 ## Done
+- 2026-11-01 — plan review: 10 changes, saved in docs.
 - 2026-11-01 — skeleton: README, CLAUDE.md, docs, .gitignore.
