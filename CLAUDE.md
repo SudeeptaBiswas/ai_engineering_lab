@@ -4,7 +4,10 @@
 Hands-on AI engineering lab — part of the 2026 career transition.
 
 ## How to run
-Python via uv (`pyproject.toml` + `uv.lock`). Commands added once uv is set up.
+Python 3.13 via uv 0.13.6 (`pyproject.toml` + `uv.lock`, `.venv` git-ignored).
+- Sync env: `uv sync`
+- Run a file: `uv run python <path>.py` from repo root.
+- If `uv` not found in an old shell: restart the terminal (PATH was updated).
 
 ## Where things live
 - `docs/STATUS.md` — current state + task queue. Read first each session.
