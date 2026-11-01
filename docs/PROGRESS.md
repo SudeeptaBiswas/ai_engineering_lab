@@ -1,8 +1,9 @@
 # Progress
 
 Target: ~200 h (midpoint of the 158–235 h estimate in PLAN.md).
-Done % per phase = milestones done / milestones in that phase.
-Overall % = sum(target × done %) / 200. Hours alone don't count as progress.
+Topic list with hours: [TOPICS.md](TOPICS.md).
+Done % per phase = hours of finished topics / phase target.
+Overall % = hours of finished topics / 199. Hours spent don't count as progress.
 
 | # | Phase | Target h | Logged h | Done % |
 |---|---|---|---|---|

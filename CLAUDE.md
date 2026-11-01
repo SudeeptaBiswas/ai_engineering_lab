@@ -9,7 +9,9 @@ Python via uv (`pyproject.toml` + `uv.lock`). Commands added once uv is set up.
 ## Where things live
 - `docs/STATUS.md` — current state + task queue. Read first each session.
 - `docs/PLAN.md` — phases, stack, how we work.
-- `docs/PROGRESS.md` — hours + % per phase. Update at session end.
+- `docs/TOPICS.md` — every topic with hours. Mark done date when finished.
+- `docs/PROGRESS.md` — hours + % per phase. Update when a topic finishes,
+  and report the new % to the user.
 - `docs/DECISIONS.md` — requirement changes and why.
 - `NN_phase_name/` — one top-level folder per phase, each with a short README.
 

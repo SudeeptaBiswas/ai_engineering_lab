@@ -1,17 +1,18 @@
-# Status
+﻿# Status
 
 Updated: 2026-11-01
 
 ## Now
-- Layout, env, pace decided. Waiting on OK to install uv + Ollama.
+- Topic breakdown done (docs/TOPICS.md). Waiting on OK to install uv.
 
 ## Queue
-a. Install uv; `uv init`; commit pyproject + lock.
-b. Install Ollama; pull a small model; measure speed.
-c. Phase 01 + 02 lesson 1: Python basics by calling the LLM.
+a. Install uv â†’ topic 1.1 (setup).
+b. Topic 1.2: syntax vs Java.
+c. Install Ollama before topic 2.2.
 
 ## Done
-- 2026-11-01 — progress tracker: docs/PROGRESS.md (hours + %).
-- 2026-11-01 — decided: name, layout, uv, pace.
-- 2026-11-01 — plan review: 10 changes, saved in docs.
-- 2026-11-01 — skeleton: README, CLAUDE.md, docs, .gitignore.
+- 2026-11-01 â€” topic breakdown: 68 topics, 199 h.
+- 2026-11-01 â€” progress tracker: docs/PROGRESS.md (hours + %).
+- 2026-11-01 â€” decided: name, layout, uv, pace.
+- 2026-11-01 â€” plan review: 10 changes, saved in docs.
+- 2026-11-01 â€” skeleton: README, CLAUDE.md, docs, .gitignore.
