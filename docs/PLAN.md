@@ -64,3 +64,4 @@ Plus `docs/`, `resources/`, `pyproject.toml`, `uv.lock`.
   - 05 evals inside 04: score each RAG step as you build it.
   - 09 Java bridge: small side task whenever a service exists.
 - Each session: one small piece → test → commit → push.
+- Track in hours + %, not weeks: [PROGRESS.md](PROGRESS.md).

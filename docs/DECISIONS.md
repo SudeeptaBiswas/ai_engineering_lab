@@ -2,6 +2,11 @@
 
 Newest first. One entry per change: what, replaces what, why.
 
+## 2026-11-01 — Track hours + %, not weeks
+- What: docs/PROGRESS.md tracks logged hours and milestone % per phase.
+- Replaces: week-based timeline idea.
+- Why: weekly hours vary too much.
+
 ## 2026-11-01 — Layout, env, pace decided
 - Repo name stays `ai_engineering_lab`.
 - Top-level numbered phase folders; replaces `labs/` (removed).
