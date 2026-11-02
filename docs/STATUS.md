@@ -3,7 +3,7 @@
 Updated: 2026-11-02
 
 ## Now
-- 1.1 + 1.2 done. Overall 1.5%. Lessons 1.3 + 1.4 ready for the user.
+- 1.1 + 1.2 done. Overall 1.5%. User working on 1.3 (in progress); 1.4 next.
 
 ## Queue
 a. User works 1.3 + 1.4 → mark done, update PROGRESS.
