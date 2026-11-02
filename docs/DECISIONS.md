@@ -2,6 +2,13 @@
 
 Newest first. One entry per change: what, replaces what, why.
 
+## 2026-11-02 — One growing app + just-in-time Python
+- What: one app `assistant/` grows v1→v10 through the phases.
+  Python topics 1.5–1.9 move to right before first use.
+- Replaces: 10 separate projects; "all Python first" order.
+- Why: user learns best by building, "growing with learning".
+- Hours unchanged (199). Topic IDs unchanged; order in PLAN.md.
+
 ## 2026-11-01 — Track hours + %, not weeks
 - What: docs/PROGRESS.md tracks logged hours and milestone % per phase.
 - Replaces: week-based timeline idea.

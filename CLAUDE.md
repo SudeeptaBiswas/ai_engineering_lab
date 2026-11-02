@@ -16,7 +16,8 @@ Python 3.13 via uv 0.13.6 (`pyproject.toml` + `uv.lock`, `.venv` git-ignored).
 - `docs/PROGRESS.md` — hours + % per phase. Update when a topic finishes,
   and report the new % to the user.
 - `docs/DECISIONS.md` — requirement changes and why.
-- `NN_phase_name/` — one top-level folder per phase, each with a short README.
+- `NN_phase_name/` — lessons + exercises, one folder per phase.
+- `assistant/` — the one real app, grows v1→v10 (from topic 2.6).
 
 ## Must never break
 - Files stay small: aim under 150 lines. Split before growing.

@@ -7,10 +7,11 @@ Updated: 2026-11-02
 
 ## Queue
 a. User works 1.3 + 1.4 → mark done, update PROGRESS.
-b. Write lessons 1.5 (modules, exceptions) + 1.6 (type hints, pydantic).
-c. Install Ollama before topic 2.2.
+b. Write lesson 2.1: how LLMs work (order: docs/PLAN.md).
+c. Install Ollama for 2.2 (ask first).
 
 ## Done
+- 2026-11-02 — plan: one growing `assistant/` app, just-in-time Python.
 - 2026-11-02 — lessons 1.3 + 1.4 written; reference answers pass 8/8 each.
 - 2026-11-02 — topic 1.2 done (10/10 PASS).
 - 2026-11-02 — topic 1.1 done; pytest added as dev dependency (by user).
