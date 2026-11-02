@@ -3,28 +3,49 @@
 
 def fizzbuzz(n: int) -> str:
     """'Fizz' if n divisible by 3, 'Buzz' by 5, 'FizzBuzz' by both, else str(n)."""
-    ...
-
+    if n % 5 == 0 and n % 3 == 0:
+        return "FizzBuzz"
+    elif n % 5 == 0:
+        return "Buzz"
+    elif n % 3 == 0:
+        return "Fizz"
+    else :
+        return str(n)
 
 def average(nums: list[float]) -> float:
     """Average of nums. Return 0.0 for an empty list (hint: truthy check)."""
-    ...
+
+    return 0.0 if len(nums) == 0 else (sum(nums) / len(nums))
 
 
 def count_vowels(text: str) -> int:
     """Count a, e, i, o, u (any case). Hint: `for ch in text.lower():`"""
-    ...
+    vowels =  "aeiou"
+    count = 0
+    for s in text.lower():
+        if s in vowels:
+            count += 1
+    return count
 
 
 def token_cost(tokens: int, price_per_1k: float = 0.002) -> float:
     """Cost of `tokens` at `price_per_1k` per 1000 tokens, rounded to 4 places."""
-    ...
+    return (tokens/1000) * price_per_1k
+
+
 
 
 def split_even_odd(nums: list[int]) -> tuple[list[int], list[int]]:
     """Return (evens, odds), keeping the original order."""
-    ...
+    evens = []
+    odds = []
+    for i in nums:
+        if i % 2 == 0:
+            evens.append(i)
+        else:
+            odds.append(i)
 
+    return evens, odds
 
 def check(label: str, got, expected) -> None:
     status = "PASS" if got == expected else f"FAIL (got {got!r}, expected {expected!r})"

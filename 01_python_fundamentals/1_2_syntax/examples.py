@@ -55,7 +55,7 @@ def describe(model: str, size_b: float = 4.0, *, local: bool = True) -> str:
     where = "local" if local else "cloud"
     return f"{model} ({size_b}B, {where})"
 
-
+print("=====qwen3")
 print(describe("qwen3"))
 print(describe("llama3.2", 3, local=False))  # args after * must be named
 
