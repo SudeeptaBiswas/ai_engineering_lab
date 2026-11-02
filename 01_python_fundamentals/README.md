@@ -6,6 +6,8 @@ One folder per topic. Each has `LESSON.md` (read) and `.py` files (run, edit).
 |---|---|---|
 | 1.1 Setup: uv, venv, layout | [1_1_setup](1_1_setup/LESSON.md) | done 2026-11-02 |
 | 1.2 Syntax vs Java | [1_2_syntax](1_2_syntax/LESSON.md) | done 2026-11-02 |
+| 1.3 Collections | [1_3_collections](1_3_collections/LESSON.md) | ready |
+| 1.4 Classes, dataclasses | [1_4_classes](1_4_classes/LESSON.md) | ready |
 
 Run any file from the repo root:
 

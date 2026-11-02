@@ -3,14 +3,15 @@
 Updated: 2026-11-02
 
 ## Now
-- 1.1 + 1.2 done. Overall 1.5%.
+- 1.1 + 1.2 done. Overall 1.5%. Lessons 1.3 + 1.4 ready for the user.
 
 ## Queue
-a. Write lesson 1.3: collections.
-b. User works 1.3 → mark done, update PROGRESS.
+a. User works 1.3 + 1.4 → mark done, update PROGRESS.
+b. Write lessons 1.5 (modules, exceptions) + 1.6 (type hints, pydantic).
 c. Install Ollama before topic 2.2.
 
 ## Done
+- 2026-11-02 — lessons 1.3 + 1.4 written; reference answers pass 8/8 each.
 - 2026-11-02 — topic 1.2 done (10/10 PASS).
 - 2026-11-02 — topic 1.1 done; pytest added as dev dependency (by user).
 - 2026-11-01 — uv 0.13.6 installed (winget); pyproject, uv.lock, .python-version.

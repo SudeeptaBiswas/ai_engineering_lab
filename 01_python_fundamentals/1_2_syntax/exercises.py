@@ -30,7 +30,7 @@ def count_vowels(text: str) -> int:
 
 def token_cost(tokens: int, price_per_1k: float = 0.002) -> float:
     """Cost of `tokens` at `price_per_1k` per 1000 tokens, rounded to 4 places."""
-    return (tokens/1000) * price_per_1k
+    return round((tokens/1000) * price_per_1k , 4)
 
 
 
