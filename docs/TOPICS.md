@@ -6,7 +6,7 @@ Hours are estimates, not measured. Done = date finished. Totals feed PROGRESS.md
 |---|---|---|---|
 | **01** | **Python for Java devs** | **15** | |
 | 1.1 | Setup: uv, venv, project layout, run scripts | 1 | 2026-11-02 |
-| 1.2 | Syntax vs Java: types, control flow, functions | 2 | |
+| 1.2 | Syntax vs Java: types, control flow, functions | 2 | 2026-11-02 |
 | 1.3 | Collections: list, dict, set, tuple, comprehensions | 2 | |
 | 1.4 | Classes, dataclasses (vs Java POJOs) | 2 | |
 | 1.5 | Modules, imports, exceptions | 1.5 | |
