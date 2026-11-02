@@ -8,6 +8,8 @@ Review notes and reasons for changes: [PLAN_REVIEW.md](PLAN_REVIEW.md).
 ## Mentor guidance
 - Step by step, practical, working code, small exercises.
 - Map Python ideas to Java ones where it helps.
+- Comment lesson code line by line: what it does + the Java equivalent.
+  Explain every new symbol or trick (lambda, `!r`, `**`, decorators).
 - Build each idea by hand first, then with the framework.
 
 ## Phases and hours
