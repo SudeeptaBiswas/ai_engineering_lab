@@ -8,7 +8,7 @@ Updated: 2026-11-03
 ## Queue
 a. User works 2.1 → check, mark done, update PROGRESS.
 b. Install Ollama for 2.2 (ask first).
-c. Fix GitHub push (403); 2+ commits waiting.
+c. Lesson 1.7: files, JSON, httpx (order: docs/PLAN.md).
 
 ## Done
 - 2026-11-03 — lesson 2.1 written; reference answers pass 11/11.
