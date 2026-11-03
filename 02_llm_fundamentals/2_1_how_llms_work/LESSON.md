@@ -1,53 +1,103 @@
 # 2.1 How LLMs work: tokens, context window (~1.5 h)
 
 Read this, run [examples.py](examples.py), then solve [exercises.py](exercises.py).
-No model yet — pure Python toys. Ollama comes in 2.2.
+No real model yet. We build tiny toy versions in plain Python.
+Ollama (a real model on your PC) comes in 2.2.
 
-## The one idea
-An LLM is a function: **tokens so far → a score for every possible next token.**
-To write a reply it picks one token, appends it, and calls itself again.
-That loop is called *autoregressive* generation. Nothing else is magic.
+## 1. What an LLM really does
+Think of **IntelliJ autocomplete**. You type `list.` and it suggests `add`.
+An LLM does the same thing, but for any text, and it is much better at it.
 
-## Tokens
-- The model never sees letters. Text → tokens (pieces) → integer ids.
-- Pieces are usually sub-words: `"unbelievable"` might be `un` + `believ` + `able`.
-- Built with **BPE**: start from characters, merge the most frequent
-  neighbour pair, repeat many thousands of times. Vocab = all pieces + ids.
-- Rule of thumb for English: ~4 characters per token. Other languages and
-  code often need more tokens for the same meaning.
-- Why you care: **cost, speed and limits are all counted in tokens.**
+It only does one thing: **look at the text so far, guess the next piece.**
+To write a full answer, it runs in a loop:
 
-## Context window
-- Max tokens the model sees in one call: system prompt + history +
-  new question + **its own answer**. Sizes range from a few thousand to
-  over a million, depending on the model.
-- The model is **stateless** — like a REST call, it remembers nothing.
-  "Chat memory" = your code resends the history every time.
-- History grows → you must drop or summarise old turns. Keep the system
-  message. This is what `assistant/` v1 will do (topic 2.6).
-- Too much to fit (a whole PDF library)? That is why RAG exists (phase 04).
+```
+"The cat"          -> guess "sat"
+"The cat sat"      -> guess "on"
+"The cat sat on"   -> guess "the"   ... until it guesses "stop"
+```
+That loop is the whole trick. It is called *autoregressive* generation.
 
-## From scores to text
-- Raw scores are called **logits**. **Softmax** turns them into
-  probabilities that sum to 1: `p_i = exp(s_i) / sum(exp(s_j))`.
-- Always taking the top token = *greedy*. Sampling options: topic 2.4.
-- The model predicts *plausible* text, not *true* text → hallucinations.
+## 2. Tokens = the pieces the model reads
+The model cannot read letters. It reads **numbers**.
+So text is cut into pieces (**tokens**), and each piece gets an id.
 
-## How a chat model is made (one line each)
-1. Pre-training: predict the next token on a huge pile of text.
-2. Instruction tuning: train on (question, good answer) pairs.
-3. Preference tuning (e.g. RLHF): humans rank answers; model learns the style.
+Java view: a compiler's **lexer** cuts `int x = 5;` into tokens first.
+A tokenizer does the same for normal text. The list of all pieces is the
+**vocabulary** — like a `Map<String, Integer>`:
+
+```
+"unbelievable"  ->  ["un", "believ", "able"]  ->  [403, 9182, 512]
+```
+- Common words are one token: `"the"`. Rare words are split into parts.
+- Unknown word? Still works — it is split into smaller known parts.
+- Rough rule for English: **1 token ≈ 4 characters ≈ ¾ of a word.**
+  Other languages and code often need more tokens.
+
+**How the pieces are chosen (BPE):** start with single letters. Find the
+two neighbours that appear together most often (`t`+`h`). Glue them
+into one piece (`th`). Repeat many thousands of times. You will do one
+step of this in the exercises.
+
+**Why you care:** price, speed and limits are all counted in tokens.
+Like paying per MB on a cloud bill — longer prompts cost more.
+
+## 3. Context window = how much the model can see at once
+Every call has a hard limit of tokens. It must fit **everything**:
+system prompt + chat history + new question + the model's own answer.
+Limits go from a few thousand to over a million tokens, per model.
+
+Java view: like a **max request body size** on a server. Send more and it fails
+(or the old part is cut off).
+
+## 4. The model has no memory
+Each call is like a **stateless REST call**. The model forgets you right away.
+So how does ChatGPT "remember"? **Your code sends the whole chat again,
+every time.**
+
+```
+Call 1 sends: [system, user1]
+Call 2 sends: [system, user1, answer1, user2]
+Call 3 sends: [system, user1, answer1, user2, answer2, user3]   <- keeps growing
+```
+When it gets too big for the window, drop the **oldest** messages.
+Keep the system message (it holds the rules). Java view: like **log
+rotation** — old lines go, the config stays. Your `assistant/` v1 does
+this in topic 2.6.
+
+Too much data to fit at all (e.g. 500 PDFs)? Send only the useful parts.
+That is **RAG** (phase 04).
+
+## 5. From scores to a choice
+For the next piece, the model gives a raw score to **every** token in the
+vocabulary. These scores are called **logits**.
+
+**Softmax** turns scores into percentages that add up to 100%:
+```
+scores:  cat 2.0   mat 1.0   rat 0.5
+softmax: cat 63%   mat 23%   rat 14%
+```
+Always taking the top one = *greedy*. Picking with some randomness = *sampling*
+(topic 2.4).
+
+**Hallucination:** the model picks what *sounds* right, not what *is* right.
+Like autocomplete suggesting a method that does not exist. Always check facts.
+
+## 6. How a chat model is made (short)
+1. **Pre-training:** read huge amounts of text, learn to guess the next piece.
+2. **Instruction tuning:** learn from (question, good answer) examples.
+3. **Preference tuning:** people rank answers; the model learns which they like.
 
 ## New Python in this lesson
-| Python | What / Java equivalent |
-|---|---|
-| `zip(a, a[1:])` | walk neighbour pairs: `(a0,a1), (a1,a2)…` |
-| `enumerate(xs, start=1)` | `(index, item)` pairs — indexed `for` loop |
-| `Counter(...).most_common(1)` | `[(item, count)]` of the top item; ties keep first-seen order |
-| `d.setdefault(k, Counter())` | `map.computeIfAbsent(k, ...)` |
-| `str \| None` | return type that may be `None` — like a nullable / `Optional<String>` |
-| `math.ceil`, `math.exp` | `Math.ceil`, `Math.exp` |
-| `reversed(xs)` | iterate backwards, no copy |
+| Python | What it does | Java |
+|---|---|---|
+| `zip(a, a[1:])` | pairs of neighbours `(a0,a1), (a1,a2)…` | loop with `i` and `i+1` |
+| `enumerate(xs, start=1)` | gives `(index, item)` | `for (int i = 1; ...)` |
+| `Counter(xs).most_common(1)` | top item + its count; a tie keeps the first one seen | `Map<K,Integer>` + sort |
+| `d.setdefault(k, Counter())` | get, or create if missing | `map.computeIfAbsent(k, ...)` |
+| `str \| None` | may return `None` | nullable / `Optional<String>` |
+| `math.ceil`, `math.exp` | round up, e to the power | `Math.ceil`, `Math.exp` |
+| `reversed(xs)` | loop from the end | `for (int i = n-1; i >= 0; i--)` |
 
 ## Do it
 1. `uv run python 02_llm_fundamentals/2_1_how_llms_work/examples.py`
@@ -56,5 +106,5 @@ That loop is called *autoregressive* generation. Nothing else is magic.
 
 ## Done when
 - [ ] All exercises PASS.
-- [ ] You can explain: token, BPE, logits, softmax, context window,
-      and why the model has no memory of its own.
+- [ ] You can explain, in your own words: token, BPE, context window,
+      logits, softmax, and why the model has no memory.
