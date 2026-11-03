@@ -3,14 +3,15 @@
 Updated: 2026-11-03
 
 ## Now
-- 1.1–1.4 done. Overall 3.5%. Next: lesson 2.1 (1.5–1.7 still open in TOPICS).
+- 1.1–1.4 done. Overall 3.5%. User working on 2.1 (lesson written).
 
 ## Queue
-a. Write lesson 2.1: how LLMs work (order: docs/PLAN.md).
+a. User works 2.1 → check, mark done, update PROGRESS.
 b. Install Ollama for 2.2 (ask first).
-c. Optional polish 1.3/1.4 (see review notes below).
+c. Fix GitHub push (403); 2+ commits waiting.
 
 ## Done
+- 2026-11-03 — lesson 2.1 written; reference answers pass 11/11.
 - 2026-11-03 — topics 1.3 + 1.4 done (8/8 + 8/8 PASS).
 - 2026-11-02 — plan: one growing `assistant/` app, just-in-time Python.
 - 2026-11-02 — lessons 1.3 + 1.4 written; reference answers pass 8/8 each.
