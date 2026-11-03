@@ -7,10 +7,11 @@ Updated: 2026-11-03
 
 ## Queue
 a. User works 2.1 → check, mark done, update PROGRESS.
-b. Write lesson 2.2: Ollama (pull a small model — ask first, size).
+b. Write lesson 2.2: Ollama (cover thinking on/off; `think:false` was ignored in test).
 c. Lesson 1.7: files, JSON, httpx (order: docs/PLAN.md).
 
 ## Done
+- 2026-11-03 — qwen3:4b pulled (2.5 GB). Speed on this PC (10284Sudee, CPU only, 31.8 GB RAM): 5.8 tokens/s; one short answer took 80.6 s because it "thinks" first (436 tokens).
 - 2026-11-03 — Ollama 0.40.14 installed (winget), `ollama --version` OK.
 - 2026-11-03 — lesson 2.1 written; reference answers pass 11/11.
 - 2026-11-03 — topics 1.3 + 1.4 done (8/8 + 8/8 PASS).
