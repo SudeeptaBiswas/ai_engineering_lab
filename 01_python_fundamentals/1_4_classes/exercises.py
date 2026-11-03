@@ -14,7 +14,7 @@ class Message:
 
     def to_dict(self) -> dict[str, str]:
         """Return {"role": ..., "content": ...} — the shape LLM APIs expect."""
-        ...
+        return {"role": self.role, "content" : self.content}
 
 
 @dataclass
@@ -23,14 +23,14 @@ class Conversation:
 
     def add(self, role: str, content: str) -> None:
         """Append a new Message."""
-        ...
+        self.messages.append(Message(role, content))
 
     def last(self, n: int) -> list[Message]:
         """The last n messages, oldest first. Hint: slicing."""
-        ...
+        return self.messages[-n:]
 
     def __len__(self) -> int:
-        ...
+        return len(self.messages)
 
 
 @dataclass(frozen=True)
@@ -47,17 +47,19 @@ class Tool(ABC):
 
 class UpperTool(Tool):
     """run("hi") -> "HI"."""
-    ...
+    def run(self, arg):
+        return arg.upper()
 
 
 class ReverseTool(Tool):
     """run("abc") -> "cba". Hint: slicing with a negative step."""
-    ...
+    def run(self, arg):
+        return arg[::-1]
 
 
 def run_all(tools: list[Tool], arg: str) -> list[str]:
     """Run every tool on arg, return the results in order."""
-    ...
+    return [ tool.run(arg) for tool in tools ]
 
 
 # ---------- Test helper — no need to change anything below ----------
