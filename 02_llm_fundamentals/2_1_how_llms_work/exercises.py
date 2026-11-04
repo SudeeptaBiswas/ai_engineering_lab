@@ -61,18 +61,49 @@ def most_common_pair(tokens: list[str]) -> tuple[str, str]:
 
 def estimate_tokens(text: str) -> int:
     """Rule of thumb: 1 token per 4 characters, rounded UP. "" -> 0."""
-    ...
+    return math.ceil(len(text) / 4)
 
 
 def next_word(text: str, word: str) -> str | None:
     """Word that most often follows `word` in text (first-seen wins a tie).
     None if `word` is never followed by anything. `str | None` = may be None."""
-    ...
+    word_map: dict[tuple[str, str], int] = {}
+    words: list[str] = text.split()
+    for i in range(len(words) -1):
+        if i < len(words) -2:
+            word_map[words[i],words[i+1]] = word_map.get((words[i],words[i+1]), 0) + 1
+        elif i < len(words) -1:
+            word_map[words[i],"None"] = word_map.get((words[i],""), 0) + 1
 
+    most_common_follower: int = 0
+    following_word: str | None = None
+    for key, val in word_map.items():
+        if val > most_common_follower and key[0] == word:
+            most_common_follower = val
+            following_word = key[1]
+
+    return following_word
 
 def most_likely(logits: dict[str, float]) -> tuple[str, float]:
     """Softmax the scores. Return (best token, its probability rounded to 2)."""
-    ...
+    soft: list[float] = []
+    for item, value in logits.items():
+        soft.append(math.exp(value))
+        logits[item] = math.exp(value)
+
+    softSome: float = sum(soft)
+    for item, value in logits.items():
+        logits[item] = logits[item] / softSome
+        logits[item] = round(logits[item], 2)
+    
+    toke: str = ""
+    val: float = 0
+    for item, value in logits.items():
+        if value > val:
+            val = value
+            toke = item
+    return (toke, val)
+
 
 
 def fit_context(
