@@ -2,6 +2,15 @@
 
 Newest first. One entry per change: what, replaces what, why.
 
+## 2026-11-04 — Lesson code: full names + detailed comments
+- What: descriptive names (`word_to_id`, `next_word_counts`, `position`),
+  no one-letter names (`a`, `b`, `m`, `e`, `i`). Comments show what a
+  variable holds (example value) and what each expression does.
+- Scope: 2.1 and all future lessons. 1.1–1.4 stay as they are.
+- Replaces: short names + one-line comments.
+- Why: user asked; easier to read while learning.
+- Cost: 2.1 examples split into 4 files to stay under 150 lines.
+
 ## 2026-11-04 — Lesson code: explicit first, concise in a comment
 - What: every idiom (comprehension, zip, unpacking, ternary, most_common...)
   is written the long way between `# --- explicit start ---` and

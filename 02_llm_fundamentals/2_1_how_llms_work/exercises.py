@@ -52,28 +52,30 @@ def fit_context(messages: list[dict], budget: int) -> list[dict]:
 
 
 # ---------- Test helper — no need to change anything below ----------
-# fn is a lambda (Java: () -> ...). It runs inside try, so an error in
-# unfinished code prints FAIL instead of stopping the whole file.
-def check(label: str, fn, expected) -> None:
+# run_test is a lambda (Java: () -> ...): a tiny function that calls YOUR
+# function. check() calls it inside try, so an error in unfinished code
+# prints FAIL instead of stopping the whole file.
+def check(label: str, run_test, expected) -> None:
     try:
-        got = fn()  # call the lambda now
-        # {got!r} prints the value in code form, e.g. 'abc' with quotes
+        actual = run_test()  # call the lambda now -> what your code returned
+        # {actual!r} prints the value in code form, e.g. 'abc' with quotes
         # --- explicit start ---
-        if got == expected:
-            status = "PASS"
+        if actual == expected:
+            result = "PASS"
         else:
-            status = f"FAIL (got {got!r}, expected {expected!r})"
+            result = f"FAIL (got {actual!r}, expected {expected!r})"
         # --- explicit end ---
-        # concise: status = "PASS" if got == expected else f"FAIL ..."
-        #          Java: cond ? a : b
-    except Exception as e:  # Java: catch (Exception e)
-        status = f"FAIL ({type(e).__name__}: {e})"
-    print(f"{label:<16} {status}")  # :<16 = pad label to 16 chars, left-aligned
+        # concise: result = "PASS" if actual == expected else f"FAIL ..."
+        #          Java: condition ? a : b
+    except Exception as error:  # Java: catch (Exception error)
+        # type(error).__name__ = the error class name, e.g. "KeyError"
+        result = f"FAIL ({type(error).__name__}: {error})"
+    print(f"{label:<16} {result}")  # :<16 = pad label to 16 chars, left-aligned
 
 
-V = {"<unk>": 0, "a": 1, "b": 2}  # small vocab for the tests
-STORY = "the cat sat on the mat the cat ran"
-CHAT = [  # token estimates: 2, 2, 3, 1
+TEST_VOCAB = {"<unk>": 0, "a": 1, "b": 2}  # small vocabulary: token -> id
+TEST_STORY = "the cat sat on the mat the cat ran"  # text for next_word
+TEST_CHAT = [  # estimate_tokens of each content: 2, 2, 3, 1
     {"role": "system", "content": "be brief"},
     {"role": "user", "content": "aaaaaaaa"},
     {"role": "assistant", "content": "bbbbbbbbbbbb"},
@@ -81,26 +83,35 @@ CHAT = [  # token estimates: 2, 2, 3, 1
 ]
 
 
-def _roles(msgs: list[dict]) -> list[str]:  # just the roles, for short checks
+def _roles(messages: list[dict]) -> list[str]:
+    """Just the roles, so a test can compare short lists: ['system', 'user']."""
     # --- explicit start ---
     roles = []
-    for m in msgs:
-        roles.append(m["role"])
+    for message in messages:
+        roles.append(message["role"])
     # --- explicit end ---
-    # concise: return [m["role"] for m in msgs]
+    # concise: return [message["role"] for message in messages]
     return roles
 
 
 # Runs only when you run this file directly (like public static void main)
 if __name__ == "__main__":
-    check("build_vocab", lambda: build_vocab("b a b".split()), V)
-    check("encode", lambda: encode(["a", "z", "b"], V), [1, 0, 2])
-    check("decode", lambda: decode([2, 1, 0], V), "b a <unk>")
+    check("build_vocab", lambda: build_vocab("b a b".split()), TEST_VOCAB)
+    check("encode", lambda: encode(["a", "z", "b"], TEST_VOCAB), [1, 0, 2])
+    check("decode", lambda: decode([2, 1, 0], TEST_VOCAB), "b a <unk>")
     check("common pair", lambda: most_common_pair(list("banana")), ("a", "n"))
     check("estimate", lambda: estimate_tokens("hello world"), 3)
     check("estimate empty", lambda: estimate_tokens(""), 0)
-    check("next_word", lambda: next_word(STORY, "the"), "cat")
-    check("next_word none", lambda: next_word(STORY, "ran"), None)
-    check("most_likely", lambda: most_likely({"cat": 2.0, "mat": 1.0, "rat": 0.5}), ("cat", 0.63))
-    check("fit_context", lambda: _roles(fit_context(CHAT, 6)), ["system", "assistant", "user"])
-    check("fit tiny", lambda: _roles(fit_context(CHAT, 2)), ["system"])
+    check("next_word", lambda: next_word(TEST_STORY, "the"), "cat")
+    check("next_word none", lambda: next_word(TEST_STORY, "ran"), None)
+    check(
+        "most_likely",
+        lambda: most_likely({"cat": 2.0, "mat": 1.0, "rat": 0.5}),
+        ("cat", 0.63),
+    )
+    check(
+        "fit_context",
+        lambda: _roles(fit_context(TEST_CHAT, 6)),
+        ["system", "assistant", "user"],
+    )
+    check("fit tiny", lambda: _roles(fit_context(TEST_CHAT, 2)), ["system"])

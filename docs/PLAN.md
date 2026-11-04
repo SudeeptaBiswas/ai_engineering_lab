@@ -80,4 +80,6 @@ Plus `docs/`, `resources/`, `pyproject.toml`, `uv.lock`.
 - Each session: one small piece → test → commit → push.
 - Lesson code: explicit first, concise form in a `# concise:` comment
   (see DECISIONS.md, 2026-11-04).
+- Lesson code: full descriptive names; comments say what a variable holds
+  and what each expression does.
 - Track in hours + %, not weeks: [PROGRESS.md](PROGRESS.md).
