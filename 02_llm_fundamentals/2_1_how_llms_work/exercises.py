@@ -58,7 +58,14 @@ def check(label: str, fn, expected) -> None:
     try:
         got = fn()  # call the lambda now
         # {got!r} prints the value in code form, e.g. 'abc' with quotes
-        status = "PASS" if got == expected else f"FAIL (got {got!r}, expected {expected!r})"
+        # --- explicit start ---
+        if got == expected:
+            status = "PASS"
+        else:
+            status = f"FAIL (got {got!r}, expected {expected!r})"
+        # --- explicit end ---
+        # concise: status = "PASS" if got == expected else f"FAIL ..."
+        #          Java: cond ? a : b
     except Exception as e:  # Java: catch (Exception e)
         status = f"FAIL ({type(e).__name__}: {e})"
     print(f"{label:<16} {status}")  # :<16 = pad label to 16 chars, left-aligned
@@ -75,7 +82,13 @@ CHAT = [  # token estimates: 2, 2, 3, 1
 
 
 def _roles(msgs: list[dict]) -> list[str]:  # just the roles, for short checks
-    return [m["role"] for m in msgs]
+    # --- explicit start ---
+    roles = []
+    for m in msgs:
+        roles.append(m["role"])
+    # --- explicit end ---
+    # concise: return [m["role"] for m in msgs]
+    return roles
 
 
 # Runs only when you run this file directly (like public static void main)

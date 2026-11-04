@@ -1,8 +1,13 @@
 # 2.1 How LLMs work: tokens, context window (~1.5 h)
 
-Read this, run [examples.py](examples.py), then solve [exercises.py](exercises.py).
+Read this, run [examples_1_tokens.py](examples_1_tokens.py) and
+[examples_2_predict.py](examples_2_predict.py), then solve [exercises.py](exercises.py).
 No real model yet. We build tiny toy versions in plain Python.
 Ollama (a real model on your PC) comes in 2.2.
+
+**How to read the code:** lines between `# --- explicit start ---` and
+`# --- explicit end ---` are the long, step-by-step way. The `# concise:`
+comment right after shows the same thing in short Python style.
 
 ## 1. What an LLM really does
 Think of **IntelliJ autocomplete**. You type `list.` and it suggests `add`.
@@ -100,7 +105,8 @@ Like autocomplete suggesting a method that does not exist. Always check facts.
 | `reversed(xs)` | loop from the end | `for (int i = n-1; i >= 0; i--)` |
 
 ## Do it
-1. `uv run python 02_llm_fundamentals/2_1_how_llms_work/examples.py`
+1. `uv run python 02_llm_fundamentals/2_1_how_llms_work/examples_1_tokens.py`
+   then `.../examples_2_predict.py`
 2. Fill each `...` in `exercises.py`.
 3. `uv run python 02_llm_fundamentals/2_1_how_llms_work/exercises.py` → all PASS.
 

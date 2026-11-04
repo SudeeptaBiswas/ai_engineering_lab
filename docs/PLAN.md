@@ -78,4 +78,6 @@ Plus `docs/`, `resources/`, `pyproject.toml`, `uv.lock`.
 - Follow the learning order below; Python is learned when needed.
 - Evals (05) are woven into RAG (04).
 - Each session: one small piece → test → commit → push.
+- Lesson code: explicit first, concise form in a `# concise:` comment
+  (see DECISIONS.md, 2026-11-04).
 - Track in hours + %, not weeks: [PROGRESS.md](PROGRESS.md).
