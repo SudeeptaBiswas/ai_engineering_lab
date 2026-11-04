@@ -10,23 +10,54 @@ UNK = "<unk>"  # token for any word the vocab doesn't know
 def build_vocab(words: list[str]) -> dict[str, int]:
     """UNK gets id 0. Other unique words get 1, 2, 3... in sorted order.
     Hint: enumerate(..., start=1)."""
-    ...
+    word_set: dict[str, int] = {"<unk>": 0}
+    word_set.update({word:id for id, word in enumerate(sorted(set(words)), 1)})
+    print(word_set)
+    return word_set
 
 
 def encode(words: list[str], vocab: dict[str, int]) -> list[int]:
     """Words -> ids. A word not in vocab gets the UNK id. Hint: dict.get."""
-    ...
+    encoded_list: list[int] = []
+    for word in words :
+        encoded_list.append(vocab.get(word, 0))
+    return encoded_list
 
 
 def decode(ids: list[int], vocab: dict[str, int]) -> str:
     """Ids -> words joined by single spaces. Hint: invert the vocab (1.3)."""
-    ...
+    decode_list: list[str] = []
+    decode_str: str = ""
+    for id in ids :
+        for key, value in enumerate(vocab):
+            if key == id:
+                decode_list.append(value)
+
+    decode_str = " ".join(decode_list)
+    return decode_str
 
 
 def most_common_pair(tokens: list[str]) -> tuple[str, str]:
     """The neighbour pair seen most often; first-seen wins a tie (BPE step)."""
-    ...
+    print(tokens)
+    token_pair_list: dict[str, int] = {}
 
+    for i in range(len(tokens) - 2) :
+        token_str = tokens[i] + tokens[i+1]
+        #if token_pair_list[token_str]:
+        token_pair_list[token_str] = token_pair_list.get(token_str, 0) +1
+
+    big_count_int = 0
+    token = "";
+    for key, value in token_pair_list.items():
+        if big_count_int <  value:
+            big_count_int = value
+            token = key
+    print("===============================")
+    print(token)
+    result = list(token)
+    print(result)
+    return (result[0], result[1])
 
 def estimate_tokens(text: str) -> int:
     """Rule of thumb: 1 token per 4 characters, rounded UP. "" -> 0."""

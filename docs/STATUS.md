@@ -4,6 +4,10 @@ Updated: 2026-11-04
 
 ## Now
 - 1.1–1.4 done. Overall 3.5%. User working on 2.1 (lesson written).
+- 2.1 exercises in progress: 4/11 PASS (build_vocab, encode, decode, common pair).
+  Open in user's code: most_common_pair glues pair to string + `- 2` skips
+  last pair (passes test by luck); decode uses enumerate (works only while
+  ids = positions); debug prints left.
 
 ## Queue
 a. User works 2.1 → check, mark done, update PROGRESS.
