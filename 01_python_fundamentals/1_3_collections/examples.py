@@ -64,7 +64,7 @@ words = "the cat and the hat and the bat".split()  # split on spaces -> list
 print("counter:", Counter(words).most_common(2))
 # defaultdict(list): a missing key starts as [] automatically
 # Java: map.computeIfAbsent(key, k -> new ArrayList<>()).add(w)
-by_letter = defaultdict(list)
+by_letter: defaultdict[str, list[str]] = defaultdict(list)
 for w in words:
     by_letter[w[0]].append(w)  # w[0] = first letter of the word
 print("grouped:", dict(by_letter))

@@ -40,14 +40,17 @@ while n > 0:
     n -= 1  # no n--
 
 # match (like switch, but more powerful)
-command = "stop"
-match command:
-    case "start":
-        print("starting")
-    case "stop" | "halt":
-        print("stopping")
-    case _:
-        print("unknown")
+def handle(command: str) -> None:
+    match command:
+        case "start":
+            print("starting")
+        case "stop" | "halt":
+            print("stopping")
+        case _:
+            print("unknown")
+
+
+handle("stop")
 
 
 # Functions: defaults, keyword args, multiple returns

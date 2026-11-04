@@ -1,5 +1,4 @@
 """Replace each `...` with code. Run until every line says PASS."""
-from collections import Counter, defaultdict
 
 def squares_of_evens(nums: list[int]) -> list[int]:
     """Squares of the even numbers, in order. Use a comprehension."""
@@ -8,7 +7,7 @@ def squares_of_evens(nums: list[int]) -> list[int]:
 
 def word_freq(text: str) -> dict[str, int]:
     """Count each word, lowercased. Split on whitespace with text.split()."""
-    word_counts = {}
+    word_counts: dict[str, int] = {}
     for word in text.split():
         word = word.lower()
         word_counts[word] = word_counts.get(word, 0) + 1
@@ -30,7 +29,8 @@ def unique_sorted(tags: list[str]) -> list[str]:
     return sorted(set(i.lower() for i in tags))
 
 
-def chunk(items: list, size: int) -> list[list]:
+# [T] = any item type, like Java <T>. Same T in, same T out.
+def chunk[T](items: list[T], size: int) -> list[list[T]]:
     """Split into pieces of `size`; last piece may be shorter. (RAG chunking!)"""
     return [
         items[i:i + size]
@@ -51,14 +51,14 @@ def merge_counts(a: dict[str, int], b: dict[str, int]) -> dict[str, int]:
         key: a.get(key, 0) + b.get(key, 0)
         for key in keys
     }"""
-    result = {}
+    result: dict[str, int] = {}
     for key in a.keys() | b.keys():
         result[key] = a.get(key, 0) + b.get(key, 0)
     return result
 
 
 # ---------- Test helper — no need to change anything below ----------
-def check(label: str, got, expected) -> None:
+def check(label: str, got: object, expected: object) -> None:
     # {got!r} prints the value in code form, e.g. 'abc' with quotes
     status = "PASS" if got == expected else f"FAIL (got {got!r}, expected {expected!r})"
     print(f"{label:<16} {status}")  # :<16 = pad label to 16 chars, left-aligned
@@ -71,6 +71,6 @@ if __name__ == "__main__":
     check("top_k", top_k({"a": 0.2, "b": 0.9, "c": 0.5}, 2), ["b", "c"])
     check("unique_sorted", unique_sorted(["MCP", "rag", "RAG", "agent"]), ["agent", "mcp", "rag"])
     check("chunk", chunk([1, 2, 3, 4, 5], 2), [[1, 2], [3, 4], [5]])
-    check("chunk empty", chunk([], 3), [])
+    check("chunk empty", chunk(list[int](), 3), [])  # list[int]() = typed []
     check("invert", invert({"py": "python", "js": "javascript"}), {"python": "py", "javascript": "js"})
     check("merge_counts", merge_counts({"a": 1, "b": 2}, {"b": 3, "c": 4}), {"a": 1, "b": 5, "c": 4})

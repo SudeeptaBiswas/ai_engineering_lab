@@ -36,7 +36,7 @@ class ModelInfo:
     size_b: float
     # default_factory=list -> a NEW empty list for each object.
     # (tags: list = [] would share one list between all objects.)
-    tags: list[str] = field(default_factory=list)
+    tags: list[str] = field(default_factory=list[str])  # list[str]() -> []
 
     def label(self) -> str:
         return f"{self.name}:{self.size_b}b"
@@ -89,7 +89,7 @@ class Square(Shape):  # Java: class Square implements Shape
 
 print("area:", Square(3).area())
 try:  # try/except = Java try/catch
-    Shape()  # not allowed: abstract
+    Shape()  # pyright: ignore[reportAbstractUsage]  -- on purpose, shows the error
 except TypeError as e:
     print("can't create ABC:", e)
 

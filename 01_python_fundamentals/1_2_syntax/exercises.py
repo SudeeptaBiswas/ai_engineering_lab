@@ -37,8 +37,8 @@ def token_cost(tokens: int, price_per_1k: float = 0.002) -> float:
 
 def split_even_odd(nums: list[int]) -> tuple[list[int], list[int]]:
     """Return (evens, odds), keeping the original order."""
-    evens = []
-    odds = []
+    evens: list[int] = []
+    odds: list[int] = []
     for i in nums:
         if i % 2 == 0:
             evens.append(i)
@@ -47,7 +47,7 @@ def split_even_odd(nums: list[int]) -> tuple[list[int], list[int]]:
 
     return evens, odds
 
-def check(label: str, got, expected) -> None:
+def check(label: str, got: object, expected: object) -> None:
     status = "PASS" if got == expected else f"FAIL (got {got!r}, expected {expected!r})"
     print(f"{label:<16} {status}")
 

@@ -4,6 +4,7 @@ These classes are the start of a real chatbot — you will reuse them in 2.6.
 """
 
 from abc import ABC, abstractmethod
+from collections.abc import Callable
 from dataclasses import dataclass, field
 
 
@@ -19,7 +20,7 @@ class Message:
 
 @dataclass
 class Conversation:
-    messages: list[Message] = field(default_factory=list)
+    messages: list[Message] = field(default_factory=list[Message])
 
     def add(self, role: str, content: str) -> None:
         """Append a new Message."""
@@ -47,13 +48,13 @@ class Tool(ABC):
 
 class UpperTool(Tool):
     """run("hi") -> "HI"."""
-    def run(self, arg):
+    def run(self, arg: str) -> str:
         return arg.upper()
 
 
 class ReverseTool(Tool):
     """run("abc") -> "cba". Hint: slicing with a negative step."""
-    def run(self, arg):
+    def run(self, arg: str) -> str:
         return arg[::-1]
 
 
@@ -65,7 +66,8 @@ def run_all(tools: list[Tool], arg: str) -> list[str]:
 # ---------- Test helper — no need to change anything below ----------
 # fn is a lambda (Java: () -> ...). It runs inside try, so an error in
 # unfinished code prints FAIL instead of stopping the whole file.
-def check(label: str, fn, expected) -> None:
+# Callable[[], object] = takes nothing, returns anything. Java: Supplier<Object>
+def check(label: str, fn: Callable[[], object], expected: object) -> None:
     try:
         got = fn()  # call the lambda now
         # {got!r} prints the value in code form, e.g. 'abc' with quotes
