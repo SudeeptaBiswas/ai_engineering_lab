@@ -7,6 +7,7 @@ Hands-on AI engineering lab — part of the 2026 career transition.
 Python 3.13 via uv 0.13.6 (`pyproject.toml` + `uv.lock`, `.venv` git-ignored).
 - Sync env: `uv sync`
 - Run a file: `uv run python <path>.py` from repo root.
+- Type check: `uv run pyright <path>.py` (strict, same as Pylance).
 - If `uv` not found in an old shell: restart the terminal (PATH was updated).
 
 ## Where things live
@@ -22,4 +23,5 @@ Python 3.13 via uv 0.13.6 (`pyproject.toml` + `uv.lock`, `.venv` git-ignored).
 ## Must never break
 - Files stay small: aim under 150 lines. Split before growing.
 - One concern per commit. Commit + push at each finished step.
+- New/changed code: 0 pyright errors before commit.
 - No secrets in the repo. Keys go in `.env` (git-ignored).

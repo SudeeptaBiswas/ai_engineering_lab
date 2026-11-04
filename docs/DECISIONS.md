@@ -2,6 +2,15 @@
 
 Newest first. One entry per change: what, replaces what, why.
 
+## 2026-11-04 — Type check with pyright (strict)
+- What: pyright 1.1.414 dev dependency, `typeCheckingMode = "strict"` in
+  pyproject (same as user's Pylance). New/changed code: 0 errors.
+- Replaces: no type check; Pylance red lines were missed (bare `dict`).
+- Why: best practice is full type hints (`dict[str, str]`, typed empty lists).
+- Not done: `TypedDict` for messages — wait for `assistant/` (2.6).
+- Open: 56 errors left in exercises.py files + phase 1 examples
+  (1.2 = 9, 1.3 = 19, 1.4 = 10, 2.1 exercises = 18).
+
 ## 2026-11-04 — Lesson code: full names + detailed comments
 - What: descriptive names (`word_to_id`, `next_word_counts`, `position`),
   no one-letter names (`a`, `b`, `m`, `e`, `i`). Comments show what a
