@@ -2,6 +2,7 @@
 
 import math  # math.ceil, math.exp
 from collections import Counter  # Counter(...).most_common(1) -> [(item, count)]
+from collections.abc import Callable  # type of a function, for check() below
 
 UNK = "<unk>"  # token for any word the vocab doesn't know
 
@@ -43,7 +44,9 @@ def most_likely(logits: dict[str, float]) -> tuple[str, float]:
     ...
 
 
-def fit_context(messages: list[dict], budget: int) -> list[dict]:
+def fit_context(
+    messages: list[dict[str, str]], budget: int
+) -> list[dict[str, str]]:
     """Always keep messages[0] (system). Then, going from NEWEST to oldest,
     keep messages while the estimate_tokens(content) total stays <= budget
     (the system message counts too). Stop at the first one that doesn't fit.
@@ -55,7 +58,8 @@ def fit_context(messages: list[dict], budget: int) -> list[dict]:
 # run_test is a lambda (Java: () -> ...): a tiny function that calls YOUR
 # function. check() calls it inside try, so an error in unfinished code
 # prints FAIL instead of stopping the whole file.
-def check(label: str, run_test, expected) -> None:
+# Callable[[], object] = takes nothing, returns anything. Java: Supplier<Object>
+def check(label: str, run_test: Callable[[], object], expected: object) -> None:
     try:
         actual = run_test()  # call the lambda now -> what your code returned
         # {actual!r} prints the value in code form, e.g. 'abc' with quotes
@@ -83,10 +87,10 @@ TEST_CHAT = [  # estimate_tokens of each content: 2, 2, 3, 1
 ]
 
 
-def _roles(messages: list[dict]) -> list[str]:
+def _roles(messages: list[dict[str, str]]) -> list[str]:
     """Just the roles, so a test can compare short lists: ['system', 'user']."""
     # --- explicit start ---
-    roles = []
+    roles: list[str] = []
     for message in messages:
         roles.append(message["role"])
     # --- explicit end ---
@@ -96,7 +100,7 @@ def _roles(messages: list[dict]) -> list[str]:
 
 # Runs only when you run this file directly (like public static void main)
 if __name__ == "__main__":
-    check("build_vocab", lambda: build_vocab("b a b".split()), TEST_VOCAB)
+    check("build_vocab", lambda: build_vocab(["b", "a", "b"]), TEST_VOCAB)
     check("encode", lambda: encode(["a", "z", "b"], TEST_VOCAB), [1, 0, 2])
     check("decode", lambda: decode([2, 1, 0], TEST_VOCAB), "b a <unk>")
     check("common pair", lambda: most_common_pair(list("banana")), ("a", "n"))

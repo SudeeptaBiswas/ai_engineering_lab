@@ -8,8 +8,9 @@ Newest first. One entry per change: what, replaces what, why.
 - Replaces: no type check; Pylance red lines were missed (bare `dict`).
 - Why: best practice is full type hints (`dict[str, str]`, typed empty lists).
 - Not done: `TypedDict` for messages — wait for `assistant/` (2.6).
-- Open: 56 errors left in exercises.py files + phase 1 examples
-  (1.2 = 9, 1.3 = 19, 1.4 = 10, 2.1 exercises = 18).
+- Then fixed phase 1 + 2.1 exercises too: 56 -> 2. Hints only, output same.
+  Left on purpose: 2.1 exercises `import math` / `Counter` = hints for the
+  user's answers; error clears once used. `Shape()` demo: pyright ignore.
 
 ## 2026-11-04 — Lesson code: full names + detailed comments
 - What: descriptive names (`word_to_id`, `next_word_counts`, `position`),
