@@ -26,7 +26,7 @@ chat_messages = [
 ]
 
 
-def count_tokens(messages: list[dict]) -> int:
+def count_tokens(messages: list[dict[str, str]]) -> int:
     """Estimate tokens for all messages: ~4 characters = 1 token, round UP.
 
     "What is a token?" has 16 characters -> 16 / 4 = 4 tokens.
@@ -54,7 +54,7 @@ while count_tokens(chat_messages) > CONTEXT_WINDOW_TOKENS:
 # Collect just the roles that are left, to show what survived.
 # remaining_roles = ['system', 'user']
 # --- explicit start ---
-remaining_roles = []
+remaining_roles: list[str] = []
 for message in chat_messages:
     remaining_roles.append(message["role"])
 # --- explicit end ---

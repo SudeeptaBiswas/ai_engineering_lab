@@ -16,7 +16,7 @@ def count_pairs(tokens: list[str]) -> dict[tuple[str, str], int]:
     pair_to_count = {('t', 'h'): 1, ('h', 'e'): 1, ('e', ' '): 1, ...}
     """
     # --- explicit start ---
-    pair_to_count = {}
+    pair_to_count: dict[tuple[str, str], int] = {}
     # Stop one early: the last token has no right-hand neighbour.
     for position in range(len(tokens) - 1):
         # A tuple (left, right) can be a dict key. Java: a small record.
@@ -36,7 +36,7 @@ def merge_pair(tokens: list[str], pair_to_merge: tuple[str, str]) -> list[str]:
     tokens = ['c', 'a', 't'], pair_to_merge = ('a', 't')  ->  ['c', 'at']
     """
     # --- explicit start ---
-    merged_tokens = []  # the new, shorter list we build
+    merged_tokens: list[str] = []  # the new, shorter list we build
     position = 0  # index of the token we look at now
     # --- explicit end ---
     # concise: merged_tokens, position = [], 0   (two assignments in one line)
@@ -64,7 +64,7 @@ for merge_number in range(1, 5):  # 1, 2, 3, 4  (5 is not included)
 
     # Find the pair with the biggest count. A tie keeps the first one seen.
     # --- explicit start ---
-    best_pair = None  # e.g. ('a', 't')
+    best_pair = ("", "")  # empty start; e.g. ('a', 't') after the loop
     best_pair_count = 0  # e.g. 3  (how often best_pair appears)
     for neighbour_pair in pair_to_count:  # a dict keeps insertion order
         if pair_to_count[neighbour_pair] > best_pair_count:

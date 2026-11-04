@@ -41,7 +41,7 @@ print("words:", word_tokens[:6], "...")  # [:6] = first 6 items. Java: subList(0
 unique_words = sorted(set(word_tokens))
 
 # word_to_id = {'.': 0, 'ate': 1, 'cat': 2, ...}  <- this IS the vocabulary
-word_to_id = {}
+word_to_id: dict[str, int] = {}  # keys are str, values are int
 for word_id in range(len(unique_words)):  # word_id = 0, 1, 2, ... 7
     word = unique_words[word_id]
     word_to_id[word] = word_id
@@ -54,7 +54,7 @@ for word_id in range(len(unique_words)):  # word_id = 0, 1, 2, ... 7
 # This list of numbers is what the model really receives.
 # token_ids = [7, 2, 6, 4, 7, 3, 0, ...]   ('the' -> 7, 'cat' -> 2, ...)
 # --- explicit start ---
-token_ids = []
+token_ids: list[int] = []  # ': list[int]' = what goes in. Java: List<Integer>
 for word in word_tokens:
     token_ids.append(word_to_id[word])  # look the word up, keep its id
 # --- explicit end ---

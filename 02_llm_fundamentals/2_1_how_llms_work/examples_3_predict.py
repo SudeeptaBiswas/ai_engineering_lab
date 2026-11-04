@@ -40,7 +40,7 @@ def most_frequent(word_to_count: dict[str, int]) -> str:
     {'cat': 2, 'mat': 1, 'rat': 1}  ->  'cat'
     """
     # --- explicit start ---
-    best_word = None
+    best_word = ""  # empty start, replaced in the loop
     best_count = 0
     for word in word_to_count:
         if word_to_count[word] > best_count:
@@ -72,12 +72,12 @@ def softmax(logits: list[float]) -> list[float]:
     """[2.0, 1.0, 0.5]  ->  [0.63, 0.23, 0.14]  (rounded)"""
     # --- explicit start ---
     # Step 1: e^score. Every result is positive; a bigger score grows faster.
-    exp_scores = []
+    exp_scores: list[float] = []
     for logit in logits:
         exp_scores.append(math.exp(logit))
     # Step 2: divide each by the total, so they add up to 1.
     exp_total = sum(exp_scores)
-    probabilities = []
+    probabilities: list[float] = []
     for exp_score in exp_scores:
         probabilities.append(exp_score / exp_total)
     # --- explicit end ---
