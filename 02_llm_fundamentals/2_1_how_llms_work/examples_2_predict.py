@@ -4,7 +4,7 @@ Same reading rule as part 1: code between "explicit start/end" is the long
 way; the "# concise:" line right after it is the short Python way.
 """
 
-import math  # math.exp for softmax. Java: Math.exp
+import math  # math.exp, math.ceil. Java: Math.exp, Math.ceil
 
 TEXT = "the cat sat on the mat . the cat ate the rat ."
 words = TEXT.split()
@@ -104,9 +104,9 @@ def size(msgs: list[dict]) -> int:
     # --- explicit start ---
     total = 0
     for m in msgs:
-        total += len(m["content"]) // 4  # ~4 chars per token; // = int division
+        total += math.ceil(len(m["content"]) / 4)  # ~4 chars per token, round UP
     # --- explicit end ---
-    # concise: return sum(len(m["content"]) // 4 for m in msgs)
+    # concise: return sum(math.ceil(len(m["content"]) / 4) for m in msgs)
     return total
 
 
