@@ -6,8 +6,8 @@ Updated: 2026-11-04
 - 1.1–1.4 done. Overall 3.5%. User working on 2.1 (lesson written).
 - 2.1 exercises: 11/11 PASS (2026-11-05, uncommitted user code). Not done yet —
   edge cases fail (checked by running them):
-  1. next_word: last pair dropped, fake key "None" stored. `next_word("a b", "a")`
-     -> string 'None' (want "b"). Fix: loop all pairs, no if/elif.
+  1. next_word: FIXED 2026-11-05 (`"a b","a"` -> 'b'). Left: line 78 `if` is
+     always true now, so `elif` (80-81) never runs — delete both, keep line 79.
   2. most_common_pair: glues pair to one string, then `list()` splits it.
      `["ab","c","ab","c"]` -> ('a','b') (want ('ab','c')). `["a","b"]` -> IndexError
      (`- 2` skips last pair). Fix: key = tuple, range(len - 1).
