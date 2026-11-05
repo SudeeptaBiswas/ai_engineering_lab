@@ -11,8 +11,8 @@ Updated: 2026-11-05
 ## Queue
 a. BISWAS PC: `uv sync` (lab_tools) + `ollama pull qwen3:1.7b` (for 2.2 section 7).
 b. User works 1.7 → check, mark done, update PROGRESS.
-d. Then lesson 2.3: chat API over HTTP (order: docs/PLAN.md).
-c. Optional: compare gemma4 E2B vs qwen3:4b on this PC (user to decide).
+c. Then lesson 2.3: chat API over HTTP (order: docs/PLAN.md).
+d. Optional: compare gemma4 E2B vs qwen3:4b on this PC (user to decide).
 
 ## Done
 - 2026-11-05 — lesson 1.7 written (files, JSON, httpx vs real Ollama): 2 examples + 12 checks; reference 12/12 in 1.2 s. httpx 0.28.1 added. `127.0.0.1` not `localhost` (2.16 s -> 0.02 s per call).
