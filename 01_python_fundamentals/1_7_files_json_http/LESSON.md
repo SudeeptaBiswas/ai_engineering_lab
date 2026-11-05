@@ -49,7 +49,9 @@ response.status_code   # 200
 response.json()        # body -> dict
 ```
 - `json=...` turns the dict into JSON and sets `Content-Type` for you.
-- Always give a `timeout`. A local LLM can be slow (see 2.2).
+- Always give a `timeout`. A local LLM can be slow: a 500-token answer
+  took ~70 s on this PC (lesson 2.2, section 5:
+  [02_llm_fundamentals/2_2_ollama/LESSON.md](../../02_llm_fundamentals/2_2_ollama/LESSON.md)).
 - **A 404 is not an exception.** Check `status_code`, or call
   `response.raise_for_status()` to throw `httpx.HTTPStatusError`.
 - Many calls → one `httpx.Client(base_url=..., timeout=...)` in a `with`
