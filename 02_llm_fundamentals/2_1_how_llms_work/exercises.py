@@ -125,10 +125,13 @@ def fit_context(
     keep messages while the estimate_tokens(content) total stays <= budget
     (the system message counts too). Stop at the first one that doesn't fit.
     Return the kept messages oldest first."""
-    ...
-    while (estimate_total_tokens(messages) > budget) :
-        messages.pop(1)
-    return messages
+    messages_copy: list[dict[str, str]] = messages.copy()
+    while (estimate_total_tokens(messages_copy) > budget) :
+        if len(messages_copy) == 1:
+            return messages_copy
+        else:
+            messages_copy.pop(1)
+    return messages_copy
 
 
 # ---------- Test helper — no need to change anything below ----------
