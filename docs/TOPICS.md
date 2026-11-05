@@ -16,7 +16,7 @@ Hours are estimates, not measured. Done = date finished. Totals feed PROGRESS.md
 | 1.9 | pytest | 1 | |
 | **02** | **LLM fundamentals** | **9** | |
 | 2.1 | How LLMs work: tokens, context window | 1.5 | 2026-11-05 |
-| 2.2 | Ollama: install, models, quantization, CPU limits | 1 | |
+| 2.2 | Ollama: install, models, quantization, CPU limits | 1 | 2026-11-05 |
 | 2.3 | Chat API over HTTP: roles, streaming | 1.5 | |
 | 2.4 | Sampling: temperature, top_p, max tokens | 1 | |
 | 2.5 | Embeddings + similarity | 2 | |
