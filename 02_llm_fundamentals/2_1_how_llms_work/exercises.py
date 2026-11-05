@@ -4,6 +4,9 @@ import math  # math.ceil, math.exp
 from collections import Counter  # Counter(...).most_common(1) -> [(item, count)]
 from collections.abc import Callable  # type of a function, for check() below
 
+# @debug above a function = its log.debug lines print. Ignore = ok while unused.
+from lab_tools.log import debug, log  # pyright: ignore[reportUnusedImport]
+
 UNK = "<unk>"  # token for any word the vocab doesn't know
 
 
@@ -12,7 +15,7 @@ def build_vocab(words: list[str]) -> dict[str, int]:
     Hint: enumerate(..., start=1)."""
     word_set: dict[str, int] = {"<unk>": 0}
     word_set.update({word:id for id, word in enumerate(sorted(set(words)), 1)})
-    print(word_set)
+    log.debug("word_set=%s", word_set)
     return word_set
 
 
@@ -36,10 +39,10 @@ def decode(ids: list[int], vocab: dict[str, int]) -> str:
     decode_str = " ".join(decode_list)
     return decode_str
 
-
+# @debug
 def most_common_pair(tokens: list[str]) -> tuple[str, str]:
     """The neighbour pair seen most often; first-seen wins a tie (BPE step)."""
-    print(tokens)
+    """ log.debug("tokens=%s", tokens)
     token_pair_list: dict[str, int] = {}
 
     for i in range(len(tokens) - 2) :
@@ -53,11 +56,18 @@ def most_common_pair(tokens: list[str]) -> tuple[str, str]:
         if big_count_int <  value:
             big_count_int = value
             token = key
-    print("===============================")
-    print(token)
+    log.debug("token=%s", token)
     result = list(token)
-    print(result)
-    return (result[0], result[1])
+    log.debug("result=%s", result)
+    return (result[0], result[1]) """
+    pairs: list[tuple[str, str]] = []
+    for i in range(len(tokens) - 1):               # -1, not -2: keeps the last pair
+        pairs.append((tokens[i], tokens[i + 1]))   # tuple, not a glued string
+    log.debug("pairs=%s", pairs)
+    counts = Counter(pairs)                        # {('a','n'): 2, ('b','a'): 1, ...}
+    return counts.most_common(1)[0][0]             # a tie goes to the first-seen pair
+
+    
 
 def estimate_tokens(text: str) -> int:
     """Rule of thumb: 1 token per 4 characters, rounded UP. "" -> 0."""
@@ -70,10 +80,8 @@ def next_word(text: str, word: str) -> str | None:
     word_map: dict[tuple[str, str], int] = {}
     words: list[str] = text.split()
     for i in range(len(words) -1):
-        if i < len(words) -2:
+        if i < len(words) -1:
             word_map[words[i],words[i+1]] = word_map.get((words[i],words[i+1]), 0) + 1
-        elif i < len(words) -1:
-            word_map[words[i],"None"] = word_map.get((words[i],""), 0) + 1
 
     most_common_follower: int = 0
     following_word: str | None = None
@@ -104,7 +112,11 @@ def most_likely(logits: dict[str, float]) -> tuple[str, float]:
             toke = item
     return (toke, val)
 
-
+def estimate_total_tokens(messages: list[dict[str, str]]) -> int:
+    total_token: int = 0
+    for message in messages:
+        total_token = total_token + estimate_tokens(message["content"]) 
+    return total_token
 
 def fit_context(
     messages: list[dict[str, str]], budget: int
@@ -114,6 +126,9 @@ def fit_context(
     (the system message counts too). Stop at the first one that doesn't fit.
     Return the kept messages oldest first."""
     ...
+    while (estimate_total_tokens(messages) > budget) :
+        messages.pop(1)
+    return messages
 
 
 # ---------- Test helper — no need to change anything below ----------
