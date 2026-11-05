@@ -94,19 +94,20 @@ def next_word(text: str, word: str) -> str | None:
 
 def most_likely(logits: dict[str, float]) -> tuple[str, float]:
     """Softmax the scores. Return (best token, its probability rounded to 2)."""
+    logits_copy: dict[str, float] = logits.copy()
     soft: list[float] = []
-    for item, value in logits.items():
+    for item, value in logits_copy.items():
         soft.append(math.exp(value))
-        logits[item] = math.exp(value)
+        logits_copy[item] = math.exp(value)
 
     softSome: float = sum(soft)
-    for item, value in logits.items():
-        logits[item] = logits[item] / softSome
-        logits[item] = round(logits[item], 2)
+    for item, value in logits_copy.items():
+        logits_copy[item] = logits_copy[item] / softSome
+        logits_copy[item] = round(logits_copy[item], 2)
     
     toke: str = ""
     val: float = 0
-    for item, value in logits.items():
+    for item, value in logits_copy.items():
         if value > val:
             val = value
             toke = item
