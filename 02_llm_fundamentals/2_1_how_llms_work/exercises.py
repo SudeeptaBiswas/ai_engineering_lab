@@ -31,10 +31,10 @@ def decode(ids: list[int], vocab: dict[str, int]) -> str:
     """Ids -> words joined by single spaces. Hint: invert the vocab (1.3)."""
     decode_list: list[str] = []
     decode_str: str = ""
-    for id in ids :
-        for key, value in enumerate(vocab):
-            if key == id:
-                decode_list.append(value)
+    for token_id in ids :
+        for word, word_id in vocab.items():
+            if word_id == token_id:
+                decode_list.append(word)
 
     decode_str = " ".join(decode_list)
     return decode_str
