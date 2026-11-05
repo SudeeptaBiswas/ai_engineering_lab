@@ -10,7 +10,8 @@ Updated: 2026-11-05
   2. most_common_pair: FIXED with Counter (`["ab","c","ab","c"]` -> ('ab','c')).
      Left: old code kept as a string literal (lines 45-62) — delete it.
   3. fit_context: FIXED (works on a copy; system alone over budget -> [system]).
-  4. most_likely: overwrites caller's logits dict.
+  4. most_likely: FIXED (works on a copy). Minor: rounds BEFORE picking the
+     best, so 300 equal tokens (each 0.003 -> 0.0) return ("", 0). Pick, then round.
   5. decode: FIXED (`decode([5], {"<unk>":0,"hi":5})` -> 'hi'). Optional:
      invert vocab once (lesson hint) instead of the inner loop.
   6. pyright: FIXED, 0 errors (debug_print -> lab_tools.log, Counter used).
