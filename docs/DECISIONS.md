@@ -2,6 +2,15 @@
 
 Newest first. One entry per change: what, replaces what, why.
 
+## 2026-11-05 — httpx + always `127.0.0.1` for Ollama
+- What: `uv add httpx` (0.28.1). Ollama URL = `http://127.0.0.1:11434`, never
+  `localhost`, in lessons and `assistant/`.
+- Why: measured on 10284Sudee: `localhost` 2.16 s per call, `127.0.0.1` 0.02 s
+  (IPv6 tried first). 1.7 exercises: 25 s -> 1.2 s.
+- Rejected: stdlib urllib (clunkier; httpx needed from 2.3 anyway).
+- User chose: 1.7 exercises call the real Ollama (not httpx MockTransport),
+  so they fail when Ollama is off. Only fast endpoints (tags, show, version).
+
 ## 2026-11-05 — Shared debug logging: `lab_tools/log.py`
 - What: `from lab_tools.log import debug, log`. `@debug` above a function =
   its `log.debug(...)` lines print (prefixed by function name). One logger.

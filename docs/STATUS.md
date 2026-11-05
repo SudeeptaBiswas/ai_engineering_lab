@@ -3,17 +3,19 @@
 Updated: 2026-11-05
 
 ## Now
-- 1.1–1.4 + 2.1 + 2.2 done. Overall 4.8% (phase 02: 28%).
+- 1.1–1.4 + 2.1 + 2.2 done. Overall 4.8% (phase 02: 28%). Lesson 1.7 written, user to do.
 - Optional 2.1 cleanup (user skipped, 2026-11-05): old most_common_pair code in
   a string literal; `softSome` name; most_likely rounds before picking best
   (300 equal tokens -> ("", 0)); next_word `if` always true; decode inner loop.
 
 ## Queue
 a. BISWAS PC: `uv sync` (lab_tools) + `ollama pull qwen3:1.7b` (for 2.2 section 7).
-b. Lesson 1.7: files, JSON, httpx (order: docs/PLAN.md).
+b. User works 1.7 → check, mark done, update PROGRESS.
+d. Then lesson 2.3: chat API over HTTP (order: docs/PLAN.md).
 c. Optional: compare gemma4 E2B vs qwen3:4b on this PC (user to decide).
 
 ## Done
+- 2026-11-05 — lesson 1.7 written (files, JSON, httpx vs real Ollama): 2 examples + 12 checks; reference 12/12 in 1.2 s. httpx 0.28.1 added. `127.0.0.1` not `localhost` (2.16 s -> 0.02 s per call).
 - 2026-11-05 — topic 2.2 done: 13/13 PASS + 5 edge cases fixed, pyright 0.
 - 2026-11-05 — lesson 2.2 Ollama written: 2 examples + 13 checks; reference 13/13.
   Measured (10284Sudee, one run each): qwen3:4b 2.5 GB file / 3.2 GB in RAM,
