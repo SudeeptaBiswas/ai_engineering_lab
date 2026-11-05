@@ -4,10 +4,20 @@ Updated: 2026-11-04
 
 ## Now
 - 1.1–1.4 done. Overall 3.5%. User working on 2.1 (lesson written).
-- 2.1 exercises in progress: 4/11 PASS (build_vocab, encode, decode, common pair).
-  Open in user's code: most_common_pair glues pair to string + `- 2` skips
-  last pair (passes test by luck); decode uses enumerate (works only while
-  ids = positions); debug prints left.
+- 2.1 exercises: 11/11 PASS (2026-11-05, uncommitted user code). Not done yet —
+  edge cases fail (checked by running them):
+  1. next_word: last pair dropped, fake key "None" stored. `next_word("a b", "a")`
+     -> string 'None' (want "b"). Fix: loop all pairs, no if/elif.
+  2. most_common_pair: glues pair to one string, then `list()` splits it.
+     `["ab","c","ab","c"]` -> ('a','b') (want ('ab','c')). `["a","b"]` -> IndexError
+     (`- 2` skips last pair). Fix: key = tuple, range(len - 1).
+  3. fit_context: pops from caller's list (TEST_CHAT changed between tests);
+     system alone over budget -> IndexError. `...` line left.
+  4. most_likely: overwrites caller's logits dict.
+  5. decode: enumerate(vocab) — works only while ids = positions.
+     `decode([5], {"<unk>":0,"hi":5})` -> ''. Fix: invert vocab once.
+  6. pyright: 10 errors (unused Counter, untyped debug_print). Rule: 0.
+  7. Style: `token = "";`, `softSome` camelCase, `id` shadows built-in.
 
 ## Queue
 a. User works 2.1 → check, mark done, update PROGRESS.
