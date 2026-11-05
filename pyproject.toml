@@ -10,5 +10,14 @@ dev = [
     "pytest>=9.2.0",
 ]
 
+# Installs lab_tools/ into .venv, so any file can: from lab_tools.log import ...
+[build-system]
+requires = ["uv_build>=0.13,<0.14"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+module-name = "lab_tools"
+module-root = ""  # lab_tools/ sits at repo root (not under src/)
+
 [tool.pyright]
 typeCheckingMode = "strict"  # same as Pylance in VS Code

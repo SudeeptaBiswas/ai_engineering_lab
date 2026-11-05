@@ -2,6 +2,15 @@
 
 Newest first. One entry per change: what, replaces what, why.
 
+## 2026-11-05 — Shared debug logging: `lab_tools/log.py`
+- What: `from lab_tools.log import debug, log`. `@debug` above a function =
+  its `log.debug(...)` lines print (prefixed by function name). One logger.
+- How: project is now an installed package (`[build-system]` uv_build in
+  pyproject; `uv sync` installs `lab_tools/` into .venv). Works from any folder.
+- Replaces: `debug_print` + global `DEBUG` in 2.1 exercises (all-or-nothing,
+  untyped = 9 pyright errors), then a per-file copy of the logging block.
+- Why: user wanted per-function toggle, one logger, no repeated code.
+
 ## 2026-11-04 — Type check with pyright (strict)
 - What: pyright 1.1.414 dev dependency, `typeCheckingMode = "strict"` in
   pyproject (same as user's Pylance). New/changed code: 0 errors.
