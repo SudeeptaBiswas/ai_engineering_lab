@@ -1,23 +1,21 @@
 # Status
 
-Updated: 2026-11-04
+Updated: 2026-11-05
 
 ## Now
 - 1.1–1.4 done. Overall 3.5%. User working on 2.1 (lesson written).
-- 2.1 exercises: 11/11 PASS (2026-11-05, uncommitted user code). Not done yet —
-  edge cases fail (checked by running them):
-  1. next_word: FIXED 2026-11-05 (`"a b","a"` -> 'b'). Left: line 78 `if` is
-     always true now, so `elif` (80-81) never runs — delete both, keep line 79.
-  2. most_common_pair: glues pair to one string, then `list()` splits it.
-     `["ab","c","ab","c"]` -> ('a','b') (want ('ab','c')). `["a","b"]` -> IndexError
-     (`- 2` skips last pair). Fix: key = tuple, range(len - 1).
+- 2.1 exercises: 11/11 PASS, pyright 0 (2026-11-05, committed). Not done yet —
+  edge cases (checked by running them):
+  1. next_word: FIXED. Left: `if` always true now — drop it, keep the body.
+  2. most_common_pair: FIXED with Counter (`["ab","c","ab","c"]` -> ('ab','c')).
+     Left: old code kept as a string literal (lines 45-62) — delete it.
   3. fit_context: pops from caller's list (TEST_CHAT changed between tests);
      system alone over budget -> IndexError. `...` line left.
   4. most_likely: overwrites caller's logits dict.
   5. decode: enumerate(vocab) — works only while ids = positions.
      `decode([5], {"<unk>":0,"hi":5})` -> ''. Fix: invert vocab once.
-  6. pyright: 10 errors (unused Counter, untyped debug_print). Rule: 0.
-  7. Style: `token = "";`, `softSome` camelCase, `id` shadows built-in.
+  6. pyright: FIXED, 0 errors (debug_print -> lab_tools.log, Counter used).
+  7. Style: `softSome` camelCase, `id` shadows built-in.
 
 ## Queue
 a. User works 2.1 → check, mark done, update PROGRESS.
