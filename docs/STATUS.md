@@ -9,8 +9,7 @@ Updated: 2026-11-05
   1. next_word: FIXED. Left: `if` always true now — drop it, keep the body.
   2. most_common_pair: FIXED with Counter (`["ab","c","ab","c"]` -> ('ab','c')).
      Left: old code kept as a string literal (lines 45-62) — delete it.
-  3. fit_context: pops from caller's list (TEST_CHAT changed between tests);
-     system alone over budget -> IndexError. `...` line left.
+  3. fit_context: FIXED (works on a copy; system alone over budget -> [system]).
   4. most_likely: overwrites caller's logits dict.
   5. decode: enumerate(vocab) — works only while ids = positions.
      `decode([5], {"<unk>":0,"hi":5})` -> ''. Fix: invert vocab once.
