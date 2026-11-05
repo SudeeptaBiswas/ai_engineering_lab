@@ -6,22 +6,29 @@ from collections.abc import Callable  # type of a function, for check() below
 def split_model_name(name: str) -> tuple[str, str]:
     """"qwen3:4b" -> ("qwen3", "4b"). No ":" -> tag is "latest" (Ollama's rule).
     Hint: str.partition(":") -> (before, ":", after); after is "" if no ":"."""
-    ...
+    return (name.split(":")[0], name.split(":")[1] if len(name.split(":")) == 2 else "latest")
 
 
 def size_gb(params_billion: float, bits: float) -> float:
     """File size in GB = params_billion x bits / 8, rounded to 1 decimal."""
+    return round(params_billion * bits / 8, 1)
     ...
 
 
 def fits_in_ram(file_gb: float, free_ram_gb: float) -> bool:
     """True if file size x 1.3 (working memory) is <= free RAM."""
-    ...
+    return True if (file_gb * 1.3) <= free_ram_gb else False
 
 
 def biggest_that_fits(models: dict[str, float], free_ram_gb: float) -> str | None:
     """Name of the BIGGEST model (by GB) that fits_in_ram. None if none fits."""
-    ...
+    biggest_model_fits: str | None = None
+    biggest_size_gb:float = 0
+    for name, size in models.items():
+        if biggest_size_gb < size and (size * 1.3) <= free_ram_gb:
+            biggest_model_fits = name
+            biggest_size_gb = size
+    return biggest_model_fits
 
 
 def parse_stat(verbose_text: str, name: str) -> float:
@@ -29,6 +36,11 @@ def parse_stat(verbose_text: str, name: str) -> float:
     parse_stat(text, "eval rate") -> 7.1 from the line "eval rate:  7.10 tokens/s".
     Careful: "eval count" must NOT match the line "prompt eval count".
     Hint: splitlines(), strip(), partition(":"), split()[0], float(...)."""
+    lines = verbose_text.splitlines()
+    for line in lines:
+        if line.startswith(name) > 0:
+            return float(line.split(":")[1].strip().split()[0])
+    raise KeyError(name)
     ...
 
 
@@ -36,12 +48,17 @@ def answer_seconds(
     output_tokens: int, tokens_per_second: float, load_seconds: float
 ) -> float:
     """Time to load the model + generate all tokens, rounded to 1 decimal."""
+    return round((output_tokens / tokens_per_second) + load_seconds, 1)
     ...
 
 
 def thinking_share(total_tokens: int, answer_tokens: int) -> int:
     """Percent of tokens spent thinking (not in the answer). round() to int.
     0 tokens in total -> 0 (do not divide by zero)."""
+    if total_tokens == 0 :
+        return 0
+    else:
+        return round((total_tokens - answer_tokens) * 100 / total_tokens)
     ...
 
 
