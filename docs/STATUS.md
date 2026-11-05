@@ -3,26 +3,19 @@
 Updated: 2026-11-05
 
 ## Now
-- 1.1–1.4 done. Overall 3.5%. User working on 2.1 (lesson written).
-- 2.1 exercises: 11/11 PASS, pyright 0 (2026-11-05, committed). Not done yet —
-  edge cases (checked by running them):
-  1. next_word: FIXED. Left: `if` always true now — drop it, keep the body.
-  2. most_common_pair: FIXED with Counter (`["ab","c","ab","c"]` -> ('ab','c')).
-     Left: old code kept as a string literal (lines 45-62) — delete it.
-  3. fit_context: FIXED (works on a copy; system alone over budget -> [system]).
-  4. most_likely: FIXED (works on a copy). Minor: rounds BEFORE picking the
-     best, so 300 equal tokens (each 0.003 -> 0.0) return ("", 0). Pick, then round.
-  5. decode: FIXED (`decode([5], {"<unk>":0,"hi":5})` -> 'hi'). Optional:
-     invert vocab once (lesson hint) instead of the inner loop.
-  6. pyright: FIXED, 0 errors (debug_print -> lab_tools.log, Counter used).
-  7. Style: `softSome` camelCase, `id` shadows built-in.
+- 1.1–1.4 + 2.1 done. Overall 4.3% (phase 02: 17%).
+- Optional 2.1 cleanup (user skipped, 2026-11-05): old most_common_pair code in
+  a string literal; `softSome` name; most_likely rounds before picking best
+  (300 equal tokens -> ("", 0)); next_word `if` always true; decode inner loop.
 
 ## Queue
-a. User works 2.1 → check, mark done, update PROGRESS.
-b. Write lesson 2.2: Ollama (cover thinking on/off; `think:false` was ignored in test).
-c. Lesson 1.7: files, JSON, httpx (order: docs/PLAN.md).
+a. Write lesson 2.2: Ollama (cover thinking on/off; `think:false` was ignored in test).
+b. Lesson 1.7: files, JSON, httpx (order: docs/PLAN.md).
+c. User works 2.2 → check, mark done, update PROGRESS.
 
 ## Done
+- 2026-11-05 — topic 2.1 done: 11/11 PASS + 5 edge-case bugs fixed, pyright 0.
+- 2026-11-05 — `lab_tools/log.py`: shared per-function debug logging (`@debug`).
 - 2026-11-04 — type hints in phase 1 + 2.1 exercises: 56 → 2 pyright errors (2 = unused hint imports, on purpose). Same output.
 - 2026-11-04 — pyright (strict) added; 2.1 examples 1–4: 18 → 0 errors, same output. 56 left elsewhere (docs/DECISIONS.md).
 - 2026-11-04 — 2.1 code: full names + detailed comments; examples now 4 files. Same output; ref 11/11.
