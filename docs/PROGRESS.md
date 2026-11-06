@@ -8,7 +8,7 @@ Overall % = hours of finished topics / 199. Hours spent don't count as progress.
 | # | Phase | Target h | Logged h | Done % |
 |---|---|---|---|---|
 | 01 | Python for Java devs | 15 | 8.5 | 57 |
-| 02 | LLM fundamentals | 9 | 2.5 | 28 |
+| 02 | LLM fundamentals | 9 | 4 | 44 |
 | 03 | Prompting + tool calling | 8 | 0 | 0 |
 | 04 | RAG | 38 | 0 | 0 |
 | 05 | Evals + tracing | 10 | 0 | 0 |
@@ -17,10 +17,12 @@ Overall % = hours of finished topics / 199. Hours spent don't count as progress.
 | 08 | Serve + ship | 13 | 0 | 0 |
 | 09 | Java bridge | 13 | 0 | 0 |
 | 10 | Capstone | 33 | 0 | 0 |
-| | **Total** | **199** | **11** | **5.5** |
+| | **Total** | **199** | **12.5** | **6.3** |
 
 ## Session log
 Newest first: date, hours, phase, what was finished.
+
+- 2026-11-06 — 1.5 h (estimate) — 02 — topic 2.3 chat API done, 12/12 PASS.
 
 - 2026-11-06 — 1.5 h (estimate) — 01 — topic 1.7 files/JSON/httpx done, 12/12 PASS.
 
