@@ -3,6 +3,7 @@ Needs Ollama running with qwen3:4b pulled (`ollama list`)."""
 
 import json  # pyright: ignore[reportUnusedImport] — json.dumps / json.loads
 import tempfile  # temporary folder for the file tests
+import traceback  # find the failing line, for check() below
 from collections.abc import Callable  # type of a function, for check() below
 from pathlib import Path
 from typing import Any  # "any type": what json.loads returns. Java: Object
@@ -68,7 +69,12 @@ def save_report(path: Path) -> None:
 # run_test is a lambda (Java: () -> ...): a tiny function that calls YOUR
 # function. check() calls it inside try, so an error in unfinished code
 # prints FAIL instead of stopping the whole file.
+_count = 0  # how many checks ran so far: gives each result a number
+
+
 def check(label: str, run_test: Callable[[], object], expected: object) -> None:
+    global _count  # change the module variable above. Java: a static field
+    _count += 1
     try:
         actual = run_test()  # call the lambda now -> what your code returned
         if actual == expected:
@@ -76,8 +82,13 @@ def check(label: str, run_test: Callable[[], object], expected: object) -> None:
         else:  # {actual!r} = value in code form, e.g. 'abc' with quotes
             result = f"FAIL (got {actual!r}, expected {expected!r})"
     except Exception as error:  # Java: catch (Exception error)
-        result = f"FAIL ({type(error).__name__}: {error})"
-    print(f"{label:<16} {result}")  # :<16 = pad label to 16 chars
+        # Traceback = the call chain (Java: stack trace). Keep only frames in
+        # this file, so the line shown is in YOUR code, not inside a library.
+        mine = [f for f in traceback.extract_tb(error.__traceback__)
+                if f.filename == __file__]
+        where = f"\n{'':<21}line {mine[-1].lineno}: {mine[-1].line}" if mine else ""
+        result = f"FAIL ({type(error).__name__}: {error}){where}"
+    print(f"{_count:>2}. {label:<16} {result}")  # :>2 = right-align, :<16 = pad
 
 
 def _save_then_load(path: Path, data: Any) -> Any:
