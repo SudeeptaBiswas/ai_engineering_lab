@@ -1,7 +1,7 @@
 # 1.7 Files, JSON, HTTP with httpx (~1.5 h)
 
-Read this, run [examples_1_files_json.py](examples_1_files_json.py) and
-[examples_2_http.py](examples_2_http.py), then solve [exercises.py](exercises.py).
+Read this, run [examples_1_7_1_files_json.py](examples_1_7_1_files_json.py) and
+[examples_1_7_2_http.py](examples_1_7_2_http.py), then solve [exercises_1_7.py](exercises_1_7.py).
 Part 2 and the exercises call the **real Ollama** on your PC — keep it running.
 Why now: in 2.3 we talk to Ollama over HTTP, with JSON, from Python.
 
@@ -51,7 +51,7 @@ response.json()        # body -> dict
 - `json=...` turns the dict into JSON and sets `Content-Type` for you.
 - Always give a `timeout`. A local LLM can be slow: a 500-token answer
   took ~70 s on this PC (lesson 2.2, section 5:
-  [02_llm_fundamentals/2_2_ollama/LESSON.md](../../02_llm_fundamentals/2_2_ollama/LESSON.md)).
+  [02_llm_fundamentals/2_2_ollama/LESSON_2_2.md](../../02_llm_fundamentals/2_2_ollama/LESSON_2_2.md)).
 - **A 404 is not an exception.** Check `status_code`, or call
   `response.raise_for_status()` to throw `httpx.HTTPStatusError`.
 - Many calls → one `httpx.Client(base_url=..., timeout=...)` in a `with`
@@ -74,6 +74,6 @@ response.json()        # body -> dict
 | `GET /api/ps` | models in RAM now | `ollama ps` |
 
 ## 6. Exercises
-[exercises.py](exercises.py): 9 functions, 12 checks. Files + JSON first
+[exercises_1_7.py](exercises_1_7.py): 9 functions, 12 checks. Files + JSON first
 (temp folder, deleted after), then Ollama calls, then one that combines
 all three. Needs `qwen3:4b` on the PC.

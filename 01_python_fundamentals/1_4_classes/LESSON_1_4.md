@@ -1,6 +1,6 @@
 # 1.4 Classes and dataclasses (~2 h)
 
-Read this, run [examples.py](examples.py), then solve [exercises.py](exercises.py).
+Read this, run [examples_1_4.py](examples_1_4.py), then solve [exercises_1_4.py](exercises_1_4.py).
 
 ## Java → Python map
 | Java | Python |
@@ -42,9 +42,9 @@ Python doesn't need `implements`. If it has `.run()`, you can call `.run()`.
 `ABC` makes the contract explicit and fails early if a method is missing.
 
 ## Do it
-1. `uv run python 01_python_fundamentals/1_4_classes/examples.py`
-2. Fill each `...` in `exercises.py`.
-3. `uv run python 01_python_fundamentals/1_4_classes/exercises.py` → all PASS.
+1. `uv run python 01_python_fundamentals/1_4_classes/examples_1_4.py`
+2. Fill each `...` in `exercises_1_4.py`.
+3. `uv run python 01_python_fundamentals/1_4_classes/exercises_1_4.py` → all PASS.
 
 ## Done when
 - [ ] All exercises PASS.

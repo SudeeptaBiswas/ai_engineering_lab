@@ -2,6 +2,17 @@
 
 Newest first. One entry per change: what, replaces what, why.
 
+## 2026-11-06 — Lesson file names carry the topic id
+- What: `LESSON_1_7.md`, `exercises_1_7.py`, `examples_1_7.py` (one file) or
+  `examples_1_7_2_http.py` (several). 24 files renamed, links fixed.
+  `hello.py` kept (already unique).
+- Replaces: same names in every folder (`exercises.py` x6, `LESSON.md` x7).
+- Why: user could not tell which file a tab or a result line belonged to.
+- Rejected: VS Code `workbench.editor.labelFormat` (tabs only, not search,
+  terminal, or chat); header line in output (output only).
+- Also: `check()` in 1.7 now numbers results and prints `path:line` links.
+  Other lessons still have the old `check()`.
+
 ## 2026-11-05 — httpx + always `127.0.0.1` for Ollama
 - What: `uv add httpx` (0.28.1). Ollama URL = `http://127.0.0.1:11434`, never
   `localhost`, in lessons and `assistant/`.

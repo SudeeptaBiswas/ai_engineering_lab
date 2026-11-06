@@ -1,6 +1,6 @@
 # 1.3 Collections (~2 h)
 
-Read this, run [examples.py](examples.py), then solve [exercises.py](exercises.py).
+Read this, run [examples_1_3.py](examples_1_3.py), then solve [exercises_1_3.py](exercises_1_3.py).
 
 ## Java → Python map
 | Java | Python | Literal |
@@ -43,9 +43,9 @@ def add(item, bucket=None): # fix
 ```
 
 ## Do it
-1. `uv run python 01_python_fundamentals/1_3_collections/examples.py`
-2. Fill each `...` in `exercises.py`. Try comprehensions where they fit.
-3. `uv run python 01_python_fundamentals/1_3_collections/exercises.py` → all PASS.
+1. `uv run python 01_python_fundamentals/1_3_collections/examples_1_3.py`
+2. Fill each `...` in `exercises_1_3.py`. Try comprehensions where they fit.
+3. `uv run python 01_python_fundamentals/1_3_collections/exercises_1_3.py` → all PASS.
 
 ## Done when
 - [ ] All exercises PASS.

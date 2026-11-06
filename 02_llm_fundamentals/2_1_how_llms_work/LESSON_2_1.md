@@ -1,9 +1,9 @@
 # 2.1 How LLMs work: tokens, context window (~1.5 h)
 
 Read this, run the 4 example files in order —
-[examples_1_tokens.py](examples_1_tokens.py), [examples_2_bpe.py](examples_2_bpe.py),
-[examples_3_predict.py](examples_3_predict.py), [examples_4_context.py](examples_4_context.py) —
-then solve [exercises.py](exercises.py).
+[examples_2_1_1_tokens.py](examples_2_1_1_tokens.py), [examples_2_1_2_bpe.py](examples_2_1_2_bpe.py),
+[examples_2_1_3_predict.py](examples_2_1_3_predict.py), [examples_2_1_4_context.py](examples_2_1_4_context.py) —
+then solve [exercises_2_1.py](exercises_2_1.py).
 No real model yet. We build tiny toy versions in plain Python.
 Ollama (a real model on your PC) comes in 2.2.
 
@@ -107,10 +107,10 @@ Like autocomplete suggesting a method that does not exist. Always check facts.
 | `reversed(xs)` | loop from the end | `for (int i = n-1; i >= 0; i--)` |
 
 ## Do it
-1. `uv run python 02_llm_fundamentals/2_1_how_llms_work/examples_1_tokens.py`
-   then `examples_2_bpe.py`, `examples_3_predict.py`, `examples_4_context.py`
-2. Fill each `...` in `exercises.py`.
-3. `uv run python 02_llm_fundamentals/2_1_how_llms_work/exercises.py` → all PASS.
+1. `uv run python 02_llm_fundamentals/2_1_how_llms_work/examples_2_1_1_tokens.py`
+   then `examples_2_1_2_bpe.py`, `examples_2_1_3_predict.py`, `examples_2_1_4_context.py`
+2. Fill each `...` in `exercises_2_1.py`.
+3. `uv run python 02_llm_fundamentals/2_1_how_llms_work/exercises_2_1.py` → all PASS.
 
 ## Done when
 - [ ] All exercises PASS.

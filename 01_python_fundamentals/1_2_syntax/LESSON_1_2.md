@@ -1,6 +1,6 @@
 # 1.2 Syntax vs Java (~2 h)
 
-Read this, run [examples.py](examples.py), then solve [exercises.py](exercises.py).
+Read this, run [examples_1_2.py](examples_1_2.py), then solve [exercises_1_2.py](exercises_1_2.py).
 
 ## Biggest differences
 | Java | Python |
@@ -43,9 +43,9 @@ lo, hi = min_max([3, 1, 4])   # tuple unpacking
 ```
 
 ## Do it
-1. `uv run python 01_python_fundamentals/1_2_syntax/examples.py`
-2. Edit `exercises.py`: replace each `...` with code.
-3. `uv run python 01_python_fundamentals/1_2_syntax/exercises.py`
+1. `uv run python 01_python_fundamentals/1_2_syntax/examples_1_2.py`
+2. Edit `exercises_1_2.py`: replace each `...` with code.
+3. `uv run python 01_python_fundamentals/1_2_syntax/exercises_1_2.py`
    → all lines say PASS.
 
 ## Done when

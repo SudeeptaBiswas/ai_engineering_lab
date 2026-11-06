@@ -18,6 +18,8 @@ Python 3.13 via uv 0.13.6 (`pyproject.toml` + `uv.lock`, `.venv` git-ignored).
   and report the new % to the user.
 - `docs/DECISIONS.md` — requirement changes and why.
 - `NN_phase_name/` — lessons + exercises, one folder per phase.
+  Lesson files carry the topic id: `LESSON_1_7.md`, `exercises_1_7.py`,
+  `examples_1_7_2_http.py`. Never a bare `exercises.py`.
 - `assistant/` — the one real app, grows v1→v10 (from topic 2.6).
 - `lab_tools/` — shared helpers, installed by `uv sync`. Debug logging:
   `from lab_tools.log import debug, log`, then `@debug` on a function.

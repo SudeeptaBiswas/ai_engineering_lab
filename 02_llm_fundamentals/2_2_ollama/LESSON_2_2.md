@@ -1,8 +1,8 @@
 # 2.2 Ollama: models, quantization, CPU limits (~1 h)
 
 Read this, try the commands in a terminal, run
-[examples_1_size.py](examples_1_size.py) and [examples_2_speed.py](examples_2_speed.py),
-then solve [exercises.py](exercises.py).
+[examples_2_2_1_size.py](examples_2_2_1_size.py) and [examples_2_2_2_speed.py](examples_2_2_2_speed.py),
+then solve [exercises_2_2.py](exercises_2_2.py).
 No HTTP yet — calling Ollama from Python comes in 2.3 (after httpx in 1.7).
 
 All numbers below were **measured on 10284Sudee** (Intel i5-10210U, 4 cores,
@@ -110,6 +110,6 @@ ollama ps
 Compare `eval rate` with the table in section 5.
 
 ## 8. Exercises
-[exercises.py](exercises.py): 7 small functions, 13 checks.
+[exercises_2_2.py](exercises_2_2.py): 7 small functions, 13 checks.
 Model names, size math, "does it fit?", reading `--verbose` output,
 time estimates, thinking share. All plain Python, no model call.
