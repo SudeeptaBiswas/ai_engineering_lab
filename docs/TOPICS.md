@@ -11,7 +11,7 @@ Hours are estimates, not measured. Done = date finished. Totals feed PROGRESS.md
 | 1.4 | Classes, dataclasses (vs Java POJOs) | 2 | 2026-11-03 |
 | 1.5 | Modules, imports, exceptions | 1.5 | |
 | 1.6 | Type hints + pydantic | 2 | |
-| 1.7 | Files, JSON, HTTP with httpx | 1.5 | |
+| 1.7 | Files, JSON, HTTP with httpx | 1.5 | 2026-11-06 |
 | 1.8 | async/await | 2 | |
 | 1.9 | pytest | 1 | |
 | **02** | **LLM fundamentals** | **9** | |
