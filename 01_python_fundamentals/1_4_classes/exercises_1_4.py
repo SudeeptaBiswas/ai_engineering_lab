@@ -4,8 +4,8 @@ These classes are the start of a real chatbot — you will reuse them in 2.6.
 """
 
 from abc import ABC, abstractmethod
-from collections.abc import Callable
 from dataclasses import dataclass, field
+from lab_tools.check import check  # numbered PASS/FAIL + path:line links
 
 
 @dataclass
@@ -61,20 +61,6 @@ class ReverseTool(Tool):
 def run_all(tools: list[Tool], arg: str) -> list[str]:
     """Run every tool on arg, return the results in order."""
     return [ tool.run(arg) for tool in tools ]
-
-
-# ---------- Test helper — no need to change anything below ----------
-# fn is a lambda (Java: () -> ...). It runs inside try, so an error in
-# unfinished code prints FAIL instead of stopping the whole file.
-# Callable[[], object] = takes nothing, returns anything. Java: Supplier<Object>
-def check(label: str, fn: Callable[[], object], expected: object) -> None:
-    try:
-        got = fn()  # call the lambda now
-        # {got!r} prints the value in code form, e.g. 'abc' with quotes
-        status = "PASS" if got == expected else f"FAIL (got {got!r}, expected {expected!r})"
-    except Exception as e:  # Java: catch (Exception e)
-        status = f"FAIL ({type(e).__name__}: {e})"
-    print(f"{label:<16} {status}")  # :<16 = pad label to 16 chars, left-aligned
 
 
 def _conversation() -> Conversation:  # builds a 3-message conversation for tests

@@ -1,5 +1,7 @@
 """Replace each `...` with code. Run until every line says PASS."""
 
+from lab_tools.check import check  # numbered PASS/FAIL + path:line links
+
 
 def fizzbuzz(n: int) -> str:
     """'Fizz' if n divisible by 3, 'Buzz' by 5, 'FizzBuzz' by both, else str(n)."""
@@ -47,19 +49,15 @@ def split_even_odd(nums: list[int]) -> tuple[list[int], list[int]]:
 
     return evens, odds
 
-def check(label: str, got: object, expected: object) -> None:
-    status = "PASS" if got == expected else f"FAIL (got {got!r}, expected {expected!r})"
-    print(f"{label:<16} {status}")
-
 
 if __name__ == "__main__":
-    check("fizzbuzz 15", fizzbuzz(15), "FizzBuzz")
-    check("fizzbuzz 9", fizzbuzz(9), "Fizz")
-    check("fizzbuzz 10", fizzbuzz(10), "Buzz")
-    check("fizzbuzz 7", fizzbuzz(7), "7")
-    check("average", average([1, 2, 3, 4]), 2.5)
-    check("average empty", average([]), 0.0)
-    check("count_vowels", count_vowels("Retrieval AUGMENTED"), 8)
-    check("token_cost", token_cost(1500), 0.003)
-    check("token_cost named", token_cost(2000, price_per_1k=0.01), 0.02)
-    check("split_even_odd", split_even_odd([1, 2, 3, 4, 5]), ([2, 4], [1, 3, 5]))
+    check("fizzbuzz 15", lambda: fizzbuzz(15), "FizzBuzz")
+    check("fizzbuzz 9", lambda: fizzbuzz(9), "Fizz")
+    check("fizzbuzz 10", lambda: fizzbuzz(10), "Buzz")
+    check("fizzbuzz 7", lambda: fizzbuzz(7), "7")
+    check("average", lambda: average([1, 2, 3, 4]), 2.5)
+    check("average empty", lambda: average([]), 0.0)
+    check("count_vowels", lambda: count_vowels("Retrieval AUGMENTED"), 8)
+    check("token_cost", lambda: token_cost(1500), 0.003)
+    check("token_cost named", lambda: token_cost(2000, price_per_1k=0.01), 0.02)
+    check("split_even_odd", lambda: split_even_odd([1, 2, 3, 4, 5]), ([2, 4], [1, 3, 5]))

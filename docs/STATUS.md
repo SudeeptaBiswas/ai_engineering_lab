@@ -12,9 +12,9 @@ Updated: 2026-11-06
 a. BISWAS PC: `uv sync` (lab_tools) + `ollama pull qwen3:1.7b` (for 2.2 section 7).
 b. Lesson 2.3: chat API over HTTP (order: docs/PLAN.md).
 c. Optional: compare gemma4 E2B vs qwen3:4b on this PC (user to decide).
-d. Optional: one shared `check()` in lab_tools (6 lesson copies now).
 
 ## Done
+- 2026-11-06 — shared `lab_tools/check.py` replaces 6 copies; 62/62 PASS.
 - 2026-11-06 — topic 1.7 done: 12/12 PASS, pyright 0. Lesson files renamed
   with topic id (24 files). 1.7 `check()` numbers results + `path:line` links.
 - 2026-11-05 — lesson 1.7 written (files, JSON, httpx vs real Ollama): 2 examples + 12 checks; reference 12/12 in 1.2 s. httpx 0.28.1 added. `127.0.0.1` not `localhost` (2.16 s -> 0.02 s per call).

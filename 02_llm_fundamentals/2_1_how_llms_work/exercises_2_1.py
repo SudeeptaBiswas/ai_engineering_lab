@@ -2,10 +2,10 @@
 
 import math  # math.ceil, math.exp
 from collections import Counter  # Counter(...).most_common(1) -> [(item, count)]
-from collections.abc import Callable  # type of a function, for check() below
 
 # @debug above a function = its log.debug lines print. Ignore = ok while unused.
 from lab_tools.log import debug, log  # pyright: ignore[reportUnusedImport]
+from lab_tools.check import check  # numbered PASS/FAIL + path:line links
 
 UNK = "<unk>"  # token for any word the vocab doesn't know
 
@@ -133,29 +133,6 @@ def fit_context(
         else:
             messages_copy.pop(1)
     return messages_copy
-
-
-# ---------- Test helper — no need to change anything below ----------
-# run_test is a lambda (Java: () -> ...): a tiny function that calls YOUR
-# function. check() calls it inside try, so an error in unfinished code
-# prints FAIL instead of stopping the whole file.
-# Callable[[], object] = takes nothing, returns anything. Java: Supplier<Object>
-def check(label: str, run_test: Callable[[], object], expected: object) -> None:
-    try:
-        actual = run_test()  # call the lambda now -> what your code returned
-        # {actual!r} prints the value in code form, e.g. 'abc' with quotes
-        # --- explicit start ---
-        if actual == expected:
-            result = "PASS"
-        else:
-            result = f"FAIL (got {actual!r}, expected {expected!r})"
-        # --- explicit end ---
-        # concise: result = "PASS" if actual == expected else f"FAIL ..."
-        #          Java: condition ? a : b
-    except Exception as error:  # Java: catch (Exception error)
-        # type(error).__name__ = the error class name, e.g. "KeyError"
-        result = f"FAIL ({type(error).__name__}: {error})"
-    print(f"{label:<16} {result}")  # :<16 = pad label to 16 chars, left-aligned
 
 
 TEST_VOCAB = {"<unk>": 0, "a": 1, "b": 2}  # small vocabulary: token -> id

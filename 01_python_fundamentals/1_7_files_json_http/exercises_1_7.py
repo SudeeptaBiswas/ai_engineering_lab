@@ -1,14 +1,12 @@
 """Replace each `...` with code. Run until every line says PASS.
 Needs Ollama running with qwen3:4b pulled (`ollama list`)."""
 
-import inspect  # find the line that called check()
 import json  # pyright: ignore[reportUnusedImport] — json.dumps / json.loads
 import tempfile  # temporary folder for the file tests
-import traceback  # find the failing line, for check() below
-from collections.abc import Callable  # type of a function, for check() below
 from pathlib import Path
 from typing import Any  # "any type": what json.loads returns. Java: Object
 from lab_tools.log import debug, log  # pyright: ignore[reportUnusedImport]
+from lab_tools.check import check  # numbered PASS/FAIL + path:line links
 
 import httpx  # pyright: ignore[reportUnusedImport] — until you use it
 
@@ -108,42 +106,6 @@ def save_report(path: Path) -> None:
     save_json(path, data)
 
     ...
-
-
-# ---------- Test helper — no need to change anything below ----------
-# run_test is a lambda (Java: () -> ...): a tiny function that calls YOUR
-# function. check() calls it inside try, so an error in unfinished code
-# prints FAIL instead of stopping the whole file.
-_count = 0  # how many checks ran so far: gives each result a number
-# This file as a path from the folder you run in. "path:line" is a link:
-# Ctrl+click it in the VS Code terminal to jump to that line.
-try:
-    _here = Path(__file__).relative_to(Path.cwd(), walk_up=True)
-except ValueError:  # run from another drive: no relative path, use full
-    _here = Path(__file__)
-
-
-def check(label: str, run_test: Callable[[], object], expected: object) -> None:
-    global _count  # change the module variable above. Java: a static field
-    _count += 1
-    called_at = inspect.stack(0)[1].lineno  # [1] = caller: the check(...) line
-    pad = " " * 21  # lines up under the label
-    try:
-        actual = run_test()  # call the lambda now -> what your code returned
-        if actual == expected:
-            result = "PASS"
-        else:  # {actual!r} = value in code form, e.g. 'abc' with quotes
-            result = f"FAIL (got {actual!r}, expected {expected!r})"
-    except Exception as error:  # Java: catch (Exception error)
-        # Traceback = the call chain (Java: stack trace). Keep only frames in
-        # this file, so the line shown is in YOUR code, not inside a library.
-        mine = [f for f in traceback.extract_tb(error.__traceback__)
-                if f.filename == __file__]
-        where = f"\n{pad}error {_here}:{mine[-1].lineno}  {mine[-1].line}" if mine else ""
-        result = f"FAIL ({type(error).__name__}: {error}){where}"
-    if result != "PASS":
-        result += f"\n{pad}test  {_here}:{called_at}"
-    print(f"{_count:>2}. {label:<16} {result}")  # :>2 = right-align, :<16 = pad
 
 
 def _save_then_load(path: Path, data: Any) -> Any:

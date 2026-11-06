@@ -1,6 +1,6 @@
 """Replace each `...` with code. Run until every line says PASS."""
 
-from collections.abc import Callable  # type of a function, for check() below
+from lab_tools.check import check  # numbered PASS/FAIL + path:line links
 
 
 def split_model_name(name: str) -> tuple[str, str]:
@@ -60,25 +60,6 @@ def thinking_share(total_tokens: int, answer_tokens: int) -> int:
     else:
         return round((total_tokens - answer_tokens) * 100 / total_tokens)
     ...
-
-
-# ---------- Test helper — no need to change anything below ----------
-# run_test is a lambda (Java: () -> ...): a tiny function that calls YOUR
-# function. check() calls it inside try, so an error in unfinished code
-# prints FAIL instead of stopping the whole file.
-# Callable[[], object] = takes nothing, returns anything. Java: Supplier<Object>
-def check(label: str, run_test: Callable[[], object], expected: object) -> None:
-    try:
-        actual = run_test()  # call the lambda now -> what your code returned
-        # {actual!r} prints the value in code form, e.g. 'abc' with quotes
-        if actual == expected:
-            result = "PASS"
-        else:
-            result = f"FAIL (got {actual!r}, expected {expected!r})"
-    except Exception as error:  # Java: catch (Exception error)
-        # type(error).__name__ = the error class name, e.g. "KeyError"
-        result = f"FAIL ({type(error).__name__}: {error})"
-    print(f"{label:<16} {result}")  # :<16 = pad label to 16 chars, left-aligned
 
 
 TEST_MODELS = {"qwen3:1.7b": 1.4, "qwen3:4b": 2.5, "qwen3:8b": 5.2}  # name -> GB

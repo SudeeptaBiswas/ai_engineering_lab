@@ -23,6 +23,8 @@ Python 3.13 via uv 0.13.6 (`pyproject.toml` + `uv.lock`, `.venv` git-ignored).
 - `assistant/` — the one real app, grows v1→v10 (from topic 2.6).
 - `lab_tools/` — shared helpers, installed by `uv sync`. Debug logging:
   `from lab_tools.log import debug, log`, then `@debug` on a function.
+  Exercise checks: `from lab_tools.check import check`, then
+  `check("label", lambda: my_func(1), expected)`. Never a local copy.
 
 ## Must never break
 - Files stay small: aim under 150 lines. Split before growing.
