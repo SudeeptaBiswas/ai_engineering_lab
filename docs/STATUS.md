@@ -4,16 +4,21 @@ Updated: 2026-11-06
 
 ## Now
 - 1.1–1.4 + 1.7 + 2.1 + 2.2 done. Overall 5.5% (phase 01: 57%, 02: 28%).
+  Lesson 2.3 written, user to do.
 - Optional 2.1 cleanup (user skipped, 2026-11-05): old most_common_pair code in
   a string literal; `softSome` name; most_likely rounds before picking best
   (300 equal tokens -> ("", 0)); next_word `if` always true; decode inner loop.
 
 ## Queue
-a. BISWAS PC: `uv sync` (lab_tools) + `ollama pull qwen3:1.7b` (for 2.2 section 7).
-b. Lesson 2.3: chat API over HTTP (order: docs/PLAN.md).
-c. Optional: compare gemma4 E2B vs qwen3:4b on this PC (user to decide).
+a. BISWAS PC: `uv sync` (lab_tools) + `ollama pull qwen3:1.7b` (2.2 section 7, 2.3).
+b. User works 2.3 → check, mark done, update PROGRESS.
+c. Then lesson 2.4: sampling (order: docs/PLAN.md).
+d. Optional: compare gemma4 E2B vs qwen3:4b on this PC (user to decide).
 
 ## Done
+- 2026-11-06 — lesson 2.3 written (chat API, roles, no memory, thinking,
+  streaming): 2 examples + 12 checks; reference 12/12 in 3.1–5.7 s (5 runs).
+  qwen3:1.7b + `think: False`: 2.5 s vs 12.8 s with thinking (empty answer).
 - 2026-11-06 — shared `lab_tools/check.py` replaces 6 copies; 62/62 PASS.
 - 2026-11-06 — topic 1.7 done: 12/12 PASS, pyright 0. Lesson files renamed
   with topic id (24 files). 1.7 `check()` numbers results + `path:line` links.

@@ -2,6 +2,13 @@
 
 Newest first. One entry per change: what, replaces what, why.
 
+## 2026-11-06 — Chat lessons use qwen3:1.7b with `"think": False`
+- What: from 2.3, /api/chat calls send `"think": False`; model qwen3:1.7b.
+- Why: measured on 10284Sudee, num_predict 60: 1.7b without it 12.8 s and
+  an EMPTY answer (all tokens went to thinking); with it 2.5 s, clean answer.
+  qwen3:4b with `think: False` 8.5 s and its thinking leaks into the answer.
+- Not decided: model for the real app (`assistant/`, 2.6+). Revisit there.
+
 ## 2026-11-06 — One shared `check()` in lab_tools
 - What: `lab_tools/check.py`; every exercises file does
   `from lab_tools.check import check`. Results numbered; FAIL prints
