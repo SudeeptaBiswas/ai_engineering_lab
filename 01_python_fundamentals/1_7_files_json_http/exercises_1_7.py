@@ -8,6 +8,7 @@ import traceback  # find the failing line, for check() below
 from collections.abc import Callable  # type of a function, for check() below
 from pathlib import Path
 from typing import Any  # "any type": what json.loads returns. Java: Object
+from lab_tools.log import debug, log  # pyright: ignore[reportUnusedImport]
 
 import httpx  # pyright: ignore[reportUnusedImport] — until you use it
 
@@ -15,54 +16,99 @@ OLLAMA_URL = "http://127.0.0.1:11434"  # not "localhost": 2 s slower on Windows
 
 
 # ---------- Files + JSON ----------
+#@debug
 def save_json(path: Path, data: Any) -> None:
     """Write data as pretty JSON (indent=2), UTF-8."""
+    path.write_text(json.dumps(data, indent=2))
+    #log.debug("++++++++++++++++++++", path, path.exists())
     ...
 
 
 def load_json(path: Path) -> Any:
     """Read a JSON file back into Python objects."""
+    return json.loads(path.read_text(encoding="utf-8"))
     ...
 
 
 def count_lines(path: Path) -> int:
     """Number of NON-blank lines. A line with only spaces is blank.
     Hint: read_text, splitlines, strip()."""
+    line_count:int = 0
+    with open(path, encoding="utf-8") as file:
+        for line in file:
+            if line.strip().__len__() > 0:
+                line_count = line_count + 1
+    return line_count
     ...
 
 
 # ---------- HTTP (Ollama) ----------
 def ollama_version() -> str:
     """GET /api/version -> "0.40.14" (the value only, not the dict)."""
+    return httpx.get(f"{OLLAMA_URL}/api/version", timeout= 10.0).json()["version"]
     ...
 
-
+#@debug
 def model_names() -> list[str]:
     """GET /api/tags -> names of all models, sorted A-Z."""
+    response = httpx.get(f"{OLLAMA_URL}/api/tags", timeout= 10.0).json()
+    model_name_list: list[str] = []
+    for model in response["models"]:
+        model_name_list.append(model["name"])
+    return model_name_list
     ...
 
-
+#@debug
 def model_size_gb(name: str) -> float | None:
     """Size from /api/tags in GB (bytes / 1_000_000_000), rounded to 1.
     None if that model is not on this PC."""
+    response = httpx.get(f"{OLLAMA_URL}/api/tags", timeout= 10.0).json()
+    model_size: float | None = None
+    for model in response["models"]:
+        if model["name"] == name:
+            value = model["size"] / 1000000000
+            model_size = float(f"{value:.1f}")
+    log.debug("==================================")
+    log.debug(model_size)
+    return model_size
     ...
 
-
+@debug
 def is_installed(name: str) -> bool:
     """POST /api/show {"model": name}: 200 -> True, 404 -> False."""
-    ...
+    response = httpx.post(f"{OLLAMA_URL}/api/show", timeout= 10.0, json={"model": name})
+    # model_size: bool = False
+    if response.status_code == 200:
+        return True
+    return False
 
-
+@debug
 def context_length(name: str) -> int:
     """POST /api/show -> model_info has a key like "qwen3.context_length"
     (the start depends on the model family). Find the key that ENDS with
     ".context_length" and return its value. Hint: str.endswith."""
+    response = httpx.post(f"{OLLAMA_URL}/api/show", timeout= 10.0, json={"model": name})
+    response.raise_for_status()
+    data = response.json()
+    #log.debug(data)
+    # model_size: bool = False
+    for key, value in data.get("model_info", {}).items():
+        if key.endswith(".context_length"):
+            return int(value)
+    return 0
     ...
 
-
+#@debug
 def save_report(path: Path) -> None:
     """Files + JSON + HTTP together: write {model name: size in GB}
     for every model on this PC to `path` as JSON. Reuse your functions."""
+    data: dict[str, float | None] = {}
+    for name in model_names():
+        size: float | None = model_size_gb(name)
+        data[name] = size
+    log.debug("=========================="+json.dumps(data))
+    save_json(path, data)
+
     ...
 
 
