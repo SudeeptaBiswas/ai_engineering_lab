@@ -68,7 +68,6 @@ def model_size_gb(name: str) -> float | None:
         if model["name"] == name:
             value = model["size"] / 1000000000
             model_size = float(f"{value:.1f}")
-    log.debug("==================================")
     log.debug(model_size)
     return model_size
     ...
@@ -106,7 +105,6 @@ def save_report(path: Path) -> None:
     for name in model_names():
         size: float | None = model_size_gb(name)
         data[name] = size
-    log.debug("=========================="+json.dumps(data))
     save_json(path, data)
 
     ...
