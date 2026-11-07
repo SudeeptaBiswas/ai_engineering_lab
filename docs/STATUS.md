@@ -1,20 +1,26 @@
 # Status
 
-Updated: 2026-11-06
+Updated: 2026-11-07
 
 ## Now
 - 1.1–1.4 + 1.7 + 2.1–2.3 done. Overall 6.3% (phase 01: 57%, 02: 44%).
+- Lesson 2.4 sampling written, waiting for the user.
 - Optional 2.1 cleanup (user skipped, 2026-11-05): old most_common_pair code in
   a string literal; `softSome` name; most_likely rounds before picking best
   (300 equal tokens -> ("", 0)); next_word `if` always true; decode inner loop.
 
 ## Queue
-a. BISWAS PC: `ollama pull qwen3:1.7b` (2.2 section 7, 2.3).
+a. User works 2.4 → check, mark done, update PROGRESS.
 b. Optional: 2.3 fixes (review notes below), user to decide.
-c. Lesson 2.4: sampling (order: docs/PLAN.md).
+c. Then lesson 1.5 (order: docs/PLAN.md).
 d. Optional: compare gemma4 E2B vs qwen3:4b on this PC (user to decide).
 
 ## Done
+- 2026-11-07 — lesson 2.4 written (sampling by hand + in Ollama): 2 examples +
+  14 checks; reference 14/14 in 6.9–8.4 s (3 runs, BISWAS). qwen3 defaults:
+  temperature 0.6, top_k 20, top_p 0.95. "a name" prompt too sure for a
+  variety check (Whiskers 4/10 at T 1.5) → "an unusual name" (9/10 different).
+- 2026-11-07 — BISWAS PC: `ollama pull qwen3:1.7b` done (1.4 GB).
 - 2026-11-06 — topic 2.3 done: 12/12 PASS in 6.3 s, pyright 0.
 - 2026-11-06 — lesson 2.3 written (chat API, roles, no memory, thinking,
   streaming): 2 examples + 12 checks; reference 12/12 in 3.1–5.7 s (5 runs).
