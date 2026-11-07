@@ -9,7 +9,7 @@ Updated: 2026-11-06
   (300 equal tokens -> ("", 0)); next_word `if` always true; decode inner loop.
 
 ## Queue
-a. BISWAS PC: `uv sync` (lab_tools) + `ollama pull qwen3:1.7b` (2.2 section 7, 2.3).
+a. BISWAS PC: `ollama pull qwen3:1.7b` (2.2 section 7, 2.3).
 b. Optional: 2.3 fixes (review notes below), user to decide.
 c. Lesson 2.4: sampling (order: docs/PLAN.md).
 d. Optional: compare gemma4 E2B vs qwen3:4b on this PC (user to decide).
@@ -22,6 +22,7 @@ d. Optional: compare gemma4 E2B vs qwen3:4b on this PC (user to decide).
 - 2026-11-06 — shared `lab_tools/check.py` replaces 6 copies; 62/62 PASS.
 - 2026-11-06 — topic 1.7 done: 12/12 PASS, pyright 0. Lesson files renamed
   with topic id (24 files). 1.7 `check()` numbers results + `path:line` links.
+- 2026-11-05 — BISWAS PC: `uv sync` failed (`invalid peer certificate: UnknownIssuer`). Fixed with `uv sync --system-certs`; httpx 0.28.1 + lab_tools import OK.
 - 2026-11-05 — lesson 1.7 written (files, JSON, httpx vs real Ollama): 2 examples + 12 checks; reference 12/12 in 1.2 s. httpx 0.28.1 added. `127.0.0.1` not `localhost` (2.16 s -> 0.02 s per call).
 - 2026-11-05 — topic 2.2 done: 13/13 PASS + 5 edge cases fixed, pyright 0.
 - 2026-11-05 — lesson 2.2 Ollama written: 2 examples + 13 checks; reference 13/13.
