@@ -4,17 +4,21 @@ Updated: 2026-11-08
 
 ## Now
 - 1.1–1.4 + 1.7 + 2.1–2.4 done. Overall 6.8% (phase 01: 57%, 02: 56%).
-- Next by PLAN order: lesson 1.5 (then 2.5).
+- Lesson 1.5 modules/imports/exceptions written, waiting for the user.
 - Optional 2.1 cleanup (user skipped, 2026-11-05): old most_common_pair code in
   a string literal; `softSome` name; most_likely rounds before picking best
   (300 equal tokens -> ("", 0)); next_word `if` always true; decode inner loop.
 
 ## Queue
-a. Lesson 1.5 (order: docs/PLAN.md), then 2.5.
+a. User works 1.5 → check, mark done, update PROGRESS. Then 2.5.
 b. Optional: 2.3 fixes (review notes below), user to decide.
 c. Optional: compare gemma4 E2B vs qwen3:4b on this PC (user to decide).
 
 ## Done
+- 2026-11-08 — lesson 1.5 written (modules, imports, exceptions): 2 examples,
+  demo module, user module `chat_errors_1_5.py` + 16 checks; reference 16/16
+  in 4.3–4.7 s (3 runs, BISWAS), pyright 0 (stubs + solution). Measured:
+  missing model → 404 `{"error": ...}`; dead port → ConnectTimeout after timeout.
 - 2026-11-08 — topic 2.4 done: 14/14 PASS, pyright 0. Bug fixed: T=0 compared
   word to `dict.keys` (method) → all 0.0. Check 12 failed once (2 answers at
   T=0, first call after model load); 3 reruns gave 1. Added a warm-up call.
