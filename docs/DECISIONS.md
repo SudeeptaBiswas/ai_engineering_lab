@@ -2,6 +2,15 @@
 
 Newest first. One entry per change: what, replaces what, why.
 
+## 2026-11-07 — Teach every new idea through context, not definitions
+- What: each new idea in a lesson starts from a real example and shows how
+  it connects to earlier lessons and to later ones (where it gets used).
+  Definition comes after, short.
+- Replaces: definition-first sections (e.g. 2.4 "top_p = keep the smallest
+  group…").
+- Why: user said they learn easily with real examples and clear links to
+  the rest of the content, not just definitions.
+
 ## 2026-11-06 — Chat lessons use qwen3:1.7b with `"think": False`
 - What: from 2.3, /api/chat calls send `"think": False`; model qwen3:1.7b.
 - Why: measured on 10284Sudee, num_predict 60: 1.7b without it 12.8 s and

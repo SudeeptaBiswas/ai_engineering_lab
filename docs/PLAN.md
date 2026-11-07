@@ -11,6 +11,8 @@ Review notes and reasons for changes: [PLAN_REVIEW.md](PLAN_REVIEW.md).
 - Comment lesson code line by line: what it does + the Java equivalent.
   Explain every new symbol or trick (lambda, `!r`, `**`, decorators).
 - Build each idea by hand first, then with the framework.
+- Every new idea: real example first, then how it links to earlier and
+  later lessons, then a short definition. Never a bare definition.
 
 ## Phases and hours
 Hours are rough estimates, not measured. (*) = added in the review.
