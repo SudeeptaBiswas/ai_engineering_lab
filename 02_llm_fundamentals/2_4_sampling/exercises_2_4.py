@@ -22,28 +22,65 @@ def softmax_t(word_to_score: dict[str, float], temperature: float) -> Probs:
     """Softmax of score / temperature (example part 1, section 1).
     Edge case: temperature 0 -> top word 1.0, every other word 0.0
     (Ollama's "greedy"). Do not divide by zero."""
-    ...
+    word_to_exp: dict[str, float] = {}
+    if temperature < 0:
+        raise ValueError("Temperature cannot be negative")
+
+    # Handle greedy sampling
+    if temperature == 0:
+        best_word = top_k(word_to_score, 1)
+        probs: Probs = {
+            word: 1.0 if word == list(best_word.keys())[0] else 0.0
+            for word in word_to_score
+        }
+        return probs
+    for word in word_to_score:
+        word_to_exp[word] = math.exp(word_to_score[word] / temperature) # the only new part
+    exp_total = sum(word_to_exp.values())
+    word_to_prob: dict[str, float] = {}
+    for word in word_to_exp:
+        word_to_prob[word] = word_to_exp[word] / exp_total
+    # --- explicit end ---
+    # concise: exps = {w: math.exp(s / temperature) for w, s in word_to_score.items()}
+    #          return {w: e / sum(exps.values()) for w, e in exps.items()}
+    #          {k: v for ...} = a "dict comprehension": builds a dict in one line
+    return word_to_prob
 
 
 def top_k(word_to_prob: Probs, k: int) -> Probs:
     """Keep the k most likely words, rescaled to add up to 1.
     k bigger than the number of words -> keep them all."""
-    ...
+    ranked_words = sorted(word_to_prob, key=lambda word: word_to_prob[word], reverse=True)
+    kept_words = ranked_words[:k]  # [:k] = first k items. Java: subList(0, k)
+    kept_total = sum(word_to_prob[word] for word in kept_words)
+    return {word: word_to_prob[word] / kept_total for word in kept_words}
 
 
 def top_p(word_to_prob: Probs, p: float) -> Probs:
     """Biggest first, add words until their total reaches p. Rescale."""
-    ...
+    ranked_words = sorted(word_to_prob, key=lambda word: word_to_prob[word], reverse=True)
+    kept_words: list[str] = []
+    running_total = 0.0
+    for word in ranked_words:
+        kept_words.append(word)
+        running_total += word_to_prob[word]
+        if running_total >= p:  # covered enough: stop
+            break
+    # --- explicit end ---
+    return {word: word_to_prob[word] / running_total for word in kept_words}
 
 
 def pick(word_to_prob: Probs, rng: random.Random) -> str:
     """One weighted random word. Hint: rng.choices(words, weights=...)[0]"""
-    ...
+    words = list(word_to_prob)
+    weights = list(word_to_prob.values())
+    return rng.choices(words, weights=weights)[0]  # choices returns a list of 1
 
 
 def picks(word_to_prob: Probs, seed: int, count: int) -> list[str]:
     """`count` picks from ONE random.Random(seed). Same seed -> same list."""
-    ...
+    seeded_rng = random.Random(seed)  # a fresh generator, started from `seed`
+    return [pick(word_to_prob, seeded_rng) for _ in range(count)]
 
 
 # ---------- Sampling in Ollama (real calls) ----------
@@ -52,19 +89,32 @@ def sampling_body(messages: list[Message], temperature: float,
     """The 2.3 chat body (stream False, think False) whose "options" hold
     "temperature", "num_predict" and — only when seed is not None — "seed".
     `int | None` = an int or nothing. Java: Integer that may be null."""
-    ...
+    options = {"temperature": temperature, "num_predict": max_tokens}
+    if seed is not None:
+        options["seed"] = seed
+    body: dict[str, Any] = {
+        "model": MODEL,
+        "messages": messages,
+        "stream": False,
+        "think": False,  # qwen3: no hidden reasoning (lesson 2.3, section 4)
+        "options": options,  # the sampling knobs go here, next to num_predict
+    }
+    return body
 
 
 def ask(messages: list[Message], temperature: float,
         seed: int | None = None, max_tokens: int = 10) -> str:
     """POST /api/chat with sampling_body -> the answer, .strip()-ed."""
-    ...
+    body = sampling_body(messages, temperature, seed, max_tokens)
+    reply = httpx.post(OLLAMA_URL + "/api/chat", json=body, timeout=120.0).json()
+    return reply["message"]["content"].strip()
 
 
 def distinct_answers(messages: list[Message], temperature: float, runs: int) -> int:
     """Ask `runs` times (no seed). How many DIFFERENT answers came back?
     Hint: a set keeps one copy of each. Java: new HashSet<>()"""
-    ...
+    response_list = [ask(messages, temperature) for _ in range(runs)]
+    return len(dict.fromkeys(response_list))
 
 
 # ---------- Test data ----------
@@ -97,6 +147,7 @@ if __name__ == "__main__":
           {"model": MODEL, "messages": PET, "stream": False, "think": False,
            "options": {"temperature": 0.7, "num_predict": 5}})
     check("body seed", lambda: sampling_body(PET, 0.7, 42, 5)["options"]["seed"], 42)
+    ask(PET, 0.0)  # warm-up: 1st call after model load can differ, even at T=0
     check("T=0 same", lambda: distinct_answers(PET, 0.0, 3), 1)
     check("seed same", lambda: ask(PET, 1.5, seed=42) == ask(PET, 1.5, seed=42), True)
     check("T=1.5 varies", lambda: distinct_answers(PET, 1.5, 5) > 1, True)
