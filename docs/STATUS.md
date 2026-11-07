@@ -1,21 +1,23 @@
 # Status
 
-Updated: 2026-11-07
+Updated: 2026-11-08
 
 ## Now
-- 1.1–1.4 + 1.7 + 2.1–2.3 done. Overall 6.3% (phase 01: 57%, 02: 44%).
-- Lesson 2.4 sampling written, waiting for the user.
+- 1.1–1.4 + 1.7 + 2.1–2.4 done. Overall 6.8% (phase 01: 57%, 02: 56%).
+- Next by PLAN order: lesson 1.5 (then 2.5).
 - Optional 2.1 cleanup (user skipped, 2026-11-05): old most_common_pair code in
   a string literal; `softSome` name; most_likely rounds before picking best
   (300 equal tokens -> ("", 0)); next_word `if` always true; decode inner loop.
 
 ## Queue
-a. User works 2.4 → check, mark done, update PROGRESS.
+a. Lesson 1.5 (order: docs/PLAN.md), then 2.5.
 b. Optional: 2.3 fixes (review notes below), user to decide.
-c. Then lesson 1.5 (order: docs/PLAN.md).
-d. Optional: compare gemma4 E2B vs qwen3:4b on this PC (user to decide).
+c. Optional: compare gemma4 E2B vs qwen3:4b on this PC (user to decide).
 
 ## Done
+- 2026-11-08 — topic 2.4 done: 14/14 PASS, pyright 0. Bug fixed: T=0 compared
+  word to `dict.keys` (method) → all 0.0. Check 12 failed once (2 answers at
+  T=0, first call after model load); 3 reruns gave 1. Added a warm-up call.
 - 2026-11-07 — lesson 2.4 written (sampling by hand + in Ollama): 2 examples +
   14 checks; reference 14/14 in 6.9–8.4 s (3 runs, BISWAS). qwen3 defaults:
   temperature 0.6, top_k 20, top_p 0.95. "a name" prompt too sure for a
