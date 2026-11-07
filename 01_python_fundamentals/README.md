@@ -6,8 +6,10 @@ One folder per topic. Each has `LESSON_<id>.md` (read) and `.py` files (run, edi
 |---|---|---|
 | 1.1 Setup: uv, venv, layout | [1_1_setup](1_1_setup/LESSON_1_1.md) | done 2026-11-02 |
 | 1.2 Syntax vs Java | [1_2_syntax](1_2_syntax/LESSON_1_2.md) | done 2026-11-02 |
-| 1.3 Collections | [1_3_collections](1_3_collections/LESSON_1_3.md) | ready |
-| 1.4 Classes, dataclasses | [1_4_classes](1_4_classes/LESSON_1_4.md) | ready |
+| 1.3 Collections | [1_3_collections](1_3_collections/LESSON_1_3.md) | done 2026-11-03 |
+| 1.4 Classes, dataclasses | [1_4_classes](1_4_classes/LESSON_1_4.md) | done 2026-11-03 |
+| 1.5 Modules, imports, exceptions | [1_5_modules_exceptions](1_5_modules_exceptions/LESSON_1_5.md) | ready |
+| 1.7 Files, JSON, HTTP | [1_7_files_json_http](1_7_files_json_http/LESSON_1_7.md) | done 2026-11-06 |
 
 Run any file from the repo root:
 
