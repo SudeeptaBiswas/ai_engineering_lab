@@ -10,6 +10,9 @@ Review notes and reasons for changes: [PLAN_REVIEW.md](PLAN_REVIEW.md).
 - Map Python ideas to Java ones where it helps.
 - Comment lesson code line by line: what it does + the Java equivalent.
   Explain every new symbol or trick (lambda, `!r`, `**`, decorators).
+- Every function gets a Javadoc-style docstring: one line on what it does,
+  then `Args:` / `Returns:` / `Raises:` (= `@param` / `@return` / `@throws`),
+  each with a real example value.
 - Build each idea by hand first, then with the framework.
 - Every new idea: real example first, then how it links to earlier and
   later lessons, then a short definition. Never a bare definition.

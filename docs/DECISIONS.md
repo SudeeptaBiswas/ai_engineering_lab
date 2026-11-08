@@ -2,6 +2,13 @@
 
 Newest first. One entry per change: what, replaces what, why.
 
+## 2026-11-08 — Javadoc-style docstrings on every lesson function
+- What: each function says what it does, then Args / Returns / Raises
+  (Java @param / @return / @throws), with example values. 2.5 exercises
+  split in 2 files to stay under 150 lines.
+- Replaces: one-line docstrings (input/output were not clear).
+- Why: user could not tell input, action and output from `embed`'s docstring.
+
 ## 2026-11-08 — Critical issues = test cases; minor notes wait for the end
 - What: a critical issue (wrong result, crash, hidden bug) gets a check in
   the exercises, so it shows as FAIL. Minor notes (style, dead code, naming,
