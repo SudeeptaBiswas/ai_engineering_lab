@@ -3,18 +3,20 @@
 Updated: 2026-11-08
 
 ## Now
-- 1.1–1.4 + 1.7 + 2.1–2.4 done. Overall 6.8% (phase 01: 57%, 02: 56%).
-- Lesson 1.5 modules/imports/exceptions written, waiting for the user.
+- 1.1–1.5 + 1.7 + 2.1–2.4 done. Overall 7.5% (phase 01: 67%, 02: 56%).
+- Next: lesson 2.5.
 - Optional 2.1 cleanup (user skipped, 2026-11-05): old most_common_pair code in
   a string literal; `softSome` name; most_likely rounds before picking best
   (300 equal tokens -> ("", 0)); next_word `if` always true; decode inner loop.
 
 ## Queue
-a. User works 1.5 → check, mark done, update PROGRESS. Then 2.5.
-b. Optional: 2.3 fixes (review notes below), user to decide.
+a. Write lesson 2.5.
+b. Optional: 2.3 + 1.5 fixes (review notes below), user to decide.
 c. Optional: compare gemma4 E2B vs qwen3:4b on this PC (user to decide).
 
 ## Done
+- 2026-11-08 — topic 1.5 done: 16/16 PASS in 3.7 s, pyright 0. Two rounds:
+  chat_errors stub left at first; then `reply["messages"]` typo (key is "message").
 - 2026-11-08 — lesson 1.5 written (modules, imports, exceptions): 2 examples,
   demo module, user module `chat_errors_1_5.py` + 16 checks; reference 16/16
   in 4.3–4.7 s (3 runs, BISWAS), pyright 0 (stubs + solution). Measured:
@@ -64,6 +66,11 @@ c. Optional: compare gemma4 E2B vs qwen3:4b on this PC (user to decide).
 - 2026-11-01 — decided: name, layout, uv, pace.
 - 2026-11-01 — plan review: 10 changes, saved in docs.
 - 2026-11-01 — skeleton: README, CLAUDE.md, docs, .gitignore.
+
+## Review notes 1.5 (2026-11-08)
+- Leftover `...` after each `return` (dead code), both files.
+- `ask`: `else:` after `raise` not needed. `settings:dict` → `settings: dict`.
+- chat_errors: TODO lines still in the class docstrings.
 
 ## Review notes 2.3 (2026-11-06)
 - `ask_stream` keeps empty chunks (last line has content ""); docstring says skip.
