@@ -14,6 +14,8 @@ b. Optional: compare gemma4 E2B vs qwen3:4b on this PC (user to decide).
 c. 10284Sudee: `ollama pull nomic-embed-text` before 2.5 there.
 
 ## Done
+- 2026-11-08 — 2.5 comments: Javadoc-style docstrings (Args/Returns/Raises),
+  more line comments; exercises split in 2 files. Solved copy 17/17, pyright 0.
 - 2026-11-08 — lesson 2.5 written (embeddings, cosine, search): 2 examples +
   17 checks; reference 17/17 in 2.3–2.5 s (3 runs, BISWAS), pyright 0.
   nomic-embed-text pulled (274 MB, 768 numbers, length 1.0). qwen3:1.7b on
