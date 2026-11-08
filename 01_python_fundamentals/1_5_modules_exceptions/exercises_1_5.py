@@ -32,6 +32,14 @@ def parse_temperature(text: str) -> float:
     """"0.7" -> 0.7. For the 2.6 chatbot command `/temp 0.7`.
     Not a number -> raise ValueError(f"not a number: {text!r}") FROM the
     error float() raised. Below 0 -> raise ValueError("must be 0 or more")."""
+    try:
+        temperature: float = float(text)
+    except ValueError as error:
+        raise ValueError(f"not a number: {text!r}") from error
+
+    if temperature < 0:
+        raise ValueError("must be 0 or more")
+    return temperature
     ...
 
 
@@ -41,6 +49,11 @@ def load_settings(path: Path) -> dict[str, Any]:
     No file -> just the defaults (the chatbot's first run).
     Broken JSON -> do NOT catch it: no good fix exists, let it go up.
     Hint: dict(DEFAULTS) = a copy. Java: new HashMap<>(DEFAULTS)"""
+    settings:dict[str, Any] = DEFAULTS.copy()
+    if path.exists():
+        with path.open("r", encoding="utf-8") as file:
+            settings.update(json.load(file))
+    return settings
     ...
 
 
@@ -52,6 +65,28 @@ def ask(prompt: str, model: str = MODEL, url: str = OLLAMA_URL) -> str:
       OllamaDownError(f"no Ollama at {url}") from that error
     - status 404 -> raise ModelNotFoundError(model)
     - otherwise -> answer_from(the reply as dict)"""
+    try:
+        response = httpx.post(
+            f"{url}/api/chat",
+            json={
+                "model": model,
+                "messages": [
+                    {"role": "user", "content": prompt}
+                ],
+                "stream" : False,
+                "think" : False,
+                "options": {
+                    "num_predict" : 10
+                }
+            },
+            timeout=TIMEOUT
+        )
+    except httpx.TransportError as error:
+        raise OllamaDownError(f"no Ollama at {url}") from error
+    if response.status_code == 404:
+        raise ModelNotFoundError(model)
+    else:
+        return answer_from(response.json())
     ...
 
 
@@ -59,6 +94,13 @@ def ask_or_tip(prompt: str, model: str = MODEL, url: str = OLLAMA_URL) -> str:
     """ask(), but never raises those two errors. Returns a tip instead:
     model missing -> f"Run: ollama pull {model}"
     Ollama down   -> "Start Ollama: ollama serve" """
+    try:
+        response: str = ask(prompt, model, url)
+    except ModelNotFoundError:
+        return f"Run: ollama pull {model}"
+    except OllamaDownError:
+        return "Start Ollama: ollama serve"
+    return response
     ...
 
 

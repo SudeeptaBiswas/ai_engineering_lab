@@ -13,12 +13,12 @@ class OllamaError(Exception):
     Java: class OllamaException extends RuntimeException {}"""
 
 
-class ModelNotFoundError(Exception):
+class ModelNotFoundError(OllamaError):
     """Ollama is up, but this model is not pulled (HTTP 404).
     TODO: make it a child of OllamaError, so `except OllamaError` catches it."""
 
 
-class OllamaDownError(Exception):
+class OllamaDownError(OllamaError):
     """Nothing answers at the Ollama URL (connect failed or timed out).
     TODO: make it a child of OllamaError."""
 
@@ -27,4 +27,7 @@ def answer_from(reply: dict[str, Any]) -> str:
     """The text of a /api/chat reply (2.3), .strip()-ed.
     Reply has an "error" key -> raise OllamaError with that text.
     Real one (measured): {"error": "model 'no-such-model' not found"}"""
+    if "error" in reply:
+        raise OllamaError(reply["error"])
+    return reply["message"]["content"].strip()
     ...
