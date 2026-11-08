@@ -2,6 +2,14 @@
 
 Newest first. One entry per change: what, replaces what, why.
 
+## 2026-11-08 — Critical issues = test cases; minor notes wait for the end
+- What: a critical issue (wrong result, crash, hidden bug) gets a check in
+  the exercises, so it shows as FAIL. Minor notes (style, dead code, naming,
+  file length) go in STATUS.md "End-of-course review" and are not raised
+  topic by topic.
+- Replaces: review notes after each topic with an "optional fix?" question.
+- Why: user's call — tests catch what matters; polish is batched at the end.
+
 ## 2026-11-07 — Teach every new idea through context, not definitions
 - What: each new idea in a lesson starts from a real example and shows how
   it connects to earlier lessons and to later ones (where it gets used).

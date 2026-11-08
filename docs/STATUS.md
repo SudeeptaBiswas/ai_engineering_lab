@@ -4,17 +4,22 @@ Updated: 2026-11-08
 
 ## Now
 - 1.1–1.5 + 1.7 + 2.1–2.4 done. Overall 7.5% (phase 01: 67%, 02: 56%).
-- Next: lesson 2.5.
-- Optional 2.1 cleanup (user skipped, 2026-11-05): old most_common_pair code in
-  a string literal; `softSome` name; most_likely rounds before picking best
-  (300 equal tokens -> ("", 0)); next_word `if` always true; decode inner loop.
+- Lesson 2.5 embeddings written, waiting for the user.
+- Review rule (DECISIONS 2026-11-08): critical issue → a check; minor → the
+  "End-of-course review" list at the bottom.
 
 ## Queue
-a. Write lesson 2.5.
-b. Optional: 2.3 + 1.5 fixes (review notes below), user to decide.
-c. Optional: compare gemma4 E2B vs qwen3:4b on this PC (user to decide).
+a. User works 2.5 → check, mark done, update PROGRESS. Then 1.9 (PLAN order).
+b. Optional: compare gemma4 E2B vs qwen3:4b on this PC (user to decide).
+c. 10284Sudee: `ollama pull nomic-embed-text` before 2.5 there.
 
 ## Done
+- 2026-11-08 — lesson 2.5 written (embeddings, cosine, search): 2 examples +
+  17 checks; reference 17/17 in 2.3–2.5 s (3 runs, BISWAS), pyright 0.
+  nomic-embed-text pulled (274 MB, 768 numbers, length 1.0). qwen3:1.7b on
+  /api/embed → 501. Batch of 5: 0.38–0.60 s vs 1.34–1.92 s one by one.
+- 2026-11-08 — rule: critical bug → a check; minor → end-of-course list.
+  3 old BUGs left for the end (user's call).
 - 2026-11-08 — topic 1.5 done: 16/16 PASS in 3.7 s, pyright 0. Two rounds:
   chat_errors stub left at first; then `reply["messages"]` typo (key is "message").
 - 2026-11-08 — lesson 1.5 written (modules, imports, exceptions): 2 examples,
@@ -67,13 +72,22 @@ c. Optional: compare gemma4 E2B vs qwen3:4b on this PC (user to decide).
 - 2026-11-01 — plan review: 10 changes, saved in docs.
 - 2026-11-01 — skeleton: README, CLAUDE.md, docs, .gitignore.
 
+# End-of-course review
+Minor notes, batched for the end (DECISIONS 2026-11-08). BUG = wrong result,
+should get a check instead.
+
+## Review notes 2.1 (2026-11-05)
+- BUG: most_likely rounds before picking best (300 equal tokens -> ("", 0)).
+- Old most_common_pair code in a string literal; `softSome` name;
+  next_word `if` always true; decode inner loop.
+
 ## Review notes 1.5 (2026-11-08)
 - Leftover `...` after each `return` (dead code), both files.
 - `ask`: `else:` after `raise` not needed. `settings:dict` → `settings: dict`.
 - chat_errors: TODO lines still in the class docstrings.
 
 ## Review notes 2.3 (2026-11-06)
-- `ask_stream` keeps empty chunks (last line has content ""); docstring says skip.
+- BUG: `ask_stream` keeps empty chunks (last line has content ""); docstring says skip.
   Check passes anyway (`> 1`). Fix: `if text: append`.
 - `@debug` + `log.debug` left on `tokens_per_second`: prints a debug line each run.
 - Leftover `...` after each `return` (dead code); commented-out code in
@@ -83,7 +97,7 @@ c. Optional: compare gemma4 E2B vs qwen3:4b on this PC (user to decide).
 - `ask` has no `raise_for_status()` (`stop_reason` does).
 
 ## Review notes 1.3 + 1.4 (2026-11-03)
-- 1.4 `last(0)` returns ALL messages (`[-0:]` == `[0:]`). Guard: `if n <= 0: return []`.
+- BUG: 1.4 `last(0)` returns ALL messages (`[-0:]` == `[0:]`). Guard: `if n <= 0: return []`.
 - 1.3 `Counter`, `defaultdict` imported, unused. `word_freq` could be `Counter(text.lower().split())`.
 - 1.3 `merge_counts`: old code left as a string literal — delete it.
 - 1.3 `top_k`: `key=scores.get` is shorter than the lambda.
