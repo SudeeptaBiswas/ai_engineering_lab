@@ -1,19 +1,20 @@
 # Status
 
-Updated: 2026-11-08
+Updated: 2026-11-09
 
 ## Now
-- 1.1–1.5 + 1.7 + 2.1–2.4 done. Overall 7.5% (phase 01: 67%, 02: 56%).
-- Lesson 2.5 embeddings written, waiting for the user.
+- 1.1–1.5 + 1.7 + 2.1–2.5 done. Overall 8.5% (phase 01: 67%, 02: 78%).
+- Next: lesson 1.9 pytest (PLAN order). Lesson rules now checked by a hook.
 - Review rule (DECISIONS 2026-11-08): critical issue → a check; minor → the
   "End-of-course review" list at the bottom.
 
 ## Queue
-a. User works 2.5 → check, mark done, update PROGRESS. Then 1.9 (PLAN order).
+a. Write lesson 1.9 (pytest); user works it → check, mark done.
 b. Optional: compare gemma4 E2B vs qwen3:4b on this PC (user to decide).
-c. 10284Sudee: `ollama pull nomic-embed-text` before 2.5 there.
 
 ## Done
+- 2026-11-09 — topic 2.5 done: 17/17 PASS (10 + 7), pyright 0. nomic-embed-text
+  now on 10284Sudee too.
 - 2026-11-09 — lesson-rule check: `lab_tools/lesson_rules.py` + Claude hook
   + git pre-commit. Fake files: 9/9 planted breaks caught, good file 0,
   `# rule-ok:` skipped; pre-commit exit 1 on bad staged file. 14 old files
