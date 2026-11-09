@@ -28,7 +28,10 @@ typeCheckingMode = "strict"  # same as Pylance in VS Code
 extraPaths = ["02_llm_fundamentals/2_5_embeddings"]
 
 [tool.pytest.ini_options]
-pythonpath = ["02_llm_fundamentals/2_5_embeddings"]  # same reason as extraPaths
+pythonpath = [
+    "02_llm_fundamentals/2_5_embeddings",  # same reason as extraPaths
+    ".",  # repo root: 2.6+ tests do `import assistant` (pyright finds it already)
+]
 markers = ["ollama: needs a running Ollama (skip with -m 'not ollama')"]
 # Lesson files are not named test_*.py. Point pytest only at pytest-style
 # folders (1.9+): older examples run code on import.
