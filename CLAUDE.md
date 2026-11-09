@@ -31,3 +31,7 @@ Python 3.13 via uv 0.13.6 (`pyproject.toml` + `uv.lock`, `.venv` git-ignored).
 - One concern per commit. Commit + push at each finished step.
 - New/changed code: 0 pyright errors before commit.
 - No secrets in the repo. Keys go in `.env` (git-ignored).
+- Lesson code (`examples_*.py`): long form first, short form only in a
+  `# concise:` comment; full names; docstrings with Args/Returns.
+  Enforced by `lab_tools/lesson_rules.py` (Claude hook + git pre-commit).
+  New clone: `git config core.hooksPath .githooks` once.

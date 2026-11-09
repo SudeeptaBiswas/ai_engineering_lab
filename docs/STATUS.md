@@ -14,6 +14,10 @@ b. Optional: compare gemma4 E2B vs qwen3:4b on this PC (user to decide).
 c. 10284Sudee: `ollama pull nomic-embed-text` before 2.5 there.
 
 ## Done
+- 2026-11-09 — lesson-rule check: `lab_tools/lesson_rules.py` + Claude hook
+  + git pre-commit. Fake files: 9/9 planted breaks caught, good file 0,
+  `# rule-ok:` skipped; pre-commit exit 1 on bad staged file. 14 old files
+  in legacy list. BISWAS: run `git config core.hooksPath .githooks`.
 - 2026-11-08 — 2.5 comments: Javadoc-style docstrings (Args/Returns/Raises),
   more line comments; exercises split in 2 files. Solved copy 17/17, pyright 0.
 - 2026-11-08 — lesson 2.5 written (embeddings, cosine, search): 2 examples +
@@ -77,6 +81,15 @@ c. 10284Sudee: `ollama pull nomic-embed-text` before 2.5 there.
 # End-of-course review
 Minor notes, batched for the end (DECISIONS 2026-11-08). BUG = wrong result,
 should get a check instead.
+
+## Review notes 2.5 (2026-11-09)
+- `search`: 2 embed calls instead of 1 (`embed([query] + notes)`); ranks by
+  hand instead of reusing `top_matches` from part 1.
+- Leftover `...` after each `return` (dead code), both 2.5 files.
+- Lesson code (Claude's) breaks PLAN rules: 2.5 examples have no
+  explicit-first / `# concise:` form and use short names (`x`, `v`, `s`, `i`).
+  2.3 + 1.5 also have no markers (not checked by hand). Rewrite at the end.
+- User's 2.5 exercise code: short names (`v`, `p`, `i`).
 
 ## Review notes 2.1 (2026-11-05)
 - BUG: most_likely rounds before picking best (300 equal tokens -> ("", 0)).

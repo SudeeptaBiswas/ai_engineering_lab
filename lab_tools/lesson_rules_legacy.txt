@@ -1,0 +1,16 @@
+# Lesson files written before the lesson-rule check (DECISIONS 2026-11-09).
+# Skipped by lesson_rules_run.py. Rewrite at course end, then delete the line.
+01_python_fundamentals/1_2_syntax/examples_1_2.py
+01_python_fundamentals/1_3_collections/examples_1_3.py
+01_python_fundamentals/1_4_classes/examples_1_4.py
+01_python_fundamentals/1_5_modules_exceptions/examples_1_5_2_exceptions.py
+02_llm_fundamentals/2_1_how_llms_work/examples_2_1_2_bpe.py
+02_llm_fundamentals/2_1_how_llms_work/examples_2_1_3_predict.py
+02_llm_fundamentals/2_1_how_llms_work/examples_2_1_4_context.py
+02_llm_fundamentals/2_2_ollama/examples_2_2_1_size.py
+02_llm_fundamentals/2_2_ollama/examples_2_2_2_speed.py
+02_llm_fundamentals/2_3_chat_api/examples_2_3_1_chat.py
+02_llm_fundamentals/2_4_sampling/examples_2_4_1_by_hand.py
+02_llm_fundamentals/2_4_sampling/examples_2_4_2_ollama.py
+02_llm_fundamentals/2_5_embeddings/examples_2_5_1_cosine.py
+02_llm_fundamentals/2_5_embeddings/examples_2_5_2_ollama.py

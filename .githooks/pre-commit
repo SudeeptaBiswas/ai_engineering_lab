@@ -1,0 +1,5 @@
+#!/bin/sh
+# Blocks a commit if a staged examples_*.py breaks the lesson rules
+# (lab_tools/lesson_rules.py, DECISIONS 2026-11-09).
+# Turn on once per clone: git config core.hooksPath .githooks
+exec uv run python -m lab_tools.lesson_rules_run --staged

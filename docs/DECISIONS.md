@@ -2,6 +2,22 @@
 
 Newest first. One entry per change: what, replaces what, why.
 
+## 2026-11-09 — Lesson rules enforced by a script, not memory
+- What: `lab_tools/lesson_rules.py` checks every `examples_*.py`: no idioms
+  in code (comprehension, lambda, ternary, zip, unpacking...), a `# concise:`
+  line after each explicit block, no one-letter names, docstrings with
+  Args/Returns, max 150 lines. `# rule-ok: <reason>` skips idiom + name
+  rules on one line (a lesson whose topic IS the idiom).
+- Runs: Claude Code hook after each Write/Edit (`.claude/settings.json`) +
+  git pre-commit (`.githooks/`, needs `git config core.hooksPath .githooks`
+  once per clone). 14 older files listed in `lesson_rules_legacy.txt`.
+- Scope: lesson code only. User's exercise code is not checked.
+- Can't check: that the long form equals the concise one, or name quality
+  beyond length. User review covers those.
+- Replaces: rules only in PLAN.md (read when remembered).
+- Why: 2.3, 1.5 and 2.5 were written without explicit forms; rules in a doc
+  nobody re-opens get missed. A failing check can't be missed.
+
 ## 2026-11-08 — Javadoc-style docstrings on every lesson function
 - What: each function says what it does, then Args / Returns / Raises
   (Java @param / @return / @throws), with example values. 2.5 exercises
