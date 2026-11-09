@@ -49,7 +49,10 @@ def test_search_login_fake(monkeypatch: pytest.MonkeyPatch) -> None:
     Args:
         monkeypatch: built-in pytest fixture.
     """
-    pytest.fail("not written yet")
+    monkeypatch.setattr(search_module, "embed", fake_embed)
+
+    result = search(LOGIN_QUERY, NOTES, 1)
+    assert result == [NOTES[0]]
 
 
 def test_search_k_2_fake(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -58,7 +61,9 @@ def test_search_k_2_fake(monkeypatch: pytest.MonkeyPatch) -> None:
     Args:
         monkeypatch: built-in pytest fixture.
     """
-    pytest.fail("not written yet")
+    monkeypatch.setattr(search_module, "embed", fake_embed)
+    result = search(LOGIN_QUERY, NOTES, 2)
+    assert result == [NOTES[0], NOTES[4]]
 
 
 def test_embed_sends_model(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -74,7 +79,17 @@ def test_embed_sends_model(monkeypatch: pytest.MonkeyPatch) -> None:
     Args:
         monkeypatch: built-in pytest fixture.
     """
-    pytest.fail("not written yet")
+    sent_bodies: list[dict[str, object]] = []
+
+    def fake_post(url: str, json: dict[str, object], timeout: float) -> httpx.Response:
+        sent_bodies.append(json)  # write down what embed() sent
+        return httpx.Response(200, json={"embeddings": [[0.0]]},
+                            request=httpx.Request("POST", url))
+
+    monkeypatch.setattr(httpx, "post", fake_post)
+    embed(["cat"], model="qwen3:1.7b")
+    assert len(sent_bodies) == 1  # 5. exactly one HTTP call
+    assert sent_bodies[0]["model"] == "qwen3:1.7b"  # 6. the model it sent
 
 
 def test_embed_bad_status(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -84,7 +99,14 @@ def test_embed_bad_status(monkeypatch: pytest.MonkeyPatch) -> None:
     Args:
         monkeypatch: built-in pytest fixture.
     """
-    pytest.fail("not written yet")
+    def fake_post(url: str, json: dict[str, object], timeout: float) -> httpx.Response:
+        """Stands in for httpx.post: always 501, like a chat model on /api/embed."""
+        return httpx.Response(501, json={"error": "does not support embeddings"},
+                            request=httpx.Request("POST", url))
+
+    monkeypatch.setattr(httpx, "post", fake_post)
+    with pytest.raises(httpx.HTTPStatusError):
+        embed(["cat"], model="qwen3:1.7b")
 
 
 @pytest.mark.ollama
@@ -93,4 +115,5 @@ def test_search_real() -> None:
 
     No fakes: this one proves the real model agrees with your code.
     """
-    pytest.fail("not written yet")
+    result = search("my kitten naps a lot", NOTES, 1)
+    assert result == [NOTES[3]]

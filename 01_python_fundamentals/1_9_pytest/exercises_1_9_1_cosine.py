@@ -14,7 +14,7 @@ from exercises_2_5_1_cosine import COMPASS, COMPASS_VECS, cosine, dot, top_match
 
 def test_dot_simple() -> None:
     """dot([1, 2, 3], [4, 5, 6]) is 32. A plain assert is enough (whole numbers)."""
-    pytest.fail("not written yet")
+    assert dot([1, 2, 3], [4, 5, 6]) == 32
 
 
 def test_dot_lengths_differ() -> None:
@@ -22,13 +22,16 @@ def test_dot_lengths_differ() -> None:
 
     Use: with pytest.raises(..., match=...).
     """
-    pytest.fail("not written yet")
+    with pytest.raises(ValueError, match="lengths differ"):
+        dot([1, 2, 3], [1, 2])
 
 
 @pytest.mark.parametrize(
     ("vector_a", "vector_b", "expected"),
     [
         ([1.0, 2.0], [2.0, 4.0], 1.0),  # same way
+        ([1.0, 0], [-1.0, 0], -1.0),
+        ([1.0, 0], [0, 1.0], 0.0)
         # add 2 rows: opposite ([1, 0] vs [-1, 0]) and right angle ([1, 0] vs [0, 1])
     ],
 )
@@ -41,12 +44,13 @@ def test_cosine_cases(vector_a: list[float], vector_b: list[float], expected: fl
         vector_b: from the same row, e.g. [2.0, 4.0].
         expected: from the same row, e.g. 1.0.
     """
-    pytest.fail("not written yet")
+    assert cosine(vector_a, vector_b) == pytest.approx(expected)
 
 
 def test_cosine_zero_vector() -> None:
     """cosine([0, 0], [1, 2]) raises ValueError("zero vector")."""
-    pytest.fail("not written yet")
+    with pytest.raises(ValueError, match="zero vector"):
+        cosine([0, 0], [1, 2])
 
 
 def test_top_matches_top_2() -> None:
@@ -57,7 +61,13 @@ def test_top_matches_top_2() -> None:
       2. the first score is about 0.995: pytest.approx(0.995, abs=0.001)
          (abs = allowed error; 0.995 is rounded, so the default is too strict)
     """
-    pytest.fail("not written yet")
+    result = top_matches([1, 0], COMPASS_VECS, COMPASS, 2)
+    assert result[0][0] == "east"
+    assert result[1][0] == "north-east"
+    
+    assert result[0][1] == pytest.approx(0.995, abs=0.001)
+    assert result[1][1] == pytest.approx(0.707, abs=0.001)
+
 
 
 @pytest.mark.parametrize("bad_k", [0, -1])
@@ -67,4 +77,5 @@ def test_top_matches_bad_k(bad_k: int) -> None:
     Args:
         bad_k: from the list above, 0 then -1.
     """
-    pytest.fail("not written yet")
+    result = top_matches([1, 0], COMPASS_VECS, COMPASS, bad_k)
+    assert result == []
