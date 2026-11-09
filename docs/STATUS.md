@@ -4,16 +4,25 @@ Updated: 2026-11-09
 
 ## Now
 - 1.1–1.5 + 1.7 + 1.9 + 2.1–2.5 done. Overall 9.0% (phase 01: 73%, 02: 78%).
-- Next: 2.6 assistant v1 (PLAN order). Lesson rules checked by a hook.
+- Lesson 2.6 written (assistant v1): user fills `assistant/` stubs until
+  `02_llm_fundamentals/2_6_assistant_v1` tests pass. Lesson rules checked by a hook.
 - Review rule (DECISIONS 2026-11-08): critical issue → a check; minor → the
   "End-of-course review" list at the bottom.
 - From 2.6: exercises are pytest tests (DECISIONS 2026-11-09).
 
 ## Queue
-a. Write lesson 2.6 (assistant v1, pytest exercises). Add its folder to .vscode pytestArgs.
-b. Optional: compare gemma4 E2B vs qwen3:4b on this PC (user to decide).
+a. User: solve 2.6 (memory → client → cli), then Claude checks.
+b. On 10284Sudee: add `02_llm_fundamentals/2_6_assistant_v1` to .vscode pytestArgs.
+c. Optional: compare gemma4 E2B vs qwen3:4b on this PC (user to decide).
 
 ## Done
+- 2026-11-09 — lesson 2.6 written (assistant v1, BISWAS): 2 examples
+  (31.0 s with Ollama; no-Ollama one instant), `assistant/` package with
+  stubs, 28 tests (10 memory + 9 client + 9 cli, 2 real). Reference 28/28
+  in 3.32–3.91 s (3 runs); 26 + 2 deselected in 0.11 s. Pyright 0, lesson
+  rules 0. Measured: default `num_ctx` 4096 (`ollama ps`); over it, Ollama
+  drops messages silently ("Blue" instead of "green"); estimate chars/4
+  is 1.2–2.2x low. Real chat, 4 turns: 9.3 s.
 - 2026-11-09 — review docs `docs/review/`: 12 topics, 45 quiz questions,
   102 keywords (54 AI + 48 Python). Each finished topic adds its section.
 - 2026-11-09 — topic 1.9 done: 14/14 PASS in 0.50 s (13 + 1 deselected without

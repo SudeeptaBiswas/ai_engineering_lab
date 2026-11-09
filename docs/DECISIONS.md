@@ -2,6 +2,21 @@
 
 Newest first. One entry per change: what, replaces what, why.
 
+## 2026-11-09 — 2.6: tests given, user writes the app; v1 memory scope
+- What: for 2.6 Claude writes the pytest tests (the spec) and the user
+  fills `raise NotImplementedError` stubs in `assistant/`. Tests stay in
+  the lesson folder (`exercises_2_6_*.py`); `assistant/` is a package,
+  found via `"."` in pytest `pythonpath` (pyright finds it already).
+- Replaces: 1.9 style (user writes the tests, `pytest.fail` stubs).
+- v1 memory = in RAM + trim to an estimated token budget + `/reset`.
+  Saving to a JSON file: rejected for now (user's call, 2 h budget).
+- `num_ctx` sent explicitly (4096): measured, Ollama drops messages over
+  it silently (wrong answer, no error).
+- `TypedDict` for messages, as planned on 2026-11-04.
+- `.vscode` pytestArgs: skipped on BISWAS (no `.vscode/` there); do it on
+  10284Sudee.
+- Why: user's call (question batch before the lesson).
+
 ## 2026-11-09 — Review docs: flows, quiz, keyword glossaries
 - What: `docs/review/`: README (big picture + how to use), REVIEW_01_python,
   REVIEW_02_llm (per topic: flow, must-remember, quiz with hidden answers),
