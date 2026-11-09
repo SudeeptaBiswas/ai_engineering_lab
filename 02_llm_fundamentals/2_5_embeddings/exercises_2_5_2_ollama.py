@@ -29,6 +29,11 @@ def embed(texts: list[str], model: str = EMBED_MODEL) -> list[Vector]:
         httpx.HTTPStatusError on a bad status (404 no model, 501 chat
         model): call response.raise_for_status().
     """
+    body = {"model": model, "input": texts}  # request JSON. "input", not "messages"
+    response = httpx.post(f"{OLLAMA_URL}/api/embed", json=body, timeout=120.0)  # send, wait max 120 s
+    response.raise_for_status()
+    reply = response.json()  # JSON -> dict: {"model": ..., "embeddings": [[...], [...]]}
+    return reply["embeddings"]  # the list of vectors. Java: List<double[]>
     ...
 
 
@@ -44,6 +49,14 @@ def search(query: str, notes: list[str], k: int) -> list[str]:
     Returns:
         Note texts only, no scores, e.g. ["To reset your password, ..."].
     """
+    query_embed_vec:list[Vector] = embed([query], EMBED_MODEL)
+    notes_embed_vec: list[Vector] = embed(notes, EMBED_MODEL)
+
+    score = [cosine(query_embed_vec[0], v) for v in notes_embed_vec]
+    pairs = list(zip(notes, score))
+    top_matches_list =  sorted(pairs, key=lambda p: p[1], reverse=True)[:k]
+    return [i[0] for i in top_matches_list]
+    
     ...
 
 

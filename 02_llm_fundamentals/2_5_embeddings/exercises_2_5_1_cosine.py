@@ -23,6 +23,9 @@ def dot(a: Vector, b: Vector) -> float:
         ValueError(f"lengths differ: {len(a)} vs {len(b)}") if lengths differ.
         Why: zip() silently stops at the shorter list -> a wrong score.
     """
+    if len(a) != len(b):
+        raise ValueError(f"lengths differ: {len(a)} vs {len(b)}")
+    return sum(x * y for x, y in zip(a, b))
     ...
 
 
@@ -34,6 +37,7 @@ def norm(a: Vector) -> float:
     Returns:
         e.g. sqrt(3*3 + 4*4) = 5.0.
     """
+    return math.sqrt(dot(a, a))  # sqrt(x*x + y*y + ...)
     ...
 
 
@@ -49,6 +53,9 @@ def cosine(a: Vector, b: Vector) -> float:
         ValueError("zero vector") if a or b is all zeros (no direction,
         would divide by 0).
     """
+    if all(x == 0 for x in a) or all(x == 0 for x in b):
+        raise ValueError("zero vector")
+    return dot(a, b) / (norm(a) * norm(b))
     ...
 
 
@@ -66,6 +73,13 @@ def top_matches(query: Vector, doc_vecs: list[Vector], docs: list[str],
         [("east", 0.995), ("north-east", 0.707)] for k = 2.
     Hint: list(zip(docs, scores)), then sorted(..., key=..., reverse=True).
     """
+    # Handle invalid k
+    if k <= 0:
+        return []
+
+    score = [cosine(query, v) for v in doc_vecs]
+    pairs = list(zip(docs, score))
+    return sorted(pairs, key=lambda p: p[1], reverse=True)[:k]
     ...
 
 
