@@ -3,17 +3,19 @@
 Updated: 2026-11-09
 
 ## Now
-- 1.1–1.5 + 1.7 + 2.1–2.5 done. Overall 8.5% (phase 01: 67%, 02: 78%).
-- Lesson 1.9 pytest written, waiting for the user. Lesson rules checked by a hook.
+- 1.1–1.5 + 1.7 + 1.9 + 2.1–2.5 done. Overall 9.0% (phase 01: 73%, 02: 78%).
+- Next: 2.6 assistant v1 (PLAN order). Lesson rules checked by a hook.
 - Review rule (DECISIONS 2026-11-08): critical issue → a check; minor → the
   "End-of-course review" list at the bottom.
 - From 2.6: exercises are pytest tests (DECISIONS 2026-11-09).
 
 ## Queue
-a. User works 1.9 → check, mark done, update PROGRESS. Then 2.6 (assistant v1).
+a. Write lesson 2.6 (assistant v1, pytest exercises). Add its folder to .vscode pytestArgs.
 b. Optional: compare gemma4 E2B vs qwen3:4b on this PC (user to decide).
 
 ## Done
+- 2026-11-09 — topic 1.9 done: 14/14 PASS in 0.50 s (13 + 1 deselected without
+  Ollama), pyright 0. VS Code: pytest Testing panel + "pytest: current file" debug.
 - 2026-11-09 — lesson 1.9 written (pytest: assert, approx, raises, parametrize,
   fixture, monkeypatch, marker): 2 examples (7 + 3 tests, 0.07 s / 0.42 s),
   exercises test the user's 2.5 code. Reference 14/14 in 0.93–3.64 s

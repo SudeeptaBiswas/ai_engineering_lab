@@ -13,7 +13,7 @@ Hours are estimates, not measured. Done = date finished. Totals feed PROGRESS.md
 | 1.6 | Type hints + pydantic | 2 | |
 | 1.7 | Files, JSON, HTTP with httpx | 1.5 | 2026-11-06 |
 | 1.8 | async/await | 2 | |
-| 1.9 | pytest | 1 | |
+| 1.9 | pytest | 1 | 2026-11-09 |
 | **02** | **LLM fundamentals** | **9** | |
 | 2.1 | How LLMs work: tokens, context window | 1.5 | 2026-11-05 |
 | 2.2 | Ollama: install, models, quantization, CPU limits | 1 | 2026-11-05 |
