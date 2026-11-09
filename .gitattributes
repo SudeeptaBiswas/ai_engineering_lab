@@ -1,0 +1,2 @@
+# Hook scripts must keep LF: a CRLF turns "--staged" into "--staged" and the check silently passes.
+.githooks/* text eol=lf
