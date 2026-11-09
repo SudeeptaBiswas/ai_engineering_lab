@@ -84,6 +84,9 @@ A function marked `@pytest.fixture` runs **before** each test that has a
 parameter with the same name. Its return value is that parameter.
 `monkeypatch` (next section) is a fixture that comes with pytest.
 
+> ▶ **Now run part 1** and read the file next to the output (expect 7 passed):
+> `uv run pytest 01_python_fundamentals/1_9_pytest/examples_1_9_1_basics.py -v`
+
 ## 7. Fakes: `monkeypatch`
 ```python
 def test_model_names_fake(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -114,6 +117,9 @@ That's how work projects do it too.
 `@pytest.mark.ollama` is a label, declared in `pyproject.toml`.
 `-m "not ollama"` skips it. Measured, part 2 examples:
 **3 passed in 0.42 s** with Ollama, **2 passed, 1 deselected in 0.09 s** without.
+
+> ▶ **Now run part 2** and read the file next to the output (expect 3 passed):
+> `uv run pytest 01_python_fundamentals/1_9_pytest/examples_1_9_2_fakes.py -v`
 
 ## 9. Setup in this repo
 `pyproject.toml` adds the 2.5 folder to the import path (`pythonpath` for

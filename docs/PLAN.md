@@ -89,4 +89,6 @@ Plus `docs/`, `resources/`, `pyproject.toml`, `uv.lock`.
   and what each expression does.
 - These lesson rules are checked by `lab_tools/lesson_rules.py` on every
   edit and commit (DECISIONS.md, 2026-11-09).
+- LESSON md: a "▶ Now run" line (with the command) right after the
+  sections each examples file covers, so the md alone guides the order.
 - Track in hours + %, not weeks: [PROGRESS.md](PROGRESS.md).

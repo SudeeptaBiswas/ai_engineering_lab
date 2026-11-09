@@ -2,6 +2,13 @@
 
 Newest first. One entry per change: what, replaces what, why.
 
+## 2026-11-09 — "▶ Now run" lines inside each LESSON md
+- What: after the sections an examples file covers, a "▶ Now run" line
+  with the exact command and the expected result. From 1.9 on.
+- Replaces: one "read, run, solve" line at the top only.
+- Why: user's idea: following the md alone should give the order
+  read → run → read → run → exercises.
+
 ## 2026-11-09 — Exercises switch to pytest from 2.6; fakes + 1 real test
 - What: from 2.6 on, exercises are pytest tests, not `check()`. Code that
   calls Ollama gets tested with fakes (`monkeypatch`); one test per file
