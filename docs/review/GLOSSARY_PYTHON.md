@@ -1,0 +1,56 @@
+# Glossary: Python + pytest keywords
+
+A–Z. One line each, with the Java twin. Topic = where it was taught.
+Process + quiz: [REVIEW_01_python.md](REVIEW_01_python.md).
+
+| Term | Plain meaning | Java twin / example | Topic |
+|---|---|---|---|
+| `__init__` | the constructor | `Point(...)` constructor | 1.4 |
+| `__name__ == "__main__"` | true only when the file is run, not imported | `public static void main` | 1.1, 1.5 |
+| `__repr__` / `__str__` | debug text / user text of an object | `toString()` | 1.4 |
+| ABC + `@abstractmethod` | an explicit contract that fails early if a method is missing | `interface` | 1.4 |
+| `approx` (pytest) | float compare with a tiny allowed error | `assertEquals(0.15, x, 1e-6)` | 1.9 |
+| `assert` (pytest) | the check; on fail pytest prints both sides | `assertEquals` | 1.9 |
+| Comprehension | build a list/dict/set in one line | `stream().map().filter()` | 1.3 |
+| `Counter` | counts items | `Map<K, Integer>` + loop | 1.3 |
+| `@dataclass` | `__init__`, `__repr__`, `__eq__` written for you | `record` / Lombok `@Data` | 1.4 |
+| `dict` | key → value, keeps insert order | `HashMap` | 1.3 |
+| Duck typing | if it has `.run()`, you can call `.run()` | no `implements` needed | 1.4 |
+| `encoding="utf-8"` | always set it on Windows | Windows default is not UTF-8 | 1.7 |
+| Exception chain (`raise ... from`) | wrap an error, keep the cause in `__cause__` | `new X(msg, cause)` | 1.5 |
+| `except` order | first match wins: child before parent | same as `catch` | 1.5 |
+| f-string | `f"a{n}"` | `"a" + n` | 1.2 |
+| Fake | stand-in for a real dependency in a test | Mockito `when(...).thenReturn` | 1.9 |
+| `field(default_factory=list)` | safe list default in a dataclass | `items: list = []` is an error | 1.4 |
+| Fixture | function pytest runs before a test; matched by parameter name | `@BeforeEach` | 1.9 |
+| Floor division `//` | integer result | `7 // 2` = 3; `7 / 2` = 3.5 | 1.2 |
+| `frozen=True` | immutable dataclass | immutable record | 1.4 |
+| `httpx` | HTTP client | `HttpClient` | 1.7 |
+| `is` vs `==` | same object vs same value | `==` vs `.equals()` | 1.2 |
+| `json.loads` / `json.dumps` | text → dict / dict → text | Jackson `readValue` / `writeValueAsString` | 1.7 |
+| `localhost` vs `127.0.0.1` | localhost tries IPv6 first on Windows | 2.16 s vs 0.02 s per call | 1.7 |
+| Marker (`@pytest.mark.x`) | a label; `-m "not x"` skips, `-m x` runs only those | `@Tag("x")` | 1.9 |
+| Module | one .py file: many functions, constants, classes | (Java: one class per file) | 1.5 |
+| `monkeypatch.setattr` | swap a function for one test, put back after | Mockito | 1.9 |
+| Mutable default | `def f(x=[])` shares ONE list across calls | fix: `x=None` | 1.3 |
+| Package | folder + `__init__.py` | Java package = folder | 1.5 |
+| `parametrize` | one test, many rows, each its own result | `@ParameterizedTest` | 1.9 |
+| `pathlib.Path` | file paths; `p / "a.txt"` | `java.nio.file.Path` | 1.7 |
+| `@property` | a getter that reads like a field | getter | 1.4 |
+| `pyproject.toml` | project + dependencies | `pom.xml` | 1.1 |
+| `raise_for_status()` | turn a 4xx/5xx into an exception (404 is not one by itself) | `if (code >= 400) throw` | 1.7 |
+| `raises` (pytest) | test passes only if that error happens | `assertThrows` | 1.9 |
+| `self` | the current object, written out | `this` | 1.4 |
+| `set` | unique items, fast `in` | `HashSet` | 1.3 |
+| Slicing | `nums[1:4]`, `[-2:]`, `[::2]` | `subList` (no full twin) | 1.3 |
+| Spy | a fake that writes down what it received | Mockito `verify` / captor | 1.9 |
+| `sys.path` | where imports are looked up: script folder, then .venv | classpath | 1.5 |
+| Timeout | always give one on HTTP calls | 500-token answer took ~70 s | 1.7 |
+| `TransportError` (httpx) | parent of ConnectError + ConnectTimeout | catch the parent for both | 1.5, 1.7 |
+| Truthy / falsy | `0`, `""`, `[]`, `{}`, `None` are false | `if items:` = not empty | 1.2 |
+| `try / except / else / finally` | `else` runs only if no error | try/catch/finally | 1.5 |
+| `tuple` | fixed, immutable sequence; unpack with `a, b = t` | record / `List.of` | 1.2, 1.3 |
+| `uv` | installs Python + packages, runs files | Maven / Gradle | 1.1 |
+| `uv.lock` | exact versions; commit it | Gradle lockfile | 1.1 |
+| `.venv` | per-project packages, git-ignored | (no shared `~/.m2`) | 1.1 |
+| `with` | closes the file/client for you, even on error | try-with-resources | 1.7 |

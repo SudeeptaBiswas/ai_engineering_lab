@@ -2,6 +2,17 @@
 
 Newest first. One entry per change: what, replaces what, why.
 
+## 2026-11-09 — Review docs: flows, quiz, keyword glossaries
+- What: `docs/review/`: README (big picture + how to use), REVIEW_01_python,
+  REVIEW_02_llm (per topic: flow, must-remember, quiz with hidden answers),
+  GLOSSARY_AI + GLOSSARY_PYTHON (A–Z, one line each, topic id).
+  Start: 12 topics, 45 questions, 102 keywords.
+- Upkeep: each finished topic adds its section + keywords (CLAUDE.md).
+  A phase file over 150 lines splits by topic range.
+- Rejected: Claude Docs online (content leaves the PC); Java-mapping
+  section (user didn't pick it; glossary Python keeps a Java column).
+- Why: user wants to review and remember the concepts later, from one place.
+
 ## 2026-11-09 — "▶ Now run" lines inside each LESSON md
 - What: after the sections an examples file covers, a "▶ Now run" line
   with the exact command and the expected result. From 1.9 on.

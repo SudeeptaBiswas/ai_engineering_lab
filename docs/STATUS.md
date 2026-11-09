@@ -14,6 +14,8 @@ a. Write lesson 2.6 (assistant v1, pytest exercises). Add its folder to .vscode 
 b. Optional: compare gemma4 E2B vs qwen3:4b on this PC (user to decide).
 
 ## Done
+- 2026-11-09 — review docs `docs/review/`: 12 topics, 45 quiz questions,
+  102 keywords (54 AI + 48 Python). Each finished topic adds its section.
 - 2026-11-09 — topic 1.9 done: 14/14 PASS in 0.50 s (13 + 1 deselected without
   Ollama), pyright 0. VS Code: pytest Testing panel + "pytest: current file" debug.
 - 2026-11-09 — lesson 1.9 written (pytest: assert, approx, raises, parametrize,

@@ -17,6 +17,8 @@ Python 3.13 via uv 0.13.6 (`pyproject.toml` + `uv.lock`, `.venv` git-ignored).
 - `docs/PROGRESS.md` — hours + % per phase. Update when a topic finishes,
   and report the new % to the user.
 - `docs/DECISIONS.md` — requirement changes and why.
+- `docs/review/` — flows + quiz per topic, keyword glossaries. When a topic
+  finishes, add its section to `REVIEW_NN_*.md` + its keywords to a glossary.
 - `NN_phase_name/` — lessons + exercises, one folder per phase.
   Lesson files carry the topic id: `LESSON_1_7.md`, `exercises_1_7.py`,
   `examples_1_7_2_http.py`. Never a bare `exercises.py`.
