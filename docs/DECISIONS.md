@@ -2,6 +2,18 @@
 
 Newest first. One entry per change: what, replaces what, why.
 
+## 2026-11-09 — Exercises switch to pytest from 2.6; fakes + 1 real test
+- What: from 2.6 on, exercises are pytest tests, not `check()`. Code that
+  calls Ollama gets tested with fakes (`monkeypatch`); one test per file
+  marked `@pytest.mark.ollama` hits the real Ollama.
+- 1.9 exercises test the user's own 2.5 code. `pyproject.toml` puts the
+  2.5 folder on the import path (pytest `pythonpath`, pyright `extraPaths`):
+  folders starting with a digit can't be packages.
+- Stubs are `pytest.fail("not written yet")`, not `...`: an empty test passes.
+- Replaces: `check()` (stays in 1.2–2.5).
+- Why: user's call. Fakes: run with Ollama off, test error cases (501) in
+  one line, fixed answers. The real test proves Ollama agrees.
+
 ## 2026-11-09 — Lesson rules enforced by a script, not memory
 - What: `lab_tools/lesson_rules.py` checks every `examples_*.py`: no idioms
   in code (comprehension, lambda, ternary, zip, unpacking...), a `# concise:`

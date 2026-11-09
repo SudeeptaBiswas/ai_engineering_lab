@@ -23,3 +23,10 @@ module-root = ""  # lab_tools/ sits at repo root (not under src/)
 
 [tool.pyright]
 typeCheckingMode = "strict"  # same as Pylance in VS Code
+# 1.9 tests import the 2.5 exercise files. Folders starting with a digit
+# can't be packages, so the folder goes on the import path instead.
+extraPaths = ["02_llm_fundamentals/2_5_embeddings"]
+
+[tool.pytest.ini_options]
+pythonpath = ["02_llm_fundamentals/2_5_embeddings"]  # same reason as extraPaths
+markers = ["ollama: needs a running Ollama (skip with -m 'not ollama')"]

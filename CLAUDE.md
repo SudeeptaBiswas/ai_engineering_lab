@@ -25,6 +25,8 @@ Python 3.13 via uv 0.13.6 (`pyproject.toml` + `uv.lock`, `.venv` git-ignored).
   `from lab_tools.log import debug, log`, then `@debug` on a function.
   Exercise checks: `from lab_tools.check import check`, then
   `check("label", lambda: my_func(1), expected)`. Never a local copy.
+  From 2.6 on, exercises are pytest tests instead (`uv run pytest <file> -v`;
+  `-m "not ollama"` skips the real-Ollama test).
 
 ## Must never break
 - Files stay small: aim under 150 lines. Split before growing.

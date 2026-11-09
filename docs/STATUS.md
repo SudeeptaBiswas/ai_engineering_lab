@@ -4,15 +4,21 @@ Updated: 2026-11-09
 
 ## Now
 - 1.1–1.5 + 1.7 + 2.1–2.5 done. Overall 8.5% (phase 01: 67%, 02: 78%).
-- Next: lesson 1.9 pytest (PLAN order). Lesson rules now checked by a hook.
+- Lesson 1.9 pytest written, waiting for the user. Lesson rules checked by a hook.
 - Review rule (DECISIONS 2026-11-08): critical issue → a check; minor → the
   "End-of-course review" list at the bottom.
+- From 2.6: exercises are pytest tests (DECISIONS 2026-11-09).
 
 ## Queue
-a. Write lesson 1.9 (pytest); user works it → check, mark done.
+a. User works 1.9 → check, mark done, update PROGRESS. Then 2.6 (assistant v1).
 b. Optional: compare gemma4 E2B vs qwen3:4b on this PC (user to decide).
 
 ## Done
+- 2026-11-09 — lesson 1.9 written (pytest: assert, approx, raises, parametrize,
+  fixture, monkeypatch, marker): 2 examples (7 + 3 tests, 0.07 s / 0.42 s),
+  exercises test the user's 2.5 code. Reference 14/14 in 0.93–3.64 s
+  (3 runs, 10284Sudee); 13 + 1 deselected without Ollama. pyright 0,
+  lesson rules 0. pyproject: pythonpath/extraPaths + `ollama` marker.
 - 2026-11-09 — topic 2.5 done: 17/17 PASS (10 + 7), pyright 0. nomic-embed-text
   now on 10284Sudee too.
 - 2026-11-09 — lesson-rule check: `lab_tools/lesson_rules.py` + Claude hook
