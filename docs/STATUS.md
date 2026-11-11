@@ -5,7 +5,7 @@ Updated: 2026-11-11
 ## Now
 - 1.1–1.5 + 1.7 + 1.9 + 2.1–2.6 done. Overall 10.1% (phase 01: 73%, 02: 100%).
 - assistant v1 works (`uv run python -m assistant`). Code by Claude; user
-  still to read it. Lesson rules checked by a hook.
+  read memory, client, cli (2026-11-11). Lesson rules checked by a hook.
 - Review rule (DECISIONS 2026-11-08): critical issue → a check; minor → the
   "End-of-course review" list at the bottom.
 - From 2.6: exercises are pytest tests (DECISIONS 2026-11-09).
@@ -13,13 +13,13 @@ Updated: 2026-11-11
   2026-12-09), Intermediate 60 h, Advanced 63 h. Order: PLAN.md.
 
 ## Queue
-a. User: read `assistant/` (memory → client → cli) + REVIEW_02 section 2.6.
-b. Claude: write lesson 3.1 (Basic order in PLAN.md).
-c. Optional: compare gemma4 E2B vs qwen3:4b on this PC (user to decide).
-d. Open (user to decide): by-hand topics 3.3, 4.1: write them (plan)
+a. Claude: write lesson 3.1 (Basic order in PLAN.md).
+b. Optional: compare gemma4 E2B vs qwen3:4b on this PC (user to decide).
+c. Open (user to decide): by-hand topics 3.3, 4.1: write them (plan)
    or read Claude's solution (faster, learns less). 2.6: Claude wrote it.
 
 ## Done
+- 2026-11-11 — user read `assistant/` (memory, client, cli) + REVIEW_02 2.6.
 - 2026-11-11 — topic 2.6 done (10284Sudee), code by Claude: 10 functions in
   `assistant/`. 28 passed in 12.79 s (2 real Ollama), pyright 0. Real run,
   2 turns, piped: second answer "Green." Fix: emoji crash on cp932 output.
