@@ -13,12 +13,18 @@ Updated: 2026-11-11
   2026-12-09), Intermediate 60 h, Advanced 63 h. Order: PLAN.md.
 
 ## Queue
-a. Claude: write lesson 3.1 (Basic order in PLAN.md).
-b. Optional: compare gemma4 E2B vs qwen3:4b on this PC (user to decide).
-c. Open (user to decide): by-hand topics 3.3, 4.1: write them (plan)
+a. User: lesson 3.1. Read LESSON_3_1.md, run 2 examples, fill 6 stubs
+   in `prompts_3_1.py` until `exercises_3_1.py` passes (22 tests).
+b. Claude: write lesson 1.6 (pydantic), then 3.2.
+c. Optional: compare gemma4 E2B vs qwen3:4b on this PC (user to decide).
+d. Open (user to decide): by-hand topics 3.3, 4.1: write them (plan)
    or read Claude's solution (faster, learns less). 2.6: Claude wrote it.
 
 ## Done
+- 2026-11-11 — lesson 3.1 written (BISWAS, qwen3:1.7b, temp 0, seed 42):
+  2 examples + 6 stubs + 22 tests. Measured: 8 tickets zero-shot 0/8,
+  system 6/8, few-shot 7/8; 6 maths problems direct 5/6, step-by-step 6/6
+  (49.6 s), think 6/6 (210.8 s). Reference 22 passed in 1.82 s, pyright 0.
 - 2026-11-11 — user read `assistant/` (memory, client, cli) + REVIEW_02 2.6.
 - 2026-11-11 — topic 2.6 done (10284Sudee), code by Claude: 10 functions in
   `assistant/`. 28 passed in 12.79 s (2 real Ollama), pyright 0. Real run,
