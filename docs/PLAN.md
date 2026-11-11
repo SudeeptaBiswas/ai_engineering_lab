@@ -38,13 +38,13 @@ Hours are rough estimates, not measured. (*) = added in the review.
 Goal is a job ASAP, so the course runs in three levels. Phases and topic
 ids stay; only the order changes. Each topic's level: TOPICS.md, `Lvl`.
 
-| Level | Gives | Then |
-|---|---|---|
-| Basic | chatbot, prompting + tools, PDF RAG with scores, MCP server, API in Docker | CV + apply |
-| Intermediate | advanced RAG, judge + tracing, agent loop + LangGraph agents, MCP client, full API | interviews |
-| Advanced | no-framework agent project, multi-agent, Java bridge, capstone | keep going |
+| Priority | Level | Goal | Gives | Topics | h |
+|---|---|---|---|---|---|
+| 1 | Basic | CV + apply | chatbot, prompting + tools, PDF RAG with scores, MCP server, API in Docker | 1.1–1.9, 2.1–2.6, 3.1–3.4, 4.1–4.6, 5.1–5.2, 7.1–7.4, 8.1, 8.4 | 76 |
+| 2 | Intermediate | interviews | advanced RAG, judge + tracing, agent loop + LangGraph agents, MCP client, full API | 4.7–4.11, 5.3–5.4, 6.1–6.3, 6.5–6.8, 7.5–7.7, 8.2, 8.3, 8.5 | 60 |
+| 3 | Advanced | keep going | no-framework agent project, multi-agent, Java bridge, capstone | 6.4, 6.9–6.11, 9.1–9.4, 10.1–10.7 | 63 |
 
-Hours and dates per level: [PROGRESS.md](PROGRESS.md).
+Hours left and end dates per level: [PROGRESS.md](PROGRESS.md).
 
 ## One growing project: `assistant/`
 Learn a topic → add it to the same app. Each version: README note, tests, demo.
