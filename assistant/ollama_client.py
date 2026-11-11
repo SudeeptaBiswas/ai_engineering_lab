@@ -1,14 +1,13 @@
 """Talks to Ollama: POST /api/chat with streaming (lesson 2.3).
 
-YOUR PART: replace each `raise NotImplementedError` with code.
 Spec = 02_llm_fundamentals/2_6_assistant_v1/exercises_2_6_2_client.py
 """
 
-import json  # pyright: ignore[reportUnusedImport] — json.loads for stream lines
+import json  # json.loads for stream lines
 from collections.abc import Iterator  # what a generator returns (2.6 part 2)
 from typing import Any  # "any type". Java: Object
 
-import httpx  # pyright: ignore[reportUnusedImport] — until you use it
+import httpx
 
 from assistant.memory import Message
 
@@ -27,7 +26,15 @@ def chat_body(messages: list[Message]) -> dict[str, Any]:
         {"model": MODEL, "messages": messages, "stream": True, "think": False,
          "options": {"num_ctx": NUM_CTX, "num_predict": MAX_ANSWER_TOKENS}}
     """
-    raise NotImplementedError("2.6: write chat_body()")
+    options = {"num_ctx": NUM_CTX, "num_predict": MAX_ANSWER_TOKENS}
+    body: dict[str, Any] = {
+        "model": MODEL,
+        "messages": messages,
+        "stream": True,  # answer comes line by line
+        "think": False,  # no hidden thinking text
+        "options": options,
+    }
+    return body
 
 
 def chunk_text(line: str) -> str:
@@ -38,7 +45,11 @@ def chunk_text(line: str) -> str:
     Returns:
         e.g. "AG". A blank line (or only spaces) gives "", no crash.
     """
-    raise NotImplementedError("2.6: write chunk_text()")
+    if not line.strip():  # blank line: nothing to parse
+        return ""
+    data: dict[str, Any] = json.loads(line)  # JSON text -> dict
+    message: dict[str, Any] = data.get("message", {})  # no "message" key -> {}
+    return str(message.get("content", ""))
 
 
 def stream_chat(messages: list[Message]) -> Iterator[str]:
@@ -56,4 +67,11 @@ def stream_chat(messages: list[Message]) -> Iterator[str]:
         httpx.HTTPStatusError: bad status, e.g. 404 = model not pulled.
         httpx.ConnectError: Ollama not running.
     """
-    raise NotImplementedError("2.6: write stream_chat()")
+    url = f"{OLLAMA_URL}/api/chat"
+    # `with` closes the connection at the end. Java: try-with-resources
+    with httpx.stream("POST", url, json=chat_body(messages), timeout=120.0) as response:
+        response.raise_for_status()  # 404 / 500 -> HTTPStatusError
+        for line in response.iter_lines():
+            text = chunk_text(line)
+            if text:  # skip "" (blank lines and the last "done" line)
+                yield text

@@ -11,6 +11,7 @@ Process + quiz: [REVIEW_01_python.md](REVIEW_01_python.md).
 | ABC + `@abstractmethod` | an explicit contract that fails early if a method is missing | `interface` | 1.4 |
 | `approx` (pytest) | float compare with a tiny allowed error | `assertEquals(0.15, x, 1e-6)` | 1.9 |
 | `assert` (pytest) | the check; on fail pytest prints both sides | `assertEquals` | 1.9 |
+| `capsys` | pytest fixture that captures `print()` output | a fake `System.out` | 2.6 |
 | Comprehension | build a list/dict/set in one line | `stream().map().filter()` | 1.3 |
 | `Counter` | counts items | `Map<K, Integer>` + loop | 1.3 |
 | `@dataclass` | `__init__`, `__repr__`, `__eq__` written for you | `record` / Lombok `@Data` | 1.4 |
@@ -25,6 +26,7 @@ Process + quiz: [REVIEW_01_python.md](REVIEW_01_python.md).
 | Fixture | function pytest runs before a test; matched by parameter name | `@BeforeEach` | 1.9 |
 | Floor division `//` | integer result | `7 // 2` = 3; `7 / 2` = 3.5 | 1.2 |
 | `frozen=True` | immutable dataclass | immutable record | 1.4 |
+| Generator (`yield`) | function that hands out values one at a time, pausing between | `Iterator` | 2.6 |
 | `httpx` | HTTP client | `HttpClient` | 1.7 |
 | `is` vs `==` | same object vs same value | `==` vs `.equals()` | 1.2 |
 | `json.loads` / `json.dumps` | text → dict / dict → text | Jackson `readValue` / `writeValueAsString` | 1.7 |
@@ -38,6 +40,7 @@ Process + quiz: [REVIEW_01_python.md](REVIEW_01_python.md).
 | `pathlib.Path` | file paths; `p / "a.txt"` | `java.nio.file.Path` | 1.7 |
 | `@property` | a getter that reads like a field | getter | 1.4 |
 | `pyproject.toml` | project + dependencies | `pom.xml` | 1.1 |
+| `python -m package` | runs the package's `__main__.py` | `Main-Class` in a jar manifest | 2.6 |
 | `raise_for_status()` | turn a 4xx/5xx into an exception (404 is not one by itself) | `if (code >= 400) throw` | 1.7 |
 | `raises` (pytest) | test passes only if that error happens | `assertThrows` | 1.9 |
 | `self` | the current object, written out | `this` | 1.4 |
@@ -50,6 +53,7 @@ Process + quiz: [REVIEW_01_python.md](REVIEW_01_python.md).
 | Truthy / falsy | `0`, `""`, `[]`, `{}`, `None` are false | `if items:` = not empty | 1.2 |
 | `try / except / else / finally` | `else` runs only if no error | try/catch/finally | 1.5 |
 | `tuple` | fixed, immutable sequence; unpack with `a, b = t` | record / `List.of` | 1.2, 1.3 |
+| `TypedDict` | a dict with known keys; checked by pyright, plain dict at runtime | a record, compile-time only | 2.6 |
 | `uv` | installs Python + packages, runs files | Maven / Gradle | 1.1 |
 | `uv.lock` | exact versions; commit it | Gradle lockfile | 1.1 |
 | `.venv` | per-project packages, git-ignored | (no shared `~/.m2`) | 1.1 |

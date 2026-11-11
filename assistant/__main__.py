@@ -4,6 +4,14 @@
 `public static void main` named in the jar's manifest.
 """
 
+import sys
+
 from assistant.cli import main
+
+# The model may print an emoji the terminal's encoding lacks (seen: cp932,
+# UnicodeEncodeError). errors="replace" prints "?" instead of crashing.
+reconfigure = getattr(sys.stdout, "reconfigure", None)  # None if stdout has no such method
+if reconfigure is not None:
+    reconfigure(errors="replace")
 
 main()

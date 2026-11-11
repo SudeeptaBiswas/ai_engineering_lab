@@ -3,23 +3,26 @@
 Updated: 2026-11-11
 
 ## Now
-- 1.1–1.5 + 1.7 + 1.9 + 2.1–2.5 done. Overall 9.0% (phase 01: 73%, 02: 78%).
-- Lesson 2.6 written (assistant v1): user fills `assistant/` stubs until
-  `02_llm_fundamentals/2_6_assistant_v1` tests pass. Lesson rules checked by a hook.
+- 1.1–1.5 + 1.7 + 1.9 + 2.1–2.6 done. Overall 10.1% (phase 01: 73%, 02: 100%).
+- assistant v1 works (`uv run python -m assistant`). Code by Claude; user
+  still to read it. Lesson rules checked by a hook.
 - Review rule (DECISIONS 2026-11-08): critical issue → a check; minor → the
   "End-of-course review" list at the bottom.
 - From 2.6: exercises are pytest tests (DECISIONS 2026-11-09).
-- Three levels (DECISIONS 2026-11-11): Basic 58 h left → apply (est.
-  2026-12-10), Intermediate 60 h, Advanced 63 h. Order: PLAN.md.
+- Three levels (DECISIONS 2026-11-11): Basic 56 h left → apply (est.
+  2026-12-09), Intermediate 60 h, Advanced 63 h. Order: PLAN.md.
 
 ## Queue
-a. User: solve 2.6 (memory → client → cli), then Claude checks.
-b. Next after 2.6: 3.1 (Basic order in PLAN.md).
+a. User: read `assistant/` (memory → client → cli) + REVIEW_02 section 2.6.
+b. Claude: write lesson 3.1 (Basic order in PLAN.md).
 c. Optional: compare gemma4 E2B vs qwen3:4b on this PC (user to decide).
-d. Open (user to decide): by-hand topics 2.6, 3.3, 4.1: write them (plan)
-   or read Claude's solution (faster, learns less).
+d. Open (user to decide): by-hand topics 3.3, 4.1: write them (plan)
+   or read Claude's solution (faster, learns less). 2.6: Claude wrote it.
 
 ## Done
+- 2026-11-11 — topic 2.6 done (10284Sudee), code by Claude: 10 functions in
+  `assistant/`. 28 passed in 12.79 s (2 real Ollama), pyright 0. Real run,
+  2 turns, piped: second answer "Green." Fix: emoji crash on cp932 output.
 - 2026-11-11 — course split in three levels (docs only). 10284Sudee:
   2.6 folder added to .vscode pytestArgs (git-ignored), 28 tests collected.
 - 2026-11-09 — lesson 2.6 written (assistant v1, BISWAS): 2 examples

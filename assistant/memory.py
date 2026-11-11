@@ -4,7 +4,6 @@ The model remembers nothing between calls (lesson 2.3). This class keeps
 the chat and hands it out each turn. When it grows past a token budget,
 the oldest messages go (lesson 2.1), before Ollama cuts silently (2.6 part 1).
 
-YOUR PART: replace each `raise NotImplementedError` with code.
 Spec = 02_llm_fundamentals/2_6_assistant_v1/exercises_2_6_1_memory.py
 """
 
@@ -62,7 +61,11 @@ class ChatMemory:
         Returns:
             e.g. [{"role": "system", ...}, {"role": "user", "content": "hi"}].
         """
-        raise NotImplementedError("2.6: write messages()")
+        to_send: list[Message] = [self.system_message]  # a new list each call
+        for message in self.history:
+            to_send.append(message)
+        return to_send
+        # concise: return [self.system_message, *self.history]
 
     def token_count(self) -> int:
         """Estimated tokens of everything messages() returns.
@@ -70,7 +73,11 @@ class ChatMemory:
         Returns:
             Sum of estimate_tokens(content) over all messages, system included.
         """
-        raise NotImplementedError("2.6: write token_count()")
+        total = 0
+        for message in self.messages():
+            total += estimate_tokens(message["content"])
+        return total
+        # concise: return sum(estimate_tokens(m["content"]) for m in self.messages())
 
     def add(self, role: str, content: str) -> None:
         """Append one message to the history, then trim().
@@ -81,7 +88,11 @@ class ChatMemory:
         Raises:
             ValueError: role not in ROLES (e.g. "assitant"). Java: IllegalArgumentException
         """
-        raise NotImplementedError("2.6: write add()")
+        if role not in ROLES:
+            # {role!r} shows the text with quotes, so "" is visible in the error
+            raise ValueError(f"role must be one of {ROLES}, got {role!r}")
+        self.history.append({"role": role, "content": content})
+        self.trim()
 
     def trim(self) -> None:
         """Drop the OLDEST history message while token_count() > max_tokens.
@@ -90,8 +101,10 @@ class ChatMemory:
         newest message, even if it alone is over budget.
         Hint: a while loop; list.pop(0) removes the first item.
         """
-        raise NotImplementedError("2.6: write trim()")
+        # len(...) > 1 keeps the newest message even when it alone is too big
+        while self.token_count() > self.max_tokens and len(self.history) > 1:
+            self.history.pop(0)  # remove the oldest. Java: list.remove(0)
 
     def reset(self) -> None:
         """Forget the chat (/reset). The system message stays."""
-        raise NotImplementedError("2.6: write reset()")
+        self.history = []

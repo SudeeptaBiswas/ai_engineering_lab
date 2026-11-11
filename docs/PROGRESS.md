@@ -8,7 +8,7 @@ Overall % = hours of finished topics / 199. Hours spent don't count as progress.
 | # | Phase | Target h | Logged h | Done % |
 |---|---|---|---|---|
 | 01 | Python for Java devs | 15 | 11 | 73 |
-| 02 | LLM fundamentals | 9 | 7 | 78 |
+| 02 | LLM fundamentals | 9 | 9 | 100 |
 | 03 | Prompting + tool calling | 8 | 0 | 0 |
 | 04 | RAG | 38 | 0 | 0 |
 | 05 | Evals + tracing | 10 | 0 | 0 |
@@ -17,7 +17,7 @@ Overall % = hours of finished topics / 199. Hours spent don't count as progress.
 | 08 | Serve + ship | 13 | 0 | 0 |
 | 09 | Java bridge | 13 | 0 | 0 |
 | 10 | Capstone | 33 | 0 | 0 |
-| | **Total** | **199** | **18** | **9.0** |
+| | **Total** | **199** | **20** | **10.1** |
 
 ## Levels
 Hours left per level (TOPICS.md, `Lvl`). End dates assume 2 h a day from
@@ -25,13 +25,15 @@ Hours left per level (TOPICS.md, `Lvl`). End dates assume 2 h a day from
 
 | Level | Total h | Done h | Left h | End date |
 |---|---|---|---|---|
-| Basic → apply | 76 | 18 | 58 | 2026-12-10 |
-| Intermediate | 60 | 0 | 60 | 2027-01-09 |
-| Advanced | 63 | 0 | 63 | 2027-02-10 |
-| **Total** | **199** | **18** | **181** | |
+| Basic → apply | 76 | 20 | 56 | 2026-12-09 |
+| Intermediate | 60 | 0 | 60 | 2027-01-08 |
+| Advanced | 63 | 0 | 63 | 2027-02-09 |
+| **Total** | **199** | **20** | **179** | |
 
 ## Session log
 Newest first: date, hours, phase, what was finished.
+
+- 2026-11-11 — 2 h (topic estimate; code by Claude) — 02 — topic 2.6 assistant v1 done, 28/28 PASS.
 
 - 2026-11-09 — 1 h (estimate) — 01 — topic 1.9 pytest done, 14/14 PASS.
 

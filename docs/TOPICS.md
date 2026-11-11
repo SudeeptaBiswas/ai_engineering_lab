@@ -21,7 +21,7 @@ Lvl: B = Basic, I = Intermediate, A = Advanced (PLAN.md, Levels).
 | 2.3 | Chat API over HTTP: roles, streaming | 1.5 | 2026-11-06 | B |
 | 2.4 | Sampling: temperature, top_p, max tokens | 1 | 2026-11-08 | B |
 | 2.5 | Embeddings + similarity | 2 | 2026-11-09 | B |
-| 2.6 | Project: CLI chatbot with memory | 2 | | B |
+| 2.6 | Project: CLI chatbot with memory | 2 | 2026-11-11 | B |
 | **03** | **Prompting + tool calling** | **8** | | |
 | 3.1 | Prompt patterns: system, few-shot, step-by-step | 2 | | B |
 | 3.2 | Structured output: JSON + pydantic validation | 2 | | B |

@@ -12,6 +12,7 @@ Process + quiz: [REVIEW_02_llm.md](REVIEW_02_llm.md).
 | Autoregressive | write one token, append it, guess the next, repeat | "The cat" → "sat" → "on" ... | 2.1 |
 | Batching | send many texts in one call | 5 notes: 1 call 0.38–0.60 s vs 5 calls 1.34–1.92 s | 2.5 |
 | BPE | build tokens by gluing the most common neighbour pair, again and again | `t`+`h` → `th` | 2.1 |
+| Chat memory | the history your code keeps and resends every turn | `ChatMemory.messages()` | 2.6 |
 | Context length | max tokens a model CAN see | qwen3:4b: 262 144 | 2.2 |
 | Context window | token limit for one call: system + history + question + answer | like max request body size | 2.1 |
 | Cosine similarity | how alike two directions are: dot ÷ (norm × norm) | 1 same, 0 right angle, -1 opposite | 2.5 |
@@ -37,6 +38,7 @@ Process + quiz: [REVIEW_02_llm.md](REVIEW_02_llm.md).
 | No memory (stateless) | every call starts from zero; your code resends history | like a stateless REST call | 2.1, 2.3 |
 | Norm | arrow length: sqrt(dot(a, a)) | norm([3, 4]) = 5 | 2.5 |
 | Normalized vector | length 1.0, so cosine = dot | nomic vectors are | 2.5 |
+| `num_ctx` | Ollama option: context size in tokens; over it, messages are dropped silently | default 4096 here; 1024 gave "Blue" | 2.6 |
 | `num_predict` | max tokens to write: a hard cut, not "be short" | 12 → stops mid-sentence | 2.3, 2.4 |
 | Ollama | runs LLMs on your PC, port 11434 | pull/list/show/run/ps/rm ≈ Docker | 2.2 |
 | Parameters (weights) | numbers the model learned | 4b = 4 billion | 2.2 |
@@ -58,6 +60,7 @@ Process + quiz: [REVIEW_02_llm.md](REVIEW_02_llm.md).
 | Tokenizer | cuts text into tokens | like a compiler's lexer | 2.1 |
 | top_k | keep only the k best tokens before the pick | qwen3 default 20; `top_k 1` = greedy | 2.4 |
 | top_p | keep the best tokens until they cover p | qwen3 default 0.95 | 2.4 |
+| Trimming | drop the oldest messages to stay under a token budget | budget 2000, system message always kept | 2.6 |
 | User (role) | the person's messages | "What is RAG?" | 2.3 |
 | Vector | a list of numbers = an arrow with a direction | [0.9, 0.1] points east | 2.5 |
 | Vocabulary | all tokens a model knows (a Map<String, Integer>) | qwen3: 151 936 tokens | 2.1, 2.4 |

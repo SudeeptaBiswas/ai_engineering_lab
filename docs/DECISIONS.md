@@ -2,6 +2,16 @@
 
 Newest first. One entry per change: what, replaces what, why.
 
+## 2026-11-11 — 2.6: Claude wrote the solution
+- What: Claude filled the 10 stubs in `assistant/` (user: "write it, do
+  commit"). User reads the code instead of writing it.
+- Replaces: user fills the stubs (2026-11-09 entry). The "hints only"
+  rule for exercises still stands unless the user asks again.
+- Why: user wants the job ASAP; libraries do chat memory in real work.
+- Still open: same choice for 3.3 and 4.1 (STATUS queue).
+- Added: `__main__.py` sets stdout `errors="replace"`. Measured: piped
+  output on this PC is cp932, an emoji from the model crashed the app.
+
 ## 2026-11-11 — Three levels: Basic → apply, Intermediate, Advanced
 - What: topics grouped in three levels (PLAN.md Levels, TOPICS.md `Lvl`,
   PROGRESS.md Levels). Basic 58 h left, Intermediate 60 h, Advanced 63 h.

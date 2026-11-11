@@ -80,3 +80,21 @@ cosine(a, b) = dot(a, b) / (norm(a) × norm(b))
 <details><summary>Q3. "I love this movie" vs "I hate this movie" scores 0.69. Why?</summary>Embeddings measure what it's about, not whether it's positive or true.</details>
 <details><summary>Q4. Why can cosine = dot for nomic-embed-text?</summary>Its vectors are normalized (length 1.0).</details>
 <details><summary>Q5. Why batch the embed call?</summary>5 notes: 1 call 0.38–0.60 s vs 5 calls 1.34–1.92 s.</details>
+
+## 2.6 Project: assistant v1, CLI chatbot with memory
+```
+you type → memory.add("user") → trim oldest if over budget
+  → stream_chat(system + history) → print each chunk as it arrives
+  → memory.add("assistant", full reply) → next turn resends it all
+```
+- The model remembers nothing: **memory = your code resends the history**.
+- Over `num_ctx` (4096 here) Ollama drops messages silently: "Blue" instead of "green".
+- So the app trims itself (oldest first, never the system message or the newest).
+- `yield` hands out chunks while they arrive, so printing starts at once.
+
+<details><summary>Q1. Where does the chatbot's memory live?</summary>In `ChatMemory.history`, a list in RAM. Every turn sends system message + history again.</details>
+<details><summary>Q2. Why trim before Ollama does?</summary>Ollama cuts with no error and may drop the fact you need. Own trim = known rule: oldest first.</details>
+<details><summary>Q3. Budget is 2000 but `num_ctx` is 4096. Why so low?</summary>chars / 4 is 1.2–2.2x under the real count, and the 300-token answer needs room too.</details>
+<details><summary>Q4. What does calling a function with `yield` do?</summary>Runs nothing; returns a generator. Each `for` step runs to the next `yield`. One pass only.</details>
+<details><summary>Q5. Why is the last stream line skipped?</summary>Its content is "" (`done: true`); "" is not a chunk (the 2.3 bug).</details>
+<details><summary>Q6. How is this done at work?</summary>A library: LangChain message history + `trim_messages` (4.5), LangGraph checkpointers (6.5). Same steps inside.</details>

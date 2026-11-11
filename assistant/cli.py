@@ -2,14 +2,13 @@
 
   uv run python -m assistant
 
-YOUR PART: replace each `raise NotImplementedError` with code.
 Spec = 02_llm_fundamentals/2_6_assistant_v1/exercises_2_6_3_cli.py
 """
 
-import httpx  # pyright: ignore[reportUnusedImport] — httpx.HTTPError in main()
+import httpx  # httpx.HTTPError in main()
 
 from assistant.memory import ChatMemory
-from assistant.ollama_client import stream_chat  # pyright: ignore[reportUnusedImport]
+from assistant.ollama_client import stream_chat
 
 SYSTEM_PROMPT = "You are a helpful assistant. Answer in 1 to 3 short sentences."
 # Estimated tokens (chars / 4). Real ones ran 1.2-2.2x more (2.6 part 1),
@@ -34,7 +33,16 @@ def answer(memory: ChatMemory, user_text: str) -> str:
     Raises:
         httpx.HTTPError: from stream_chat (main() catches it).
     """
-    raise NotImplementedError("2.6: write answer()")
+    memory.add("user", user_text)
+    print("bot> ", end="", flush=True)  # end="" = no newline; flush = show now
+    chunks: list[str] = []
+    for chunk in stream_chat(memory.messages()):
+        print(chunk, end="", flush=True)
+        chunks.append(chunk)
+    print()  # the newline after the full reply
+    reply = "".join(chunks)  # Java: String.join("", chunks)
+    memory.add("assistant", reply)
+    return reply
 
 
 def main() -> None:
@@ -49,4 +57,21 @@ def main() -> None:
     httpx.HTTPError from answer(): print a line with "error" and go on.
     Java: while (true) { String line = scanner.nextLine(); ... }
     """
-    raise NotImplementedError("2.6: write main()")
+    memory = ChatMemory(SYSTEM_PROMPT, MAX_HISTORY_TOKENS)
+    while True:
+        try:
+            line = input("you> ").strip()
+        except EOFError:  # Ctrl+Z / Ctrl+D: no more input
+            return
+        if line in EXIT_COMMANDS:
+            return
+        if line == RESET_COMMAND:
+            memory.reset()
+            print("(chat forgotten)")
+            continue
+        if not line:  # empty line: send nothing
+            continue
+        try:
+            answer(memory, line)
+        except httpx.HTTPError as error:
+            print(f"\nerror: {error}. Is Ollama running?")
