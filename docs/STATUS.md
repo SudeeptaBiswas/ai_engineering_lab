@@ -1,6 +1,6 @@
 # Status
 
-Updated: 2026-11-09
+Updated: 2026-11-11
 
 ## Now
 - 1.1–1.5 + 1.7 + 1.9 + 2.1–2.5 done. Overall 9.0% (phase 01: 73%, 02: 78%).
@@ -9,13 +9,19 @@ Updated: 2026-11-09
 - Review rule (DECISIONS 2026-11-08): critical issue → a check; minor → the
   "End-of-course review" list at the bottom.
 - From 2.6: exercises are pytest tests (DECISIONS 2026-11-09).
+- Three levels (DECISIONS 2026-11-11): Basic 58 h left → apply (est.
+  2026-12-10), Intermediate 60 h, Advanced 63 h. Order: PLAN.md.
 
 ## Queue
 a. User: solve 2.6 (memory → client → cli), then Claude checks.
-b. On 10284Sudee: add `02_llm_fundamentals/2_6_assistant_v1` to .vscode pytestArgs.
+b. Next after 2.6: 3.1 (Basic order in PLAN.md).
 c. Optional: compare gemma4 E2B vs qwen3:4b on this PC (user to decide).
+d. Open (user to decide): by-hand topics 2.6, 3.3, 4.1: write them (plan)
+   or read Claude's solution (faster, learns less).
 
 ## Done
+- 2026-11-11 — course split in three levels (docs only). 10284Sudee:
+  2.6 folder added to .vscode pytestArgs (git-ignored), 28 tests collected.
 - 2026-11-09 — lesson 2.6 written (assistant v1, BISWAS): 2 examples
   (31.0 s with Ollama; no-Ollama one instant), `assistant/` package with
   stubs, 28 tests (10 memory + 9 client + 9 cli, 2 real). Reference 28/28

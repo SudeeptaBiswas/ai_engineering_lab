@@ -19,6 +19,17 @@ Overall % = hours of finished topics / 199. Hours spent don't count as progress.
 | 10 | Capstone | 33 | 0 | 0 |
 | | **Total** | **199** | **18** | **9.0** |
 
+## Levels
+Hours left per level (TOPICS.md, `Lvl`). End dates assume 2 h a day from
+2026-11-12; they are estimates. Pace so far: 18 h in 8 days.
+
+| Level | Total h | Done h | Left h | End date |
+|---|---|---|---|---|
+| Basic → apply | 76 | 18 | 58 | 2026-12-10 |
+| Intermediate | 60 | 0 | 60 | 2027-01-09 |
+| Advanced | 63 | 0 | 63 | 2027-02-10 |
+| **Total** | **199** | **18** | **181** | |
+
 ## Session log
 Newest first: date, hours, phase, what was finished.
 

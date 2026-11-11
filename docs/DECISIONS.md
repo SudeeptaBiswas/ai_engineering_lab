@@ -2,6 +2,20 @@
 
 Newest first. One entry per change: what, replaces what, why.
 
+## 2026-11-11 — Three levels: Basic → apply, Intermediate, Advanced
+- What: topics grouped in three levels (PLAN.md Levels, TOPICS.md `Lvl`,
+  PROGRESS.md Levels). Basic 58 h left, Intermediate 60 h, Advanced 63 h.
+  After Basic: CV + apply. Intermediate runs during the job hunt.
+- Replaces: one straight run through phases 01–10 (apply at the end).
+- Moved early into Basic: 1.8 async, 7.1–7.4 MCP server, 8.1 FastAPI,
+  8.4 Docker. Reason: job posts ask for MCP and an API.
+- 6.1 agent loop: Claude put it in Basic, user moved it to Intermediate
+  (same day).
+- Moved late: 4.7–4.11, 5.3–5.4 to Intermediate; 6.4 to Advanced.
+- Nothing dropped: total stays 199 h. No CV task in the plan (user: no need).
+- Level contents picked by Claude; user has not reviewed the topic detail.
+- Why: user's goal is to learn and apply for a job ASAP.
+
 ## 2026-11-09 — 2.6: tests given, user writes the app; v1 memory scope
 - What: for 2.6 Claude writes the pytest tests (the spec) and the user
   fills `raise NotImplementedError` stubs in `assistant/`. Tests stay in
