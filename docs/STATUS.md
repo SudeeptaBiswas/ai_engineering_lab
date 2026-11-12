@@ -1,6 +1,6 @@
 # Status
 
-Updated: 2026-11-12
+Updated: 2026-11-13
 
 ## Now
 - 1.1–1.7 + 1.9 + 2.1–2.6 + 3.1–3.2 done. Overall 13.1% (phase 01:
@@ -14,13 +14,27 @@ Updated: 2026-11-12
   2026-12-06), Intermediate 60 h, Advanced 63 h. Order: PLAN.md.
 
 ## Queue
-a. Claude: write lesson 3.3 (raw tool calling, assistant v2).
-   BISWAS: `uv sync` first (pydantic added; `--system-certs` if cert error).
-b. Optional: compare gemma4 E2B vs qwen3:4b on this PC (user to decide).
-c. Open (user to decide): by-hand topics 3.3, 4.1: write them (plan)
-   or read Claude's solution (faster, learns less). 2.6: Claude wrote it.
+a. User: fill the 4 stubs in `3_3_tool_calling/tool_calls_3_3.py` until
+   `uv run pytest 03_prompting_tools/3_3_tool_calling -v` passes (24).
+b. Claude: assistant v2 = the 3.3 tools in `assistant/` (own step,
+   DECISIONS 2026-11-13).
+c. Open (user to decide): add a Claude API topic (~2 h, paid key)?
+   "AI workflow integration" = 8.1 + 8.3 (+6 h) or 6.5 (+4 h)?
+d. Optional: compare gemma4 E2B vs qwen3:4b on this PC (user to decide).
+e. Open (user to decide): 4.1 by hand: write it (plan) or read Claude's
+   solution. 3.3: user writes it (2026-11-13).
 
 ## Done
+- 2026-11-13 — lesson 3.3 written (BISWAS, qwen3:1.7b, temp 0, seed 42):
+  2 examples + `toolbox_3_3.py` (3 tools, given) + 4 stubs + 24 tests
+  (2 files). Measured: 5 products alone 2/5 (107.0 s), with tool 5/5
+  (24.3 s); 4821*3967 alone: 3 answers in 3 runs. Loop 7/8 (30.1–34.8 s,
+  2 runs); "order 1002" never called. Order tool with no example in the
+  description: not called even for A-1001. Error result: model passes it
+  on, no retry; forgiving tool ("1001" → "A-1001") fixes it. qwen3:4b:
+  thinking leaks, 43–80 s per question. Reference 24 passed in
+  10.86–12.06 s (3 runs), 22 + 2 deselected in 0.26 s, pyright 0, lesson
+  rules 0. Stubs: 24 failed. BISWAS `uv sync --system-certs` (pydantic).
 - 2026-11-12 — topic 3.2 done (10284Sudee), code by user: 16 passed in
   3.91 s (2 real Ollama), pyright 0. No bugs; style notes below.
   REVIEW_03 3.2 (6 quiz), +5 AI and +3 Python keywords.

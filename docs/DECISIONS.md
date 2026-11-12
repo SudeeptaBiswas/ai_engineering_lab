@@ -2,6 +2,16 @@
 
 Newest first. One entry per change: what, replaces what, why.
 
+## 2026-11-13 — 3.3: user writes it; assistant v2 is its own step
+- What: 3.3 by hand: Claude writes lesson, tools, tests; user fills the
+  4 stubs. assistant v2 (tools in `assistant/`) comes after, in its own
+  commit.
+- Replaces: open STATUS question (write vs read Claude's solution);
+  PLAN v2 "after 3.3" built in the same step.
+- Why: user's choice (both "Recommended" options). Smaller steps.
+- Tools given in `toolbox_3_3.py`: one file with tools + loop was 190 lines.
+- Still open: Claude API topic; "AI workflow integration" (STATUS queue).
+
 ## 2026-11-12 — VS Code test folders: tracked + checked
 - What: `.vscode/settings.json` + `launch.json` (F5 debug setups) now in
   git (rest of `.vscode/` still ignored). `lab_tools/vscode_tests.py` fails the pre-commit if a folder
