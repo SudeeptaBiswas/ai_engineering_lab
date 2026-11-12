@@ -3,8 +3,8 @@
 Newest first. One entry per change: what, replaces what, why.
 
 ## 2026-11-12 — VS Code test folders: tracked + checked
-- What: `.vscode/settings.json` now in git (rest of `.vscode/` still
-  ignored). `lab_tools/vscode_tests.py` fails the pre-commit if a folder
+- What: `.vscode/settings.json` + `launch.json` (F5 debug setups) now in
+  git (rest of `.vscode/` still ignored). `lab_tools/vscode_tests.py` fails the pre-commit if a folder
   with pytest files is missing from `pytestArgs`.
 - Replaces: settings.json git-ignored, edited by hand on each PC.
 - Why: 3.1 tests didn't show in VS Code (folder not listed); user asked

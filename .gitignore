@@ -13,6 +13,7 @@ venv/
 # Editors / OS
 .vscode/*
 !.vscode/settings.json
+!.vscode/launch.json
 .idea/
 Thumbs.db
 .DS_Store
