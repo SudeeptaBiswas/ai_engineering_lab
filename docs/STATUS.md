@@ -14,12 +14,20 @@ Updated: 2026-11-12
   2026-12-08), Intermediate 60 h, Advanced 63 h. Order: PLAN.md.
 
 ## Queue
-a. Claude: write lesson 1.6 (pydantic), then 3.2.
-b. Optional: compare gemma4 E2B vs qwen3:4b on this PC (user to decide).
-c. Open (user to decide): by-hand topics 3.3, 4.1: write them (plan)
+a. User: lesson 1.6. Read LESSON_1_6.md, run 2 examples, write `Ticket`
+   + 3 stubs in `models_1_6.py` until `exercises_1_6.py` passes (19 tests).
+   BISWAS: `uv sync` first (pydantic added; `--system-certs` if cert error).
+b. Claude: write lesson 3.2 (structured output, uses 1.6 Ticket idea).
+c. Optional: compare gemma4 E2B vs qwen3:4b on this PC (user to decide).
+d. Open (user to decide): by-hand topics 3.3, 4.1: write them (plan)
    or read Claude's solution (faster, learns less). 2.6: Claude wrote it.
 
 ## Done
+- 2026-11-12 — lesson 1.6 written (10284Sudee, pydantic 2.14.3 added by
+  `uv add`, user OK): 2 examples (instant) + Ticket model + 3 stubs + 19
+  tests. Measured: lax `"3"` → 3 and `true` → 1, strict both `int_type`;
+  10 000 validations 4.5–8.9 µs each (3 runs). Reference 19 passed in
+  0.17–0.19 s (3 runs), pyright 0, lesson rules 0.
 - 2026-11-12 — topic 3.1 done (10284Sudee), code by user: 22 passed in
   1.29 s (2 real Ollama), pyright 0. No bugs; style notes below.
   REVIEW_03 started (7 quiz), +6 AI and +4 Python keywords.
