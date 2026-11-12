@@ -11,7 +11,7 @@ Lvl: B = Basic, I = Intermediate, A = Advanced (PLAN.md, Levels).
 | 1.3 | Collections: list, dict, set, tuple, comprehensions | 2 | 2026-11-03 | B |
 | 1.4 | Classes, dataclasses (vs Java POJOs) | 2 | 2026-11-03 | B |
 | 1.5 | Modules, imports, exceptions | 1.5 | 2026-11-08 | B |
-| 1.6 | Type hints + pydantic | 2 | | B |
+| 1.6 | Type hints + pydantic | 2 | 2026-11-12 | B |
 | 1.7 | Files, JSON, HTTP with httpx | 1.5 | 2026-11-06 | B |
 | 1.8 | async/await | 2 | | B |
 | 1.9 | pytest | 1 | 2026-11-09 | B |

@@ -51,6 +51,22 @@ error → except blocks in order (child before parent) → else (no error) → f
 <details><summary>Q3. raise OllamaDownError(...) from error keeps what?</summary>The original error, as __cause__ (Java: new X(msg, cause)).</details>
 <details><summary>Q4. Checked exceptions in Python?</summary>None. Nothing forces a catch, so docstrings list Raises.</details>
 
+## 1.6 Type hints + pydantic
+```
+JSON text → Model.model_validate_json → (field_validator mode="before" cleans)
+  → hints become rules (Field, Literal, extra="forbid") → object, or ValidationError (all problems)
+```
+- Hints are notes: Python ignores them at runtime. pydantic checks them.
+- Lax by default (`"3"` → 3, `true` → 1); `Field(strict=True)` refuses.
+- Shape, not truth: `"bug"` on a billing ticket passes. Measure that (3.1, 5.1).
+- One source of labels: `Label = Literal[...]`, `LABELS = list(get_args(Label))`.
+
+<details><summary>Q1. A dataclass gets text=5. Error?</summary>No. Dataclasses don't check types; pydantic does.</details>
+<details><summary>Q2. Unknown key "team" by default? How to refuse it?</summary>Ignored. ConfigDict(extra="forbid") → extra_forbidden.</details>
+<details><summary>Q3. What is loc ("tags", 1)? And ()?</summary>The 2nd tag. () = the whole input, e.g. json_invalid.</details>
+<details><summary>Q4. Why mode="before" on the label validator?</summary>Literal is case-sensitive: clean " Billing." to "billing" before the check.</details>
+<details><summary>Q5. Why not Literal[*LABELS]?</summary>Literal needs fixed values pyright can see. Go the other way: get_args(Label).</details>
+
 ## 1.7 Files, JSON, HTTP
 ```
 Path → open(encoding="utf-8") in `with` → text → json.loads → dict

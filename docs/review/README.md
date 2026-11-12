@@ -10,7 +10,7 @@ For reviewing what was learned. Grows by one section per finished topic.
 
 | File | Covers |
 |---|---|
-| [REVIEW_01_python.md](REVIEW_01_python.md) | 1.1–1.5, 1.7, 1.9: flows + quiz |
+| [REVIEW_01_python.md](REVIEW_01_python.md) | 1.1–1.7, 1.9: flows + quiz |
 | [REVIEW_02_llm.md](REVIEW_02_llm.md) | 2.1–2.5: flows + quiz |
 | [REVIEW_03_prompting.md](REVIEW_03_prompting.md) | 3.1: flows + quiz |
 | [GLOSSARY_AI.md](GLOSSARY_AI.md) | AI / LLM keywords, A–Z |

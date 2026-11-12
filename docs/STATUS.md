@@ -3,26 +3,27 @@
 Updated: 2026-11-12
 
 ## Now
-- 1.1–1.5 + 1.7 + 1.9 + 2.1–2.6 + 3.1 done. Overall 11.1% (phase 01:
-  73%, 02: 100%, 03: 25%).
+- 1.1–1.7 + 1.9 + 2.1–2.6 + 3.1 done. Overall 12.1% (phase 01:
+  87%, 02: 100%, 03: 25%).
 - assistant v1 works (`uv run python -m assistant`). Code by Claude; user
   read memory, client, cli (2026-11-11). Lesson rules checked by a hook.
 - Review rule (DECISIONS 2026-11-08): critical issue → a check; minor → the
   "End-of-course review" list at the bottom.
 - From 2.6: exercises are pytest tests (DECISIONS 2026-11-09).
-- Three levels (DECISIONS 2026-11-11): Basic 54 h left → apply (est.
-  2026-12-08), Intermediate 60 h, Advanced 63 h. Order: PLAN.md.
+- Three levels (DECISIONS 2026-11-11): Basic 52 h left → apply (est.
+  2026-12-07), Intermediate 60 h, Advanced 63 h. Order: PLAN.md.
 
 ## Queue
-a. User: lesson 1.6. Read LESSON_1_6.md, run 2 examples, write `Ticket`
-   + 3 stubs in `models_1_6.py` until `exercises_1_6.py` passes (19 tests).
+a. Claude: write lesson 3.2 (structured output, uses 1.6 Ticket idea).
    BISWAS: `uv sync` first (pydantic added; `--system-certs` if cert error).
-b. Claude: write lesson 3.2 (structured output, uses 1.6 Ticket idea).
-c. Optional: compare gemma4 E2B vs qwen3:4b on this PC (user to decide).
-d. Open (user to decide): by-hand topics 3.3, 4.1: write them (plan)
+b. Optional: compare gemma4 E2B vs qwen3:4b on this PC (user to decide).
+c. Open (user to decide): by-hand topics 3.3, 4.1: write them (plan)
    or read Claude's solution (faster, learns less). 2.6: Claude wrote it.
 
 ## Done
+- 2026-11-12 — topic 1.6 done (10284Sudee), code by user: 19 passed in
+  0.21 s, pyright 0. No bugs; labels now written once (`Label` +
+  `get_args`). Style notes below. REVIEW_01 1.6 (5 quiz), +9 Python keywords.
 - 2026-11-12 — lesson 1.6 written (10284Sudee, pydantic 2.14.3 added by
   `uv add`, user OK): 2 examples (instant) + Ticket model + 3 stubs + 19
   tests. Measured: lax `"3"` → 3 and `true` → 1, strict both `int_type`;
@@ -131,6 +132,12 @@ d. Open (user to decide): by-hand topics 3.3, 4.1: write them (plan)
 # End-of-course review
 Minor notes, batched for the end (DECISIONS 2026-11-08). BUG = wrong result,
 should get a check instead.
+
+## Review notes 1.6 (2026-11-12)
+- 3 blank lines in two places (after `LABELS`, after `parse_ticket`); want 2.
+- Trailing space after `else:` in `error_fields`; `# Define loc here` adds nothing.
+- No blank line after the module docstring, or between `typing` and
+  `pydantic` imports (stdlib group, then third-party group).
 
 ## Review notes 3.1 (2026-11-12)
 - `parse_label`: no `return None` at the end (works, but implicit);

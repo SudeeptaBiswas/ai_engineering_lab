@@ -5,10 +5,12 @@ until every test in exercises_1_6.py passes:
   uv run pytest 01_python_fundamentals/1_6_pydantic/exercises_1_6.py -v
 No Ollama needed. Look at examples_1_6_2_pydantic.py for the syntax.
 """
+from typing import Literal, get_args
+from pydantic import BaseModel, ConfigDict, Field, ValidationError, field_validator
 
-from pydantic import BaseModel, ValidationError  # pyright: ignore[reportUnusedImport] — until you use it
+Label = Literal["billing", "login", "bug", "other"]  # the one source of labels
+LABELS: list[str] = list(get_args(Label))  # built from Label, never typed twice
 
-LABELS = ["billing", "login", "bug", "other"]
 
 
 class Ticket(BaseModel):
@@ -23,8 +25,26 @@ class Ticket(BaseModel):
     Unknown keys (e.g. "team") must be an error, not silently dropped.
     Hints: Field(...), Literal[...], ConfigDict(extra=...), @field_validator.
     """
+    model_config = ConfigDict(extra="forbid")
 
-    pass  # TODO: delete this line, write the fields
+    text: str = Field(min_length=1)
+    label: Label
+    priority: int = Field(ge=1, le=5)
+    tags: list[str] = []
+
+    @field_validator("label", mode="before")  # runs BEFORE the Literal check
+    @classmethod  # gets the class, not an object. Java: static
+    def clean_label(cls, value: object) -> object:
+        """Tidy the label first: " Billing." -> "billing" (the 3.1 cleaning).
+
+        Args:
+            value: the raw input for "label", any type.
+        Returns:
+            The cleaned text, or value unchanged if it is not text.
+        """
+        if isinstance(value, str):
+            return value.strip().lower().strip(".*")
+        return value
 
 
 def parse_ticket(json_text: str) -> Ticket | None:
@@ -35,7 +55,11 @@ def parse_ticket(json_text: str) -> Ticket | None:
     Returns:
         The Ticket. None for any ValidationError (bad JSON is one too).
     """
-    raise NotImplementedError
+    try:
+        return Ticket.model_validate_json(json_text)
+    except ValidationError:
+        return None
+
 
 
 def error_fields(json_text: str) -> list[str]:
@@ -49,7 +73,18 @@ def error_fields(json_text: str) -> list[str]:
     Returns:
         e.g. ["text", "label"]. [] if the ticket is valid.
     """
-    raise NotImplementedError
+    try:
+        Ticket.model_validate_json(json_text)
+        return []
+    except ValidationError as error:
+        fields: list[str] = []
+        for problem in error.errors():  # one dict per problem
+            loc = problem["loc"]  # Define loc here
+            if not loc:
+                fields.append("(input)")
+            else: 
+                fields.append(".".join(str(part) for part in loc))  # e.g. ("priority",); () = the whole input
+        return fields
 
 
 def count_labels(json_texts: list[str]) -> dict[str, int]:
@@ -61,4 +96,14 @@ def count_labels(json_texts: list[str]) -> dict[str, int]:
         e.g. {"invalid": 1, "billing": 2}. "invalid" is always there (0 if none).
         Labels with no tickets are left out.
     """
-    raise NotImplementedError
+    counts = {"invalid": 0}
+
+    for json_text in json_texts:
+        ticket = parse_ticket(json_text)
+
+        if ticket is None:
+            counts["invalid"] += 1
+        else:
+            counts[ticket.label] = counts.get(ticket.label, 0) + 1
+
+    return counts
