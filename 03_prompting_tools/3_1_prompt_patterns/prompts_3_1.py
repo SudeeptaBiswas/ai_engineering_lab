@@ -10,6 +10,8 @@ from typing import Any  # "any type". Java: Object
 
 import httpx  # pyright: ignore[reportUnusedImport] — until classify() uses it
 
+from decimal import Decimal, InvalidOperation
+
 from assistant.memory import Message  # {"role": ..., "content": ...} (2.6)
 
 OLLAMA_URL = "http://127.0.0.1:11434"  # not "localhost": 2 s slower on Windows (1.7)
@@ -37,7 +39,12 @@ def few_shot_messages(system_prompt: str, examples: list[tuple[str, str]], quest
     Returns:
         [system, user, assistant, ..., user(question)]. 1 + 2 * len(examples) + 1 messages.
     """
-    raise NotImplementedError
+    messages: list[Message] = [{"role": "system", "content": system_prompt}]
+    for ticket, label in examples:
+        messages.append({"role": "user", "content": ticket})
+        messages.append({"role": "assistant", "content": label})  # the "right answer"
+    messages.append({"role": "user", "content": question})
+    return messages
 
 
 def parse_label(answer: str, labels: list[str]) -> str | None:
@@ -51,7 +58,10 @@ def parse_label(answer: str, labels: list[str]) -> str | None:
     Returns:
         e.g. "billing". None for "This is a bug." (a sentence is NOT a label).
     """
-    raise NotImplementedError
+    label:str = answer.strip().lower().strip(".*")
+    if label in labels:
+        return label
+    
 
 
 def final_answer(text: str) -> str | None:
@@ -64,8 +74,10 @@ def final_answer(text: str) -> str | None:
     Returns:
         e.g. "50" (stripped). None if no line starts with "Answer:".
     """
-    raise NotImplementedError
-
+    for line in reversed(text.splitlines()):
+        if line.strip().lower().startswith("answer:"):
+            return line.split(":", 1)[1].strip()
+    return None
 
 def same_number(got: str | None, expected: str) -> bool:
     """True if got and expected are the same number: "8.00" vs "8" -> True.
@@ -76,7 +88,13 @@ def same_number(got: str | None, expected: str) -> bool:
     Returns:
         False for None or text that is not a number (catch ValueError, 1.5).
     """
-    raise NotImplementedError
+    if got is None:
+        return False
+
+    try:
+        return Decimal(got.strip()) == Decimal(expected.strip())
+    except (InvalidOperation, ValueError):
+        return False
 
 
 def score(predictions: list[Any], expected: list[Any]) -> float:
@@ -90,8 +108,18 @@ def score(predictions: list[Any], expected: list[Any]) -> float:
     Raises:
         ValueError: different lengths (a silent zip() would hide a bug, 2.5).
     """
-    raise NotImplementedError
-
+    if len(predictions) != len(expected):
+        raise ValueError(
+            f"Length mismatch: {len(predictions)} predictions "
+            f"vs {len(expected)} expected"
+        )
+    if not expected:
+        return 0.0
+    correct = sum(
+        pred == exp
+        for pred, exp in zip(predictions, expected)
+    )
+    return correct / len(expected)
 
 def classify(ticket: str) -> str | None:
     """Ask the model for the ticket's label, few-shot, and parse the reply.
@@ -108,4 +136,27 @@ def classify(ticket: str) -> str | None:
     Raises:
         httpx.HTTPStatusError: bad status, e.g. 404 = model not pulled.
     """
-    raise NotImplementedError
+    response = httpx.post(
+        f"{OLLAMA_URL}/api/chat",
+        json={
+            "model": MODEL,
+            "messages": few_shot_messages(
+                SYSTEM_PROMPT, EXAMPLES, ticket
+            ),
+            "stream": False,
+            "think": False,
+            "options": {
+                "temperature": 0,
+                "seed": 42,
+                "num_predict": 20,
+            },
+        },
+        timeout=120,
+    )
+
+    response.raise_for_status()
+
+    reply = response.json()
+    content = reply["message"]["content"]
+
+    return parse_label(content, LABELS)

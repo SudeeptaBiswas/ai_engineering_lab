@@ -3,24 +3,26 @@
 Updated: 2026-11-12
 
 ## Now
-- 1.1–1.5 + 1.7 + 1.9 + 2.1–2.6 done. Overall 10.1% (phase 01: 73%, 02: 100%).
+- 1.1–1.5 + 1.7 + 1.9 + 2.1–2.6 + 3.1 done. Overall 11.1% (phase 01:
+  73%, 02: 100%, 03: 25%).
 - assistant v1 works (`uv run python -m assistant`). Code by Claude; user
   read memory, client, cli (2026-11-11). Lesson rules checked by a hook.
 - Review rule (DECISIONS 2026-11-08): critical issue → a check; minor → the
   "End-of-course review" list at the bottom.
 - From 2.6: exercises are pytest tests (DECISIONS 2026-11-09).
-- Three levels (DECISIONS 2026-11-11): Basic 56 h left → apply (est.
-  2026-12-09), Intermediate 60 h, Advanced 63 h. Order: PLAN.md.
+- Three levels (DECISIONS 2026-11-11): Basic 54 h left → apply (est.
+  2026-12-08), Intermediate 60 h, Advanced 63 h. Order: PLAN.md.
 
 ## Queue
-a. User: lesson 3.1. Read LESSON_3_1.md, run 2 examples, fill 6 stubs
-   in `prompts_3_1.py` until `exercises_3_1.py` passes (22 tests).
-b. Claude: write lesson 1.6 (pydantic), then 3.2.
-c. Optional: compare gemma4 E2B vs qwen3:4b on this PC (user to decide).
-d. Open (user to decide): by-hand topics 3.3, 4.1: write them (plan)
+a. Claude: write lesson 1.6 (pydantic), then 3.2.
+b. Optional: compare gemma4 E2B vs qwen3:4b on this PC (user to decide).
+c. Open (user to decide): by-hand topics 3.3, 4.1: write them (plan)
    or read Claude's solution (faster, learns less). 2.6: Claude wrote it.
 
 ## Done
+- 2026-11-12 — topic 3.1 done (10284Sudee), code by user: 22 passed in
+  1.29 s (2 real Ollama), pyright 0. No bugs; style notes below.
+  REVIEW_03 started (7 quiz), +6 AI and +4 Python keywords.
 - 2026-11-12 — 3.1 tests missing in VS Code: folder added to pytestArgs.
   `.vscode/settings.json` + `launch.json` now tracked; pre-commit check
   `lab_tools/vscode_tests.py` (real 0, missing folder 1, no file 1).
@@ -121,6 +123,14 @@ d. Open (user to decide): by-hand topics 3.3, 4.1: write them (plan)
 # End-of-course review
 Minor notes, batched for the end (DECISIONS 2026-11-08). BUG = wrong result,
 should get a check instead.
+
+## Review notes 3.1 (2026-11-12)
+- `parse_label`: no `return None` at the end (works, but implicit);
+  trailing spaces on the blank line after it.
+- Line 11 `# pyright: ignore[reportUnusedImport]` stale: httpx is used now.
+- `decimal` import after `httpx`: stdlib imports first, together.
+- `label:str` → `label: str`; 1 blank line between some functions (want 2).
+- `same_number` catches `ValueError`; `Decimal` only raises `InvalidOperation`.
 
 ## Review notes 2.5 (2026-11-09)
 - `search`: 2 embed calls instead of 1 (`embed([query] + notes)`); ranks by

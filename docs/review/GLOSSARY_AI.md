@@ -2,7 +2,7 @@
 
 A–Z. One line each. Numbers are measured in the lessons (10284Sudee / BISWAS,
 CPU only). Topic = where it was taught; open that LESSON for the full story.
-Process + quiz: [REVIEW_02_llm.md](REVIEW_02_llm.md).
+Process + quiz: [REVIEW_02_llm.md](REVIEW_02_llm.md), [REVIEW_03_prompting.md](REVIEW_03_prompting.md).
 
 | Term | Plain meaning | Example / number | Topic |
 |---|---|---|---|
@@ -23,6 +23,7 @@ Process + quiz: [REVIEW_02_llm.md](REVIEW_02_llm.md).
 | Embedding model | a model that only embeds; a chat model can't | qwen3:1.7b on /api/embed → HTTP 501 | 2.5 |
 | `eval_count` | tokens the model wrote | `prompt_eval_count` = tokens read | 2.3 |
 | Eval rate | writing speed, the one you feel | qwen3:4b 7.1 tok/s, 1.7b 15.4 tok/s | 2.2 |
+| Few-shot | solved examples sent as past user/assistant turns | 4 shots: 6/8 → 7/8, 2.5x prompt tokens | 3.1 |
 | Flaky test | passes on some runs, fails on others | fix: seed, or T 0 | 2.4 |
 | FP16 / Q8_0 / Q4_K_M | quantization formats: 16 / 8.5 / ~5 bits per weight | qwen3:4b: 8.0 / 4.2 / 2.5 GB | 2.2 |
 | Greedy | always pick the top token | T 0 → same answer 10/10 | 2.1, 2.4 |
@@ -41,16 +42,20 @@ Process + quiz: [REVIEW_02_llm.md](REVIEW_02_llm.md).
 | `num_ctx` | Ollama option: context size in tokens; over it, messages are dropped silently | default 4096 here; 1024 gave "Blue" | 2.6 |
 | `num_predict` | max tokens to write: a hard cut, not "be short" | 12 → stops mid-sentence | 2.3, 2.4 |
 | Ollama | runs LLMs on your PC, port 11434 | pull/list/show/run/ps/rm ≈ Docker | 2.2 |
+| Output parsing | code checks the reply's shape; never trust it | "**bug**" → bug; a sentence → None | 3.1 |
 | Parameters (weights) | numbers the model learned | 4b = 4 billion | 2.2 |
 | Pre-training | read huge text, learn to guess the next piece | step 1 of 3 | 2.1 |
 | Preference tuning | people rank answers, model learns what they like | step 3 of 3 | 2.1 |
 | Prompt eval rate | reading speed | qwen3:4b ~21 tok/s, 1.7b 63 tok/s | 2.2 |
+| Prompt pattern | a known way to write messages so the answer comes back in the shape you need | system rules, few-shot, step-by-step | 3.1 |
 | Quantization | store each weight in fewer bits: smaller, faster, a bit less precise | GB ≈ billions × bits ÷ 8 | 2.2 |
 | RAG | find the useful text first, send only that to the model | phase 04 | 2.1, 2.5 |
 | Sampling | weighted random pick of the next token | like a loot table | 2.4 |
+| Score (accuracy) | share of answers equal to the expected ones | 7 of 8 right = 0.875 | 3.1 |
 | Seed | fixes the randomness: same seed + settings + prompt → same answer | `"seed": 42` → Fizzluff x5 | 2.4 |
 | Semantic search | find text by meaning: embed, cosine, sort, top k | login query → reset-password note 0.68 | 2.5 |
 | Softmax | turns scores into odds that add up to 100% | 2.0/1.0/0.5 → 63/23/14% | 2.1 |
+| Step-by-step (chain of thought) | ask for the steps, then a fixed last line `Answer: <n>` | maths 5/6 → 6/6; 49.6 s vs 31.4 s | 3.1 |
 | Streaming | get the answer in pieces as it is written | first text 0.13–0.64 s, whole 2.0–3.2 s | 2.3 |
 | System (role) | developer's rules for the whole chat | "Answer in one short sentence." | 2.3 |
 | Tag (model) | the part after `:` in a model name | `qwen3:4b`; no tag = `latest` | 2.2 |
@@ -64,3 +69,4 @@ Process + quiz: [REVIEW_02_llm.md](REVIEW_02_llm.md).
 | User (role) | the person's messages | "What is RAG?" | 2.3 |
 | Vector | a list of numbers = an arrow with a direction | [0.9, 0.1] points east | 2.5 |
 | Vocabulary | all tokens a model knows (a Map<String, Integer>) | qwen3: 151 936 tokens | 2.1, 2.4 |
+| Zero-shot | just the question, no rules, no examples | tickets: 0/8 usable labels | 3.1 |

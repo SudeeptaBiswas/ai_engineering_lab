@@ -15,6 +15,7 @@ Process + quiz: [REVIEW_01_python.md](REVIEW_01_python.md).
 | Comprehension | build a list/dict/set in one line | `stream().map().filter()` | 1.3 |
 | `Counter` | counts items | `Map<K, Integer>` + loop | 1.3 |
 | `@dataclass` | `__init__`, `__repr__`, `__eq__` written for you | `record` / Lombok `@Data` | 1.4 |
+| `Decimal` | exact decimal number; `Decimal("8.00") == Decimal("8")`; bad text → `InvalidOperation` | `BigDecimal` (but `equals` checks scale) | 3.1 |
 | `dict` | key → value, keeps insert order | `HashMap` | 1.3 |
 | Duck typing | if it has `.run()`, you can call `.run()` | no `implements` needed | 1.4 |
 | `encoding="utf-8"` | always set it on Windows | Windows default is not UTF-8 | 1.7 |
@@ -43,9 +44,12 @@ Process + quiz: [REVIEW_01_python.md](REVIEW_01_python.md).
 | `python -m package` | runs the package's `__main__.py` | `Main-Class` in a jar manifest | 2.6 |
 | `raise_for_status()` | turn a 4xx/5xx into an exception (404 is not one by itself) | `if (code >= 400) throw` | 1.7 |
 | `raises` (pytest) | test passes only if that error happens | `assertThrows` | 1.9 |
+| `reversed()` | walk a list from the end | `Collections.reverse` / `descendingIterator` | 3.1 |
 | `self` | the current object, written out | `this` | 1.4 |
 | `set` | unique items, fast `in` | `HashSet` | 1.3 |
 | Slicing | `nums[1:4]`, `[-2:]`, `[::2]` | `subList` (no full twin) | 1.3 |
+| `split(":", 1)` | cut at the first `:` only (1 = max cuts) | `split(":", 2)` (2 = max parts) | 3.1 |
+| `splitlines()` | text → list of lines, any line ending | `s.lines().toList()` | 3.1 |
 | Spy | a fake that writes down what it received | Mockito `verify` / captor | 1.9 |
 | `sys.path` | where imports are looked up: script folder, then .venv | classpath | 1.5 |
 | Timeout | always give one on HTTP calls | 500-token answer took ~70 s | 1.7 |
