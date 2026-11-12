@@ -15,6 +15,7 @@ Process + quiz: [REVIEW_01_python.md](REVIEW_01_python.md).
 | `capsys` | pytest fixture that captures `print()` output | a fake `System.out` | 2.6 |
 | Comprehension | build a list/dict/set in one line | `stream().map().filter()` | 1.3 |
 | `ConfigDict(extra="forbid")` | unknown keys are an error, not silently ignored | `@JsonIgnoreProperties(ignoreUnknown = false)` | 1.6 |
+| `copy.deepcopy(x)` | a full copy, nested lists/dicts too; later changes to x don't show | deep `clone()` | 3.2 |
 | `Counter` | counts items | `Map<K, Integer>` + loop | 1.3 |
 | `@dataclass` | `__init__`, `__repr__`, `__eq__` written for you | `record` / Lombok `@Data` | 1.4 |
 | `Decimal` | exact decimal number; `Decimal("8.00") == Decimal("8")`; bad text → `InvalidOperation` | `BigDecimal` (but `equals` checks scale) | 3.1 |
@@ -40,6 +41,7 @@ Process + quiz: [REVIEW_01_python.md](REVIEW_01_python.md).
 | `Literal["a", "b"]` | only these exact values (case-sensitive) | `enum` | 1.6 |
 | `localhost` vs `127.0.0.1` | localhost tries IPv6 first on Windows | 2.16 s vs 0.02 s per call | 1.7 |
 | Marker (`@pytest.mark.x`) | a label; `-m "not x"` skips, `-m x` runs only those | `@Tag("x")` | 1.9 |
+| `model_json_schema()` | a pydantic model's rules as a JSON Schema dict | Jackson `JsonSchemaGenerator` | 3.2 |
 | `model_validate_json` | JSON text → checked object in one step; `model_dump()` back to dict | `mapper.readValue(json, X.class)` | 1.6 |
 | Module | one .py file: many functions, constants, classes | (Java: one class per file) | 1.5 |
 | `monkeypatch.setattr` | swap a function for one test, put back after | Mockito | 1.9 |
@@ -59,6 +61,7 @@ Process + quiz: [REVIEW_01_python.md](REVIEW_01_python.md).
 | `split(":", 1)` | cut at the first `:` only (1 = max cuts) | `split(":", 2)` (2 = max parts) | 3.1 |
 | `splitlines()` | text → list of lines, any line ending | `s.lines().toList()` | 3.1 |
 | Spy | a fake that writes down what it received | Mockito `verify` / captor | 1.9 |
+| `str.find` / `str.rfind` | index of the first / last match, -1 if none (no exception) | `indexOf` / `lastIndexOf` | 3.2 |
 | `sys.path` | where imports are looked up: script folder, then .venv | classpath | 1.5 |
 | Timeout | always give one on HTTP calls | 500-token answer took ~70 s | 1.7 |
 | `TransportError` (httpx) | parent of ConnectError + ConnectTimeout | catch the parent for both | 1.5, 1.7 |

@@ -24,7 +24,7 @@ Lvl: B = Basic, I = Intermediate, A = Advanced (PLAN.md, Levels).
 | 2.6 | Project: CLI chatbot with memory | 2 | 2026-11-11 | B |
 | **03** | **Prompting + tool calling** | **8** | | |
 | 3.1 | Prompt patterns: system, few-shot, step-by-step | 2 | 2026-11-12 | B |
-| 3.2 | Structured output: JSON + pydantic validation | 2 | | B |
+| 3.2 | Structured output: JSON + pydantic validation | 2 | 2026-11-12 | B |
 | 3.3 | Raw tool calling over HTTP | 2.5 | | B |
 | 3.4 | Prompt injection basics | 1.5 | | B |
 | **04** | **RAG** | **38** | | |

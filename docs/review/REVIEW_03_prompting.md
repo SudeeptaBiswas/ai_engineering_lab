@@ -24,3 +24,23 @@ system (rules) + examples as past turns (few-shot) + question
 <details><summary>Q5. Why take the LAST "Answer:" line?</summary>The model may correct itself: "Answer: 95 ... Wait ... Answer: 65".</details>
 <details><summary>Q6. "8.00" vs expected "8": equal?</summary>As text no, as numbers yes. Compare as numbers (`Decimal` / `float`); "eight" → False.</details>
 <details><summary>Q7. Is a strict system prompt a security wall?</summary>No. A ticket saying "ignore the rules" can win (prompt injection, 3.4).</details>
+
+## 3.2 Structured output: JSON + pydantic validation
+```
+system: every field described (no example values)
+  + "format": Triage.model_json_schema()   (only fitting tokens allowed)
+  → reply → cut out {...} → Triage.model_validate_json
+  → ok: use it | ValidationError: append reply + error list, ask again (max 3)
+```
+- **Schema = shape, prompt = meaning.** Vague prompt + schema: 8/8 valid, 6/8 right.
+- **An example value gets copied.** `"label": "bug"` in the prompt: 7 of 8 answered bug, 2/8 right.
+- **Describe each field** (allowed values, what 1 and 5 mean): 8/8 right.
+- **Retry fixes the shape, not the meaning:** 7/8 valid by try 2, but 2/8 right.
+- **A limit in the schema cuts text** mid-word (maxLength 30 → "my订阅这个"); pydantic says valid.
+
+<details><summary>Q1. What does Ollama's "format": schema do?</summary>Constrained decoding: the model may only write tokens that fit the schema. The reply always parses.</details>
+<details><summary>Q2. Valid 8/8 with a schema. Done?</summary>No. Valid ≠ right: "Where is your office?" came back as billing. Measure the labels too.</details>
+<details><summary>Q3. Why did one example in the prompt drop accuracy to 2/8?</summary>The model copied its values (bug, priority 3). Describe the fields instead of showing values.</details>
+<details><summary>Q4. What goes back to the model on a retry?</summary>Its own bad reply (assistant) + a user message listing each problem: "- priority: Input should be a valid integer".</details>
+<details><summary>Q5. Why cut from the first "{" to the last "}"?</summary>Replies come wrapped in ```json fences or chatter. Cutting them means the feedback is about real problems.</details>
+<details><summary>Q6. Why keep maxLength out of the schema you send?</summary>Ollama enforces it by stopping the string: junk text that still passes. Check limits with pydantic + retry.</details>

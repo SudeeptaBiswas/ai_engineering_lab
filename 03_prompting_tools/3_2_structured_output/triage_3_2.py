@@ -40,7 +40,13 @@ def cut_out_json(text: str) -> str:
     Returns:
         e.g. '{"label": "bug"}'. The text unchanged if there is no "{" ... "}".
     """
-    raise NotImplementedError
+    start = text.find("{")
+    end = text.rfind("}")
+
+    if start == -1 or end == -1 or start > end:
+        return text
+
+    return text[start:end + 1]
 
 
 def chat_body(messages: list[Message], schema: dict[str, Any] | None) -> dict[str, Any]:
@@ -55,7 +61,12 @@ def chat_body(messages: list[Message], schema: dict[str, Any] | None) -> dict[st
     Returns:
         The body dict, ready for httpx.post(..., json=body).
     """
-    raise NotImplementedError
+    options = {"temperature": 0, "seed": 42, "num_predict": 200}
+    body: dict[str, Any] = {"model": MODEL, "messages": messages, "stream": False,
+                            "think": False, "options": options}
+    if schema is not None:
+        body["format"] = schema  # Ollama only lets the model write tokens that fit it
+    return body
 
 
 def feedback(error: ValidationError) -> str:
@@ -69,7 +80,16 @@ def feedback(error: ValidationError) -> str:
     Returns:
         e.g. "Your JSON broke these rules:\\n- label: Input should be ...\\nReply with the fixed JSON only."
     """
-    raise NotImplementedError
+    lines = ["Your JSON broke these rules:"]
+
+    for err in error.errors():
+        where = ".".join(str(x) for x in err["loc"]) or "(input)"
+        msg = err["msg"]
+        lines.append(f"- {where}: {msg}")
+
+    lines.append("Reply with the fixed JSON only.")
+
+    return "\n".join(lines)
 
 
 def triage(ticket: str, max_tries: int = 3) -> Triage | None:
@@ -89,4 +109,28 @@ def triage(ticket: str, max_tries: int = 3) -> Triage | None:
     Raises:
         httpx.HTTPStatusError: bad status, e.g. 404 = model not pulled.
     """
-    raise NotImplementedError
+    messages: list[Message] = [
+        {"role": "system", "content": SYSTEM_PROMPT},
+        {"role": "user", "content": ticket},
+    ]
+
+    for _ in range(max_tries):
+        response = httpx.post(
+            f"{OLLAMA_URL}/api/chat",
+            json=chat_body(messages, Triage.model_json_schema()),
+            timeout=300,
+        )
+
+        response.raise_for_status()
+
+        reply = response.json()
+        answer = reply["message"]["content"]
+
+        try:
+            return Triage.model_validate_json(cut_out_json(answer))
+
+        except ValidationError as error:
+            messages.append({"role": "assistant", "content": answer})
+            messages.append({"role": "user", "content": feedback(error)})
+
+    return None

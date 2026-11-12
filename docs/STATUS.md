@@ -3,26 +3,27 @@
 Updated: 2026-11-12
 
 ## Now
-- 1.1–1.7 + 1.9 + 2.1–2.6 + 3.1 done. Overall 12.1% (phase 01:
-  87%, 02: 100%, 03: 25%).
+- 1.1–1.7 + 1.9 + 2.1–2.6 + 3.1–3.2 done. Overall 13.1% (phase 01:
+  87%, 02: 100%, 03: 50%).
 - assistant v1 works (`uv run python -m assistant`). Code by Claude; user
   read memory, client, cli (2026-11-11). Lesson rules checked by a hook.
 - Review rule (DECISIONS 2026-11-08): critical issue → a check; minor → the
   "End-of-course review" list at the bottom.
 - From 2.6: exercises are pytest tests (DECISIONS 2026-11-09).
-- Three levels (DECISIONS 2026-11-11): Basic 52 h left → apply (est.
-  2026-12-07), Intermediate 60 h, Advanced 63 h. Order: PLAN.md.
+- Three levels (DECISIONS 2026-11-11): Basic 50 h left → apply (est.
+  2026-12-06), Intermediate 60 h, Advanced 63 h. Order: PLAN.md.
 
 ## Queue
-a. User: lesson 3.2. Read LESSON_3_2.md, run 2 examples (~2.5 + ~3 min),
-   fill 4 stubs in `triage_3_2.py` until both test files pass (16 tests).
+a. Claude: write lesson 3.3 (raw tool calling, assistant v2).
    BISWAS: `uv sync` first (pydantic added; `--system-certs` if cert error).
-b. Claude: write lesson 3.3 (raw tool calling, assistant v2).
-c. Optional: compare gemma4 E2B vs qwen3:4b on this PC (user to decide).
-d. Open (user to decide): by-hand topics 3.3, 4.1: write them (plan)
+b. Optional: compare gemma4 E2B vs qwen3:4b on this PC (user to decide).
+c. Open (user to decide): by-hand topics 3.3, 4.1: write them (plan)
    or read Claude's solution (faster, learns less). 2.6: Claude wrote it.
 
 ## Done
+- 2026-11-12 — topic 3.2 done (10284Sudee), code by user: 16 passed in
+  3.91 s (2 real Ollama), pyright 0. No bugs; style notes below.
+  REVIEW_03 3.2 (6 quiz), +5 AI and +3 Python keywords.
 - 2026-11-12 — lesson 3.2 written (10284Sudee, qwen3:1.7b, temp 0, seed
   42): 2 examples + `Triage` + 4 stubs + 16 tests (2 files). Measured, 8
   tickets: "Reply in JSON." valid 0/8; + schema 8/8 valid, 6/8 right; one
@@ -142,6 +143,12 @@ d. Open (user to decide): by-hand topics 3.3, 4.1: write them (plan)
 # End-of-course review
 Minor notes, batched for the end (DECISIONS 2026-11-08). BUG = wrong result,
 should get a check instead.
+
+## Review notes 3.2 (2026-11-12)
+- Line 11 `# pyright: ignore[reportUnusedImport]` stale: httpx is used now.
+- `cut_out_json`: `end == -1` check is not needed (`start > end` covers it).
+- `feedback`: short names `err`, `x` (`problem`, `part` read better).
+- Blank lines inside `try` / before `except` in `triage`.
 
 ## Review notes 1.6 (2026-11-12)
 - 3 blank lines in two places (after `LABELS`, after `parse_ticket`); want 2.
