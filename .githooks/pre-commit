@@ -1,5 +1,7 @@
 #!/bin/sh
 # Blocks a commit if a staged examples_*.py breaks the lesson rules
-# (lab_tools/lesson_rules.py, DECISIONS 2026-11-09).
+# (lab_tools/lesson_rules.py, DECISIONS 2026-11-09), or a pytest folder is
+# missing from .vscode/settings.json pytestArgs (DECISIONS 2026-11-12).
 # Turn on once per clone: git config core.hooksPath .githooks
-exec uv run python -m lab_tools.lesson_rules_run --staged
+uv run python -m lab_tools.lesson_rules_run --staged || exit 1
+exec uv run python -m lab_tools.vscode_tests

@@ -29,6 +29,9 @@ Python 3.13 via uv 0.13.6 (`pyproject.toml` + `uv.lock`, `.venv` git-ignored).
   `check("label", lambda: my_func(1), expected)`. Never a local copy.
   From 2.6 on, exercises are pytest tests instead (`uv run pytest <file> -v`;
   `-m "not ollama"` skips the real-Ollama test).
+- `.vscode/settings.json` (tracked) — `pytestArgs` lists every pytest
+  folder. New test folder → add it there; pre-commit
+  (`lab_tools/vscode_tests.py`) fails otherwise.
 
 ## Must never break
 - Files stay small: aim under 150 lines. Split before growing.

@@ -1,6 +1,6 @@
 # Status
 
-Updated: 2026-11-11
+Updated: 2026-11-12
 
 ## Now
 - 1.1–1.5 + 1.7 + 1.9 + 2.1–2.6 done. Overall 10.1% (phase 01: 73%, 02: 100%).
@@ -21,6 +21,11 @@ d. Open (user to decide): by-hand topics 3.3, 4.1: write them (plan)
    or read Claude's solution (faster, learns less). 2.6: Claude wrote it.
 
 ## Done
+- 2026-11-12 — 3.1 tests missing in VS Code: folder added to pytestArgs.
+  `.vscode/settings.json` now tracked; pre-commit check
+  `lab_tools/vscode_tests.py` (real 0, missing folder 1, no file 1).
+  BISWAS: `git pull` brings the settings; local copy may block the pull
+  (it was untracked) → move it aside first.
 - 2026-11-11 — lesson 3.1 written (BISWAS, qwen3:1.7b, temp 0, seed 42):
   2 examples + 6 stubs + 22 tests. Measured: 8 tickets zero-shot 0/8,
   system 6/8, few-shot 7/8; 6 maths problems direct 5/6, step-by-step 6/6

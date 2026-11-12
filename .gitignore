@@ -11,7 +11,8 @@ venv/
 .ipynb_checkpoints/
 
 # Editors / OS
-.vscode/
+.vscode/*
+!.vscode/settings.json
 .idea/
 Thumbs.db
 .DS_Store
