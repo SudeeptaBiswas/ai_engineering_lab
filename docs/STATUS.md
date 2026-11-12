@@ -14,13 +14,23 @@ Updated: 2026-11-12
   2026-12-07), Intermediate 60 h, Advanced 63 h. Order: PLAN.md.
 
 ## Queue
-a. Claude: write lesson 3.2 (structured output, uses 1.6 Ticket idea).
+a. User: lesson 3.2. Read LESSON_3_2.md, run 2 examples (~2.5 + ~3 min),
+   fill 4 stubs in `triage_3_2.py` until both test files pass (16 tests).
    BISWAS: `uv sync` first (pydantic added; `--system-certs` if cert error).
-b. Optional: compare gemma4 E2B vs qwen3:4b on this PC (user to decide).
-c. Open (user to decide): by-hand topics 3.3, 4.1: write them (plan)
+b. Claude: write lesson 3.3 (raw tool calling, assistant v2).
+c. Optional: compare gemma4 E2B vs qwen3:4b on this PC (user to decide).
+d. Open (user to decide): by-hand topics 3.3, 4.1: write them (plan)
    or read Claude's solution (faster, learns less). 2.6: Claude wrote it.
 
 ## Done
+- 2026-11-12 — lesson 3.2 written (10284Sudee, qwen3:1.7b, temp 0, seed
+  42): 2 examples + `Triage` + 4 stubs + 16 tests (2 files). Measured, 8
+  tickets: "Reply in JSON." valid 0/8; + schema 8/8 valid, 6/8 right; one
+  example in the prompt 2/8 right (copied); fields described 8/8 right.
+  Retry: valid 7/8 by try 2 but right 2/8. maxLength 30 in the schema
+  cuts text mid-word (Chinese mixed in). qwen3:4b: thinking leaks, 0/8,
+  1035.9 s. Reference 16 passed in 3.87–4.18 s (4 runs), stubs 14 failed,
+  pyright 0, lesson rules 0.
 - 2026-11-12 — topic 1.6 done (10284Sudee), code by user: 19 passed in
   0.21 s, pyright 0. No bugs; labels now written once (`Label` +
   `get_args`). Style notes below. REVIEW_01 1.6 (5 quiz), +9 Python keywords.
