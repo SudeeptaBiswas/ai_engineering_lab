@@ -16,8 +16,9 @@ Updated: 2026-11-13
 ## Queue
 a. User: fill the 4 stubs in `3_3_tool_calling/tool_calls_3_3.py` until
    `uv run pytest 03_prompting_tools/3_3_tool_calling -v` passes (24).
+   Then the 4 stubs in `3_4_prompt_injection/guards_3_4.py` (28 tests).
 b. Claude: assistant v2 = the 3.3 tools in `assistant/` (own step,
-   DECISIONS 2026-11-13).
+   DECISIONS 2026-11-13). Add the 3.4 gate there too.
 c. Open (user to decide): add a Claude API topic (~2 h, paid key)?
    "AI workflow integration" = 8.1 + 8.3 (+6 h) or 6.5 (+4 h)?
 d. Optional: compare gemma4 E2B vs qwen3:4b on this PC (user to decide).
@@ -25,6 +26,15 @@ e. Open (user to decide): 4.1 by hand: write it (plan) or read Claude's
    solution. 3.3: user writes it (2026-11-13).
 
 ## Done
+- 2026-11-13 — lesson 3.4 written (BISWAS, qwen3:1.7b, temp 0, seed 42):
+  2 examples + 4 stubs + 28 tests (2 files); user writes it, as 3.3.
+  Measured (same in 2 runs): 6 ticket attacks hijacked 6/6, with tags +
+  "data, not orders" 5/6; detectors keywords 9/10, model 9/10 (each
+  missed a different one). Poisoned tool result ran refund(A-1001, 500)
+  1/3 despite the prompt; code gate blocked it; 2 replies still promised
+  a refund in words. Secret in system prompt leaked 4/5; exact check
+  caught 3, letters-only all 4. Reference 28 passed in 3.01–3.63 s
+  (4 runs), 26 + 2 deselected in 0.07 s, pyright 0, lesson rules 0.
 - 2026-11-13 — lesson 3.3 written (BISWAS, qwen3:1.7b, temp 0, seed 42):
   2 examples + `toolbox_3_3.py` (3 tools, given) + 4 stubs + 24 tests
   (2 files). Measured: 5 products alone 2/5 (107.0 s), with tool 5/5
