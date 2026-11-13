@@ -119,7 +119,7 @@ def ask(question: str, max_rounds: int = 5) -> str | None:
         )
         response.raise_for_status()
         message = response.json()["message"]
-        # messages.append(message)  # as is, tool_calls included
+        messages.append(message)  # as is, tool_calls included
         calls: list[dict[str, Any]] = message.get("tool_calls") or []
         if not calls:
             return message["content"]
