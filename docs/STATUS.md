@@ -14,9 +14,14 @@ Updated: 2026-11-13
   2026-12-06), Intermediate 60 h, Advanced 63 h. Order: PLAN.md.
 
 ## Queue
-a. User: fill the 4 stubs in `3_3_tool_calling/tool_calls_3_3.py` until
-   `uv run pytest 03_prompting_tools/3_3_tool_calling -v` passes (24).
-   Then the 4 stubs in `3_4_prompt_injection/guards_3_4.py` (28 tests).
+a. User: 3.3 in progress (WIP commit 2026-11-13, 10284Sudee): 4 stubs
+   written, 22/24 pass. Left: `ask` skips `messages.append(message)` (line
+   commented out) → test_ask_one_tool + test_ask_two_calls_in_one_reply
+   fail. Also undo test edits in examples_3_3_1_calls.py (main demo
+   commented out). 10284Sudee only, not committed (pre-commit: 151
+   lines): examples_3_3_2_loop.py "2 * 3* 4" expects 19124907 (answer
+   24). Then the 4 stubs in
+   `3_4_prompt_injection/guards_3_4.py` (28 tests).
 b. Claude: assistant v2 = the 3.3 tools in `assistant/` (own step,
    DECISIONS 2026-11-13). Add the 3.4 gate there too.
 c. Open (user to decide): add a Claude API topic (~2 h, paid key)?

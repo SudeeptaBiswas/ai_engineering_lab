@@ -71,7 +71,8 @@ def solve(question: str) -> str:
         messages.append({"role": "tool", "tool_name": "multiply", "content": result})
     if len(messages) == 2:  # no tool call: the first reply is the answer
         return reply["content"]
-    return chat(messages, [MULTIPLY_TOOL])["content"]
+    reply2 = chat(messages, [MULTIPLY_TOOL])["content"]
+    return reply2
 
 
 def show(title: str, message: dict[str, Any]) -> None:
@@ -110,15 +111,17 @@ def score(use_tools: bool) -> None:
 
 
 if __name__ == "__main__":  # Java: public static void main
-    question = {"role": "user", "content": "What is 4821 * 3967?"}
-    chat([question], None)  # load the model first, so timings are fair
-    reply = chat([question], [MULTIPLY_TOOL])
-    show("1. with tools", reply)
-    print("2. we run it and send the result back:")
-    print(f"  answer: {solve('What is 4821 * 3967?')!r}\n")
-    show("3. two at once", chat([{"role": "user", "content": "What is 12.5 * 8 and what is 7 * 6?"}],
-                                [MULTIPLY_TOOL]))
-    show("4. no tool fits", chat([{"role": "user", "content": "What is the capital of France?"}],
-                                 [MULTIPLY_TOOL]))
+    # question = {"role": "user", "content": "What is 4821 * 3967?"}
+    # chat([question], None)  # load the model first, so timings are fair
+    #show("========", chat([{"role": "user", "content": "What is 2 * 3 * 4?"}], [MULTIPLY_TOOL]))   
+    print(f"  answer: {solve('What is 2 * 3 * 4?')!r}\n")
+    # reply = chat([question], [MULTIPLY_TOOL])
+    # show("1. with tools", reply)
+    # print("2. we run it and send the result back:")
+    # print(f"  answer: {solve('What is 4821 * 3967?')!r}\n")
+    # show("3. two at once", chat([{"role": "user", "content": "What is 12.5 * 8 and what is 7 * 6?"}],
+    #                             [MULTIPLY_TOOL]))
+    # show("4. no tool fits", chat([{"role": "user", "content": "What is the capital of France?"}],
+    #                              [MULTIPLY_TOOL]))
     score(False)
     score(True)

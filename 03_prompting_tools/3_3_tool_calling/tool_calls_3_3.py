@@ -29,7 +29,14 @@ def tool_spec(name: str, tool: Tool) -> dict[str, Any]:
         {"type": "function", "function": {"name": name, "description": ...,
          "parameters": the args model's JSON Schema (3.2)}}.
     """
-    raise NotImplementedError
+    return {
+        "type": "function",
+        "function": {
+            "name": name,
+            "description": tool.description,
+            "parameters": tool.args_model.model_json_schema(),
+        }
+    }
 
 
 def chat_body(messages: list[dict[str, Any]]) -> dict[str, Any]:
@@ -43,8 +50,14 @@ def chat_body(messages: list[dict[str, Any]]) -> dict[str, Any]:
     Returns:
         The body dict, ready for httpx.post(..., json=body).
     """
-    raise NotImplementedError
 
+    body = {"model": MODEL, "messages": messages, "stream": False, "think": False,
+            "options": {"temperature": 0, "seed": 42, "num_predict": 300},
+            "tools": [
+                tool_spec(name, tool)
+                for name, tool in TOOLS.items()
+            ]}
+    return body
 
 def run_tool(name: str, arguments: dict[str, Any]) -> str:
     """Run one tool call. Never raises: problems come back as "error: ..." text.
@@ -60,7 +73,24 @@ def run_tool(name: str, arguments: dict[str, Any]) -> str:
     Returns:
         e.g. "19124907", or "error: b: Field required".
     """
-    raise NotImplementedError
+    tool = TOOLS.get(name)
+
+    if tool is None:
+        return f"error: no tool {name!r}"
+
+    try:
+        checked_args = tool.args_model.model_validate(arguments)
+    except ValidationError as exc:
+        problems = [
+            f"{'.'.join(str(part) for part in error['loc'])}: {error['msg']}"
+            for error in exc.errors()
+        ]
+        return "error: " + "; ".join(problems)
+
+    try:
+        return str(tool.function(checked_args))
+    except Exception as exc:
+        return f"error: {exc}"
 
 
 def ask(question: str, max_rounds: int = 5) -> str | None:
@@ -80,4 +110,22 @@ def ask(question: str, max_rounds: int = 5) -> str | None:
     Raises:
         httpx.HTTPStatusError: bad status, e.g. 404 = model not pulled.
     """
-    raise NotImplementedError
+    messages: list[dict[str, Any]]  = [{"role": "system", "content": SYSTEM_PROMPT}, {"role": "user", "content": question},]
+    for _ in range(max_rounds):
+        response = httpx.post(
+            f"{OLLAMA_URL}/api/chat",
+            json=chat_body(messages),
+            timeout=300,
+        )
+        response.raise_for_status()
+        message = response.json()["message"]
+        # messages.append(message)  # as is, tool_calls included
+        calls: list[dict[str, Any]] = message.get("tool_calls") or []
+        if not calls:
+            return message["content"]
+        for call in calls:
+            name = call["function"]["name"]
+            result = run_tool(name, call["function"]["arguments"])
+            # print(f"    call {name}({call['function']['arguments']}) -> {result[:45]!r}")
+            messages.append({"role": "tool", "tool_name": name, "content": result})
+    return None
