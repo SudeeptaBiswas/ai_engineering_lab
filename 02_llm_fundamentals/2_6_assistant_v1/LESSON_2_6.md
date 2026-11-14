@@ -3,6 +3,13 @@
 The first version of the one real app, [assistant/](../../assistant/).
 It grows to v10 (PLAN.md): v2 adds tools (3.3), v3 RAG (4.6), v5 agents (6.4).
 
+> **Names changed in v2 (2026-11-15, CODE_STYLE.md):** `stream_chat` →
+> `stream_reply`, `chat_body` → `build_request_body`, `chunk_text` →
+> `parse_stream_line`, `answer` → `chat_turn.answer_one_turn`,
+> `messages()` → `messages_to_send()`, `add` → `add_message`, `trim` →
+> `drop_oldest_until_under_budget`, `reset` → `forget_chat`. This lesson
+> keeps the old names; the code and tests use the new ones.
+
 All numbers **measured on BISWAS** (i5-1135G7, no GPU), Ollama 0.40.14,
 qwen3:1.7b, 2026-11-09, one run each unless a range is given.
 

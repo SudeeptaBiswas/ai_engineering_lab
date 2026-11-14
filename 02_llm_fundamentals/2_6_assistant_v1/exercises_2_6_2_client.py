@@ -1,23 +1,25 @@
-"""Tests for assistant/ollama_client.py: 5 with fakes + 1 real (Ollama).
-Fill the stubs in assistant/ollama_client.py until all pass.
+"""Tests for assistant/ollama_client.py, text part: 5 with a fake HTTP stream + 1 real.
 
+Tool calls in the stream: 03_prompting_tools/3_5_assistant_v2/test_3_5_3_client.py.
   uv run pytest 02_llm_fundamentals/2_6_assistant_v1/exercises_2_6_2_client.py -v
 Ollama off? Add -m "not ollama".
 """
 
-from collections.abc import Callable, Generator
-from contextlib import contextmanager
 from typing import Any
 
 import httpx
 import pytest
 
 from assistant.memory import Message
-from assistant.ollama_client import MAX_ANSWER_TOKENS, MODEL, NUM_CTX, chat_body, chunk_text, stream_chat
+from assistant.ollama_client import (MAX_ANSWER_TOKENS, MODEL, NUM_CTX, SEED, TEMPERATURE, StreamPiece,
+                                     build_request_body, parse_stream_line, stream_reply)
+from fakes_2_6_2_stream import make_fake_stream
+from lab_tools.log import debug, log
 
-HI: list[Message] = [{"role": "user", "content": "Say hi."}]
+SAY_HI_MESSAGES: list[Message] = [{"role": "user", "content": "Say hi."}]
+NO_TOOLS: list[dict[str, Any]] = []
 # Real lines from qwen3:1.7b (lesson 2.3). The last one has content "".
-LINES = [
+REAL_STREAM_LINES = [
     '{"message":{"role":"assistant","content":"R"},"done":false}',
     '{"message":{"role":"assistant","content":"AG"},"done":false}',
     "",
@@ -25,111 +27,100 @@ LINES = [
     '{"message":{"role":"assistant","content":""},"done":true,"done_reason":"stop"}',
 ]
 
-FakeStream = Callable[..., Any]  # what make_fake_stream returns
 
-
-# ---------- Fake httpx.stream (done for you) ----------
-# httpx.stream is used as `with httpx.stream(...) as response:`. A fake for
-# it must work with `with` too. @contextmanager does that: code before
-# `yield` = start of the with-block, the yielded value = `response`.
-# Java: an AutoCloseable used in try-with-resources.
-def make_fake_stream(status: int, lines: list[str], sent_bodies: list[Any]) -> FakeStream:
-    """Build a stand-in for httpx.stream that never touches the network.
+def collect_texts(stream_pieces: list[StreamPiece]) -> list[str]:
+    """Take just the text of each piece.
 
     Args:
-        status: HTTP status to answer with, e.g. 200 or 404.
-        lines: the NDJSON lines to send back, e.g. LINES.
-        sent_bodies: an empty list; each call's json= body is added to it.
+        stream_pieces: e.g. what stream_reply handed out.
     Returns:
-        A function with the same use as httpx.stream.
+        e.g. ["R", "AG", " helps"].
     """
-    @contextmanager
-    def fake_stream(method: str, url: str, **options: Any) -> Generator[httpx.Response]:
-        """Saves the json= body, then hands out a ready-made response.
-
-        Args:
-            method: "POST".
-            url: e.g. "http://127.0.0.1:11434/api/chat".
-            options: json=..., timeout=... (any keyword arguments).
-        Returns:
-            (via yield) an httpx.Response holding `lines`.
-        """
-        sent_bodies.append(options.get("json"))
-        content = "\n".join(lines).encode()  # str -> bytes, like the network gives
-        yield httpx.Response(status, content=content, request=httpx.Request(method, url))
-
-    return fake_stream
+    texts: list[str] = []
+    for stream_piece in stream_pieces:
+        texts.append(stream_piece.text)
+    return texts
 
 
-# ---------- No HTTP ----------
-def test_chat_body() -> None:
-    """Streaming on, thinking off, context size and answer length set."""
-    assert chat_body(HI) == {
-        "model": MODEL,
-        "messages": HI,
-        "stream": True,
-        "think": False,
-        "options": {"num_ctx": NUM_CTX, "num_predict": MAX_ANSWER_TOKENS},
-    }
+@debug
+def test_request_body_has_streaming_on_and_thinking_off() -> None:
+    """Checks: every setting the model needs is in the body: streaming, no thinking, sizes, steady sampling."""
+    expected_options = {"num_ctx": NUM_CTX, "num_predict": MAX_ANSWER_TOKENS, "temperature": TEMPERATURE, "seed": SEED}
+    expected_body = {"model": MODEL, "messages": SAY_HI_MESSAGES, "stream": True, "think": False,
+                     "tools": NO_TOOLS, "options": expected_options}
+    request_body = build_request_body(SAY_HI_MESSAGES, NO_TOOLS)
+    log.debug("expected=%s got=%s", expected_body, request_body)
+    assert request_body == expected_body
 
 
-@pytest.mark.parametrize(("line", "expected"), [(LINES[1], "AG"), (LINES[4], ""), ("", ""), ("  ", "")])
-def test_chunk_text(line: str, expected: str) -> None:
-    """One stream line -> its text; blank lines give "" (no crash).
+@pytest.mark.parametrize(("stream_line", "expected_text"), [
+    (REAL_STREAM_LINES[1], "AG"),  # a normal text line
+    (REAL_STREAM_LINES[4], ""),    # the last "done" line has no text
+    ("", ""),                      # a blank line must not crash
+    ("  ", ""),                    # spaces only, same
+])
+@debug
+def test_parse_stream_line_gets_the_text(stream_line: str, expected_text: str) -> None:
+    """Checks: one stream line -> its text, with no tool calls.
 
     Args:
-        line: one NDJSON line.
-        expected: the text in it.
+        stream_line: one NDJSON line.
+        expected_text: the text in it.
     """
-    assert chunk_text(line) == expected
+    stream_piece = parse_stream_line(stream_line)
+    log.debug("expected=%r got=%r", expected_text, stream_piece.text)
+    assert stream_piece.text == expected_text
+    assert stream_piece.tool_calls == []
 
 
-# ---------- Fake HTTP ----------
-def test_stream_chat_yields_chunks(monkeypatch: pytest.MonkeyPatch) -> None:
-    """Non-empty chunks, in order. The final "" is skipped (the 2.3 bug).
+@debug
+def test_stream_reply_skips_empty_lines(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Checks: only pieces with text come out, in order. The final "" is skipped (the 2.3 bug).
 
     Args:
-        monkeypatch: built-in pytest fixture.
+        monkeypatch: pytest's tool to swap httpx.stream for a fake.
     """
-    monkeypatch.setattr(httpx, "stream", make_fake_stream(200, LINES, []))
-    chunks: list[str] = []
-    for chunk in stream_chat(HI):
-        chunks.append(chunk)
-    assert chunks == ["R", "AG", " helps"]
+    monkeypatch.setattr(httpx, "stream", make_fake_stream(200, REAL_STREAM_LINES, []))
+    stream_pieces = list(stream_reply(SAY_HI_MESSAGES, NO_TOOLS))  # list(...) runs the generator to the end
+    texts = collect_texts(stream_pieces)
+    log.debug("expected=%s got=%s", ["R", "AG", " helps"], texts)
+    assert texts == ["R", "AG", " helps"]
 
 
-def test_stream_chat_sends_body(monkeypatch: pytest.MonkeyPatch) -> None:
-    """Exactly one call, and its body is chat_body(messages).
+@debug
+def test_stream_reply_sends_one_request_with_the_body(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Checks: exactly one HTTP call, and its body is build_request_body(...).
 
     Args:
-        monkeypatch: built-in pytest fixture.
+        monkeypatch: pytest's tool to swap httpx.stream for a fake.
     """
     sent_bodies: list[Any] = []
-    monkeypatch.setattr(httpx, "stream", make_fake_stream(200, LINES, sent_bodies))
-    for _ in stream_chat(HI):  # a generator does nothing until looped over
-        pass
-    assert sent_bodies == [chat_body(HI)]
+    monkeypatch.setattr(httpx, "stream", make_fake_stream(200, REAL_STREAM_LINES, sent_bodies))
+    list(stream_reply(SAY_HI_MESSAGES, NO_TOOLS))  # a generator does nothing until it is read
+    expected_bodies = [build_request_body(SAY_HI_MESSAGES, NO_TOOLS)]
+    log.debug("expected %d body, got %d", len(expected_bodies), len(sent_bodies))
+    assert sent_bodies == expected_bodies
 
 
-def test_stream_chat_bad_status(monkeypatch: pytest.MonkeyPatch) -> None:
-    """404 (model not pulled) must raise HTTPStatusError, not yield nothing.
+@debug
+def test_stream_reply_raises_on_bad_status(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Checks: 404 (model not pulled) raises HTTPStatusError instead of silently giving nothing.
 
     Args:
-        monkeypatch: built-in pytest fixture.
+        monkeypatch: pytest's tool to swap httpx.stream for a fake.
     """
     error_line = '{"error":"model \\"qwen3:1.7b\\" not found"}'
     monkeypatch.setattr(httpx, "stream", make_fake_stream(404, [error_line], []))
     with pytest.raises(httpx.HTTPStatusError):
-        for _ in stream_chat(HI):
-            pass
+        list(stream_reply(SAY_HI_MESSAGES, NO_TOOLS))
 
 
-# ---------- Real Ollama ----------
 @pytest.mark.ollama
-def test_stream_chat_real() -> None:
-    """The real model streams more than one non-empty chunk for "Say hi."."""
-    chunks: list[str] = []
-    for chunk in stream_chat(HI):
-        chunks.append(chunk)
-    assert len(chunks) > 1
-    assert "" not in chunks
+@debug
+def test_stream_reply_real_model_streams_in_pieces() -> None:
+    """Checks: the real model sends "Say hi." back in more than one non-empty piece."""
+    stream_pieces = list(stream_reply(SAY_HI_MESSAGES, NO_TOOLS))
+    texts = collect_texts(stream_pieces)
+    log.debug("got %d pieces: %s", len(texts), texts)
+    assert len(texts) > 1
+    assert "" not in texts

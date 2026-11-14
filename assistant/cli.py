@@ -1,77 +1,78 @@
-"""The chat loop you type into. Start it from the repo root:
+"""The chat you type into: read a line, handle commands, answer questions.
 
-  uv run python -m assistant
+Start it from the repo root:
+  uv run python -m assistant            (add --debug to see the log)
 
-Spec = 02_llm_fundamentals/2_6_assistant_v1/exercises_2_6_3_cli.py
+Commands: /reset forgets the chat; /exit or /quit ends it.
+Tests: 02_llm_fundamentals/2_6_assistant_v1/exercises_2_6_3_cli.py
 """
 
-import httpx  # httpx.HTTPError in main()
+import httpx  # httpx.HTTPError: Ollama down or a bad status
 
+from assistant.chat_turn import answer_one_turn
 from assistant.memory import ChatMemory
-from assistant.ollama_client import stream_chat
+from lab_tools.log import debug, log
 
-SYSTEM_PROMPT = "You are a helpful assistant. Answer in 1 to 3 short sentences."
-# Estimated tokens (chars / 4). Real ones ran 1.2-2.2x more (2.6 part 1),
+# Measured 2026-11-15, 5 tool questions x 2 runs: this (the 3.3 prompt) 5/5 both runs.
+# Adding "Answer in 1 to 3 short sentences." -> 3/5: it said "I will look up ..." and called nothing.
+SYSTEM_PROMPT = "You are a support assistant. Use a tool whenever one fits; never guess numbers, dates or order details."
+# Estimated tokens (characters / 4). Real ones ran 1.2-2.2x more (2.6 part 1),
 # so 2000 + a 300-token answer stays under NUM_CTX 4096.
 MAX_HISTORY_TOKENS = 2000
 EXIT_COMMANDS = ("/exit", "/quit")
 RESET_COMMAND = "/reset"
+INPUT_PROMPT = "you> "
 
 
-def answer(memory: ChatMemory, user_text: str) -> str:
-    """One turn: remember the question, stream the reply to the screen,
-    remember the reply, return it.
+def read_typed_line() -> str | None:
+    """Wait for the user to type one line.
 
-    Steps: memory.add("user", ...) -> print("bot> ", end="", flush=True) ->
-    for each chunk of stream_chat(memory.messages()): print it the same way
-    and keep it -> print() -> join the chunks -> memory.add("assistant", ...).
+    Returns:
+        The line without spaces at the ends, e.g. "hi".
+        None at the end of input (Ctrl+Z on Windows, Ctrl+D elsewhere).
+    """
+    try:
+        typed_line = input(INPUT_PROMPT).strip()
+    except EOFError:  # input() raises this when there is no more input
+        return None
+    return typed_line
+
+
+@debug
+def answer_and_survive_errors(memory: ChatMemory, user_question: str) -> None:
+    """Answer one question; if Ollama fails, say so and keep the chat running.
+
     Args:
         memory: the chat so far.
-        user_text: e.g. "What is RAG?".
-    Returns:
-        The full reply, e.g. "RAG stands for ...".
-    Raises:
-        httpx.HTTPError: from stream_chat (main() catches it).
+        user_question: e.g. "What is RAG?".
     """
-    memory.add("user", user_text)
-    print("bot> ", end="", flush=True)  # end="" = no newline; flush = show now
-    chunks: list[str] = []
-    for chunk in stream_chat(memory.messages()):
-        print(chunk, end="", flush=True)
-        chunks.append(chunk)
-    print()  # the newline after the full reply
-    reply = "".join(chunks)  # Java: String.join("", chunks)
-    memory.add("assistant", reply)
-    return reply
+    try:
+        answer_one_turn(memory, user_question)
+    except httpx.HTTPError as http_error:
+        log.debug("http_error=%r", http_error)
+        print(f"\nerror: {http_error}. Is Ollama running?")
 
 
+@debug
 def main() -> None:
-    """Read lines until /exit, /quit or end of input; answer each one.
+    """Run the chat until /exit, /quit or the end of input.
 
-    Per line, after .strip():
-      /exit or /quit -> return
-      /reset         -> memory.reset(), print a note, next line
-      empty          -> next line (send nothing)
-      anything else  -> answer(memory, line)
-    input("you> ") raises EOFError on Ctrl+Z (Windows) / Ctrl+D: return.
-    httpx.HTTPError from answer(): print a line with "error" and go on.
-    Java: while (true) { String line = scanner.nextLine(); ... }
+    How, for each typed line:
+        /exit or /quit -> stop
+        /reset         -> forget the chat, print a note
+        empty line     -> skip it (send nothing)
+        anything else  -> answer it
     """
     memory = ChatMemory(SYSTEM_PROMPT, MAX_HISTORY_TOKENS)
     while True:
-        try:
-            line = input("you> ").strip()
-        except EOFError:  # Ctrl+Z / Ctrl+D: no more input
+        typed_line = read_typed_line()
+        log.debug("typed_line=%r", typed_line)
+        if typed_line is None or typed_line in EXIT_COMMANDS:
             return
-        if line in EXIT_COMMANDS:
-            return
-        if line == RESET_COMMAND:
-            memory.reset()
+        if typed_line == RESET_COMMAND:
+            memory.forget_chat()
             print("(chat forgotten)")
             continue
-        if not line:  # empty line: send nothing
+        if typed_line == "":  # Enter on an empty line
             continue
-        try:
-            answer(memory, line)
-        except httpx.HTTPError as error:
-            print(f"\nerror: {error}. Is Ollama running?")
+        answer_and_survive_errors(memory, typed_line)

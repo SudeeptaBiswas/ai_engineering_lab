@@ -73,7 +73,7 @@ STREAM_LINES = [
 def text_chunks(lines: list[str]) -> Iterator[str]:
     """Yield the answer text of each stream line, skipping empty ones.
 
-    stream_chat() in assistant/ has this shape, reading lines from Ollama.
+    stream_reply() in assistant/ has this shape, reading lines from Ollama.
     Args:
         lines: NDJSON lines, e.g. STREAM_LINES.
     Returns:
