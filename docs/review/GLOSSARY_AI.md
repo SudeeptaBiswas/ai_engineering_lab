@@ -2,7 +2,7 @@
 
 A–Z. One line each. Numbers are measured in the lessons (10284Sudee / BISWAS,
 CPU only). Topic = where it was taught; open that LESSON for the full story.
-Process + quiz: [REVIEW_02_llm.md](REVIEW_02_llm.md), [REVIEW_03_prompting.md](REVIEW_03_prompting.md) (3.1–3.2).
+Process + quiz: [REVIEW_02_llm.md](REVIEW_02_llm.md), [REVIEW_03_prompting.md](REVIEW_03_prompting.md) (3.1–3.4).
 
 | Term | Plain meaning | Example / number | Topic |
 |---|---|---|---|
@@ -13,6 +13,7 @@ Process + quiz: [REVIEW_02_llm.md](REVIEW_02_llm.md), [REVIEW_03_prompting.md](R
 | Batching | send many texts in one call | 5 notes: 1 call 0.38–0.60 s vs 5 calls 1.34–1.92 s | 2.5 |
 | BPE | build tokens by gluing the most common neighbour pair, again and again | `t`+`h` → `th` | 2.1 |
 | Chat memory | the history your code keeps and resends every turn | `ChatMemory.messages()` | 2.6 |
+| Code gate | code checks every tool call before it runs: who asked, how much | refund(500) blocked; "needs a human" | 3.4 |
 | Constrained decoding | the server only lets the model write tokens that fit a schema | `"format": schema` → 8/8 replies parse | 3.2 |
 | Context length | max tokens a model CAN see | qwen3:4b: 262 144 | 2.2 |
 | Context window | token limit for one call: system + history + question + answer | like max request body size | 2.1 |
@@ -34,6 +35,7 @@ Process + quiz: [REVIEW_02_llm.md](REVIEW_02_llm.md), [REVIEW_03_prompting.md](R
 | JSON Schema | a JSON description of a JSON shape: types, `enum`, `minimum`, `maxLength`, `required` | made from a pydantic model | 3.2 |
 | Keepalive | Ollama keeps a model in RAM after a call | 5 min; 2nd call load 9.4 s → 0.009 s | 2.2 |
 | KV cache | memory for the text being read; grows with context | why RAM ≈ file × 1.3 | 2.2 |
+| Least privilege | give the model only the tools the task needs, read-only where you can | order_status yes, delete_order no | 3.4 |
 | Load time | copy the model file into RAM (first call) | qwen3:4b 9.4 s, 1.7b 1.9 s | 2.2 |
 | Logits | raw score the model gives every vocabulary token | cat 2.0, mat 1.0, rat 0.5 | 2.1 |
 | LLM | a next-token guesser, run in a loop | IntelliJ autocomplete for any text | 2.1 |
@@ -50,12 +52,14 @@ Process + quiz: [REVIEW_02_llm.md](REVIEW_02_llm.md), [REVIEW_03_prompting.md](R
 | Pre-training | read huge text, learn to guess the next piece | step 1 of 3 | 2.1 |
 | Preference tuning | people rank answers, model learns what they like | step 3 of 3 | 2.1 |
 | Prompt eval rate | reading speed | qwen3:4b ~21 tok/s, 1.7b 63 tok/s | 2.2 |
+| Prompt injection | untrusted text the model follows as your orders; direct (user) or indirect (in data) | ticket attacks hijacked 6/6 | 3.4 |
 | Prompt pattern | a known way to write messages so the answer comes back in the shape you need | system rules, few-shot, step-by-step | 3.1 |
 | Quantization | store each weight in fewer bits: smaller, faster, a bit less precise | GB ≈ billions × bits ÷ 8 | 2.2 |
 | RAG | find the useful text first, send only that to the model | phase 04 | 2.1, 2.5 |
 | Retry with feedback | send the bad reply + the error list back, ask again | 7/8 valid by try 2, but 2/8 right | 3.2 |
 | Sampling | weighted random pick of the next token | like a loot table | 2.4 |
 | Score (accuracy) | share of answers equal to the expected ones | 7 of 8 right = 0.875 | 3.1 |
+| Secret leak | the model gives out what its prompt holds; check answers letters-only | SAVE-7731 leaked 4/5 | 3.4 |
 | Seed | fixes the randomness: same seed + settings + prompt → same answer | `"seed": 42` → Fizzluff x5 | 2.4 |
 | Semantic search | find text by meaning: embed, cosine, sort, top k | login query → reset-password note 0.68 | 2.5 |
 | Softmax | turns scores into odds that add up to 100% | 2.0/1.0/0.5 → 63/23/14% | 2.1 |
@@ -68,9 +72,14 @@ Process + quiz: [REVIEW_02_llm.md](REVIEW_02_llm.md), [REVIEW_03_prompting.md](R
 | Thinking model | writes hidden reasoning before the answer | 99% of tokens for "2+2"; send `think: False` | 2.2, 2.3 |
 | Token | a piece of text the model reads, as an id | 1 token ≈ 4 chars ≈ ¾ word | 2.1 |
 | Tokenizer | cuts text into tokens | like a compiler's lexer | 2.1 |
+| Tool calling | the model asks your code to run a named function with JSON arguments | `multiply(4821, 3967)`: 5/5 vs 2/5 alone | 3.3 |
+| Tool description | all the model knows about a tool: description + args schema | no example id → not called | 3.3 |
+| Tool loop | POST, run the calls, send results, POST again until a plain answer; max N rounds | 7/8 right, 30.1–34.8 s | 3.3 |
+| Tool result (role) | `{"role": "tool", "tool_name": ..., "content": ...}`, one per call | errors go back as "error: ..." text | 3.3 |
 | top_k | keep only the k best tokens before the pick | qwen3 default 20; `top_k 1` = greedy | 2.4 |
 | top_p | keep the best tokens until they cover p | qwen3 default 0.95 | 2.4 |
 | Trimming | drop the oldest messages to stay under a token budget | budget 2000, system message always kept | 2.6 |
+| Untrusted text | any text you didn't write: tickets, tool results, PDFs, web pages | treat as data, never orders | 3.4 |
 | User (role) | the person's messages | "What is RAG?" | 2.3 |
 | Vector | a list of numbers = an arrow with a direction | [0.9, 0.1] points east | 2.5 |
 | Vocabulary | all tokens a model knows (a Map<String, Integer>) | qwen3: 151 936 tokens | 2.1, 2.4 |

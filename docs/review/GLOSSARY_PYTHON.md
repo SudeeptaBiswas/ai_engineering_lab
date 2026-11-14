@@ -12,6 +12,7 @@ Process + quiz: [REVIEW_01_python.md](REVIEW_01_python.md).
 | `approx` (pytest) | float compare with a tiny allowed error | `assertEquals(0.15, x, 1e-6)` | 1.9 |
 | `assert` (pytest) | the check; on fail pytest prints both sides | `assertEquals` | 1.9 |
 | `BaseModel` (pydantic) | a class whose type hints are checked at runtime | record + Jackson + Bean Validation | 1.6 |
+| `Callable[[Any], str]` | type of a function: takes one arg, returns str | `Function<Object, String>` | 3.3 |
 | `capsys` | pytest fixture that captures `print()` output | a fake `System.out` | 2.6 |
 | Comprehension | build a list/dict/set in one line | `stream().map().filter()` | 1.3 |
 | `ConfigDict(extra="forbid")` | unknown keys are an error, not silently ignored | `@JsonIgnoreProperties(ignoreUnknown = false)` | 1.6 |
@@ -25,6 +26,7 @@ Process + quiz: [REVIEW_01_python.md](REVIEW_01_python.md).
 | Exception chain (`raise ... from`) | wrap an error, keep the cause in `__cause__` | `new X(msg, cause)` | 1.5 |
 | `except` order | first match wins: child before parent | same as `catch` | 1.5 |
 | f-string | `f"a{n}"` | `"a" + n` | 1.2 |
+| f-string `!r` | `{name!r}` puts the repr in: quotes around text | `"no tool 'divide'"` | 3.3 |
 | Fake | stand-in for a real dependency in a test | Mockito `when(...).thenReturn` | 1.9 |
 | `Field(...)` (pydantic) | rules on one field: `min_length=1`, `ge=1, le=5`, `strict=True` | `@NotBlank`, `@Min`, `@Max` | 1.6 |
 | `field(default_factory=list)` | safe list default in a dataclass | `items: list = []` is an error | 1.4 |
@@ -54,6 +56,8 @@ Process + quiz: [REVIEW_01_python.md](REVIEW_01_python.md).
 | `python -m package` | runs the package's `__main__.py` | `Main-Class` in a jar manifest | 2.6 |
 | `raise_for_status()` | turn a 4xx/5xx into an exception (404 is not one by itself) | `if (code >= 400) throw` | 1.7 |
 | `raises` (pytest) | test passes only if that error happens | `assertThrows` | 1.9 |
+| `re.compile(p, re.IGNORECASE)` | a ready pattern, any case; `</?ticket>` = open or close tag | `Pattern.compile(p, CASE_INSENSITIVE)` | 3.4 |
+| `re.sub(p, new, text)` | replace every match; `[^A-Za-z0-9]` → "" keeps letters + digits | `replaceAll` | 3.4 |
 | `reversed()` | walk a list from the end | `Collections.reverse` / `descendingIterator` | 3.1 |
 | `self` | the current object, written out | `this` | 1.4 |
 | `set` | unique items, fast `in` | `HashSet` | 1.3 |

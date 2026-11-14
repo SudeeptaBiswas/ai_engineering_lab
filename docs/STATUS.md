@@ -1,27 +1,22 @@
 # Status
 
-Updated: 2026-11-13
+Updated: 2026-11-15
 
 ## Now
-- 1.1–1.7 + 1.9 + 2.1–2.6 + 3.1–3.2 done. Overall 13.1% (phase 01:
-  87%, 02: 100%, 03: 50%).
+- 1.1–1.7 + 1.9 + 2.1–2.6 + 3.1–3.4 done. Overall 15.1% (phase 01:
+  87%, 02: 100%, 03: 100%).
 - assistant v1 works (`uv run python -m assistant`). Code by Claude; user
   read memory, client, cli (2026-11-11). Lesson rules checked by a hook.
 - Review rule (DECISIONS 2026-11-08): critical issue → a check; minor → the
   "End-of-course review" list at the bottom.
 - From 2.6: exercises are pytest tests (DECISIONS 2026-11-09).
-- Three levels (DECISIONS 2026-11-11): Basic 50 h left → apply (est.
-  2026-12-06), Intermediate 60 h, Advanced 63 h. Order: PLAN.md.
+- Three levels (DECISIONS 2026-11-11): Basic 46 h left → apply (est.
+  2026-12-08), Intermediate 60 h, Advanced 63 h. Order: PLAN.md.
 
 ## Queue
-a. User: 3.3 in progress (WIP commit 2026-11-13, 10284Sudee): 4 stubs
-   written, 22/24 pass. Left: `ask` skips `messages.append(message)` (line
-   commented out) → test_ask_one_tool + test_ask_two_calls_in_one_reply
-   fail. Also undo test edits in examples_3_3_1_calls.py (main demo
-   commented out). 10284Sudee only, not committed (pre-commit: 151
-   lines): examples_3_3_2_loop.py "2 * 3* 4" expects 19124907 (answer
-   24). Then the 4 stubs in
-   `3_4_prompt_injection/guards_3_4.py` (28 tests).
+a. 10284Sudee only, not committed (pre-commit: 151 lines; not checked
+   since 2026-11-13): examples_3_3_2_loop.py "2 * 3* 4" expects
+   19124907 (answer 24). Undo there.
 b. Claude: assistant v2 = the 3.3 tools in `assistant/` (own step,
    DECISIONS 2026-11-13). Add the 3.4 gate there too.
 c. Open (user to decide): add a Claude API topic (~2 h, paid key)?
@@ -31,6 +26,15 @@ e. Open (user to decide): 4.1 by hand: write it (plan) or read Claude's
    solution. 3.3: user writes it (2026-11-13).
 
 ## Done
+- 2026-11-15 — topic 3.4 done (BISWAS), code by user (2026-11-14): 28
+  passed in 40.22 s (2 real Ollama), pyright 0, lesson rules 0. User's
+  edit to examples_3_4_2_tools.py kept (user's call): `support_turn` no
+  longer starts with the lookup done, so the lesson's part 2 text no
+  longer matches the file. Style notes below. REVIEW_03 3.4 (6 quiz),
+  +5 AI and +2 Python keywords. Phase 03 complete.
+- 2026-11-15 — topic 3.3 marked done (finished 2026-11-13, commit
+  1a8e0ac): 24 passed in 42.58 s on BISWAS (2 real Ollama). Style notes
+  below. REVIEW_03 3.3 (6 quiz), +4 AI and +2 Python keywords.
 - 2026-11-13 — lesson 3.4 written (BISWAS, qwen3:1.7b, temp 0, seed 42):
   2 examples + 4 stubs + 28 tests (2 files); user writes it, as 3.3.
   Measured (same in 2 runs): 6 ticket attacks hijacked 6/6, with tags +
@@ -172,6 +176,19 @@ e. Open (user to decide): 4.1 by hand: write it (plan) or read Claude's
 # End-of-course review
 Minor notes, batched for the end (DECISIONS 2026-11-08). BUG = wrong result,
 should get a check instead.
+
+## Review notes 3.4 (2026-11-15)
+- BUG: `check_tool_call` with a refund that has no `amount` → `KeyError`
+  (crash, not a reason text). Not in the tests.
+- `check_tool_call`: a second docstring left inside the body.
+- `normalize(s)`: no docstring, short name `s`; 1 blank line around it (want 2).
+- `wrap_ticket` reuses the parameter `text` for the result.
+- Extra blank line after the imports; trailing spaces in `flag_injection`.
+
+## Review notes 3.3 (2026-11-15)
+- Lines 11, 12, 14: `# pyright: ignore[reportUnusedImport]` stale (all used now).
+- `ask`: commented-out `print`; `messages` line too long, 2 spaces before `=`.
+- `chat_body`: 1 blank line before `run_tool` (want 2); blank line after docstring.
 
 ## Review notes 3.2 (2026-11-12)
 - Line 11 `# pyright: ignore[reportUnusedImport]` stale: httpx is used now.

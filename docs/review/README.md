@@ -12,7 +12,7 @@ For reviewing what was learned. Grows by one section per finished topic.
 |---|---|
 | [REVIEW_01_python.md](REVIEW_01_python.md) | 1.1–1.7, 1.9: flows + quiz |
 | [REVIEW_02_llm.md](REVIEW_02_llm.md) | 2.1–2.5: flows + quiz |
-| [REVIEW_03_prompting.md](REVIEW_03_prompting.md) | 3.1–3.2: flows + quiz |
+| [REVIEW_03_prompting.md](REVIEW_03_prompting.md) | 3.1–3.4: flows + quiz |
 | [GLOSSARY_AI.md](GLOSSARY_AI.md) | AI / LLM keywords, A–Z |
 | [GLOSSARY_PYTHON.md](GLOSSARY_PYTHON.md) | Python + pytest keywords, A–Z, with the Java twin |
 
@@ -35,6 +35,11 @@ notes + question → /api/embed → vectors → cosine → sort → top k notes
 ```
 system rules + few-shot turns (+ step-by-step) → reply → parse + check → score
 fields described + JSON schema → reply → pydantic check → retry with errors (3.2)
+```
+**Letting the model use your code, safely** (3.3, 3.4):
+```
+tools listed → reply asks for a call → gate checks it → run → result back → loop
+untrusted text in, answer out: both checked in code, never trusted
 ```
 **Proving it works** (1.9):
 ```

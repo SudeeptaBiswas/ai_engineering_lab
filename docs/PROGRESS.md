@@ -9,7 +9,7 @@ Overall % = hours of finished topics / 199. Hours spent don't count as progress.
 |---|---|---|---|---|
 | 01 | Python for Java devs | 15 | 13 | 87 |
 | 02 | LLM fundamentals | 9 | 9 | 100 |
-| 03 | Prompting + tool calling | 8 | 4 | 50 |
+| 03 | Prompting + tool calling | 8 | 8 | 100 |
 | 04 | RAG | 38 | 0 | 0 |
 | 05 | Evals + tracing | 10 | 0 | 0 |
 | 06 | Agents + LangGraph | 43 | 0 | 0 |
@@ -17,21 +17,25 @@ Overall % = hours of finished topics / 199. Hours spent don't count as progress.
 | 08 | Serve + ship | 13 | 0 | 0 |
 | 09 | Java bridge | 13 | 0 | 0 |
 | 10 | Capstone | 33 | 0 | 0 |
-| | **Total** | **199** | **26** | **13.1** |
+| | **Total** | **199** | **30** | **15.1** |
 
 ## Levels
 Hours left per level (TOPICS.md, `Lvl`). End dates assume 2 h a day from
-2026-11-12; they are estimates. Pace so far: 26 h logged by 2026-11-12.
+2026-11-15; they are estimates. Pace so far: 30 h logged by 2026-11-15.
 
 | Level | Total h | Done h | Left h | End date |
 |---|---|---|---|---|
-| Basic → apply | 76 | 26 | 50 | 2026-12-06 |
-| Intermediate | 60 | 0 | 60 | 2027-01-05 |
-| Advanced | 63 | 0 | 63 | 2027-02-06 |
-| **Total** | **199** | **26** | **173** | |
+| Basic → apply | 76 | 30 | 46 | 2026-12-08 |
+| Intermediate | 60 | 0 | 60 | 2027-01-07 |
+| Advanced | 63 | 0 | 63 | 2027-02-08 |
+| **Total** | **199** | **30** | **169** | |
 
 ## Session log
 Newest first: date, hours, phase, what was finished.
+
+- 2026-11-14 — 1.5 h (estimate) — 03 — topic 3.4 prompt injection done, 28/28 PASS. Phase 03 complete.
+
+- 2026-11-13 — 2.5 h (estimate) — 03 — topic 3.3 tool calling done, 24/24 PASS.
 
 - 2026-11-12 — 2 h (estimate) — 03 — topic 3.2 structured output done, 16/16 PASS.
 
