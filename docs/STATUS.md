@@ -19,8 +19,7 @@ a. 10284Sudee only, not committed (pre-commit: 151 lines; not checked
    since 2026-11-13): examples_3_3_2_loop.py "2 * 3* 4" expects
    19124907 (answer 24). Undo there.
 b. User: read assistant v2 (start with assistant/README.md, "How one
-   turn runs"). Open: an output check for false "refund recorded" claims
-   (README "Known limits")?
+   turn runs").
 c. Open (user to decide): add a Claude API topic (~2 h, paid key)?
    "AI workflow integration" = 8.1 + 8.3 (+6 h) or 6.5 (+4 h)?
 d. Optional: compare gemma4 E2B vs qwen3:4b on this PC (user to decide).
@@ -28,6 +27,10 @@ e. Open (user to decide): 4.1 by hand: write it (plan) or read Claude's
    solution. 3.3: user writes it (2026-11-13).
 
 ## Done
+- 2026-11-15 — assistant v2 answer check (`answer_check.py`, user OK):
+  a refund claim with no refund that ran gets a printed correction;
+  memory keeps the corrected answer. 6-question chat x 2: the false
+  "refund of $500.00 ... recorded" caught 2/2. Tests 74 passed (+11).
 - 2026-11-15 — assistant v2 (BISWAS, code by Claude, DECISIONS
   2026-11-15): tools + gate + tool loop, streaming kept; all of
   `assistant/` + 2.6 tests restyled. Tests: 2.6 28 + 3.5 35 = 63 passed,
