@@ -5,8 +5,9 @@ Updated: 2026-11-15
 ## Now
 - 1.1–1.7 + 1.9 + 2.1–2.6 + 3.1–3.4 done. Overall 15.1% (phase 01:
   87%, 02: 100%, 03: 100%).
-- assistant v1 works (`uv run python -m assistant`). Code by Claude; user
-  read memory, client, cli (2026-11-11). Lesson rules checked by a hook.
+- assistant v2 works (`uv run python -m assistant`, `--debug` for the
+  log): 4 tools + gate. Code by Claude, in CODE_STYLE.md. User to read it.
+  Lesson rules checked by a hook.
 - Review rule (DECISIONS 2026-11-08): critical issue → a check; minor → the
   "End-of-course review" list at the bottom.
 - From 2.6: exercises are pytest tests (DECISIONS 2026-11-09).
@@ -17,8 +18,9 @@ Updated: 2026-11-15
 a. 10284Sudee only, not committed (pre-commit: 151 lines; not checked
    since 2026-11-13): examples_3_3_2_loop.py "2 * 3* 4" expects
    19124907 (answer 24). Undo there.
-b. Claude: assistant v2 = the 3.3 tools in `assistant/` (own step,
-   DECISIONS 2026-11-13). Add the 3.4 gate there too.
+b. User: read assistant v2 (start with assistant/README.md, "How one
+   turn runs"). Open: an output check for false "refund recorded" claims
+   (README "Known limits")?
 c. Open (user to decide): add a Claude API topic (~2 h, paid key)?
    "AI workflow integration" = 8.1 + 8.3 (+6 h) or 6.5 (+4 h)?
 d. Optional: compare gemma4 E2B vs qwen3:4b on this PC (user to decide).
@@ -26,6 +28,14 @@ e. Open (user to decide): 4.1 by hand: write it (plan) or read Claude's
    solution. 3.3: user writes it (2026-11-13).
 
 ## Done
+- 2026-11-15 — assistant v2 (BISWAS, code by Claude, DECISIONS
+  2026-11-15): tools + gate + tool loop, streaming kept; all of
+  `assistant/` + 2.6 tests restyled. Tests: 2.6 28 + 3.5 35 = 63 passed,
+  3 runs (22.9–25.0 s, 6 real Ollama). 6-question chat 26.9 s: 4 tool
+  calls right; "date today" answered without the tool; "refund A-1002,
+  500" (5th question) no tool call but said "recorded". Alone: tool
+  called / gate blocked. System prompt measured: 3.3 prompt 5/5 x 2,
+  + "1 to 3 short sentences" 3/5 x 2.
 - 2026-11-15 — code style guide `docs/CODE_STYLE.md` from the user's 3.4
   review (12 points); applies from 4.1. Line limit 250 (aim 150);
   lesson_rules MAX_LINES 250, check passes. DECISIONS 2026-11-15.

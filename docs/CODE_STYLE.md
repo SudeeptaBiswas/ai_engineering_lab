@@ -1,7 +1,8 @@
 # Code style for lesson code
 
 From lesson 4.1 on, every file Claude writes follows this: examples,
-stubs, given helpers, tests. User feedback 2026-11-15 (DECISIONS).
+stubs, given helpers, tests, and `assistant/`. Old `assistant/` code is
+brought up to date whenever a step touches it. User feedback 2026-11-15 (DECISIONS).
 Bad examples are real lines from 3.4 (`examples_3_4_1_tickets.py`).
 
 Goal: read a function once and know **what it is for, what goes in, what

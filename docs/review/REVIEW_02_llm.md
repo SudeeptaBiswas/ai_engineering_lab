@@ -83,9 +83,9 @@ cosine(a, b) = dot(a, b) / (norm(a) × norm(b))
 
 ## 2.6 Project: assistant v1, CLI chatbot with memory
 ```
-you type → memory.add("user") → trim oldest if over budget
-  → stream_chat(system + history) → print each chunk as it arrives
-  → memory.add("assistant", full reply) → next turn resends it all
+you type → memory.add_message("user") → drop oldest if over budget
+  → stream_reply(system + history) → print each piece as it arrives
+  → memory.add_message("assistant", full reply) → next turn resends it all
 ```
 - The model remembers nothing: **memory = your code resends the history**.
 - Over `num_ctx` (4096 here) Ollama drops messages silently: "Blue" instead of "green".

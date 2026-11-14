@@ -2,6 +2,23 @@
 
 Newest first. One entry per change: what, replaces what, why.
 
+## 2026-11-15 — assistant v2 (Claude writes it) + v1 restyled
+- What: Claude wrote v2: 3.3 tools + fake `refund`, tool loop in
+  `chat_turn.py`, 3.4 gate in `tool_gate.py`, streaming kept. Tests in
+  `03_prompting_tools/3_5_assistant_v2/`. All of `assistant/` and the 2.6
+  tests rewritten to CODE_STYLE.md (new names, see LESSON_2_6 note).
+- Choices (user, all "Recommended"): fake refund yes; new test folder;
+  restyle v1 tests; keep streaming.
+- Claude's calls: memory keeps only question + final answer (tool
+  messages live one turn: trimming could split a call from its result);
+  temperature 0 + seed 42 in every request (tools need steady choices);
+  `--debug` shows the log, hidden otherwise; gate also blocks a refund
+  with no / non-number amount (the 3.4 review bug).
+- Standing rule (user): when old `assistant/` code is used, bring it up
+  to the latest feedback first, so it is always ready to review.
+- System prompt: the 3.3 one. Measured: + "Answer in 1 to 3 short
+  sentences." dropped tool use 5/5 → 3/5.
+
 ## 2026-11-15 — Code style guide for lesson code
 - What: [CODE_STYLE.md](CODE_STYLE.md), 11 rules: clear names with purpose,
   same name across functions, one job per function, inputs as parameters,

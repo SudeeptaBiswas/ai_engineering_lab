@@ -12,7 +12,7 @@ Process + quiz: [REVIEW_02_llm.md](REVIEW_02_llm.md), [REVIEW_03_prompting.md](R
 | Autoregressive | write one token, append it, guess the next, repeat | "The cat" → "sat" → "on" ... | 2.1 |
 | Batching | send many texts in one call | 5 notes: 1 call 0.38–0.60 s vs 5 calls 1.34–1.92 s | 2.5 |
 | BPE | build tokens by gluing the most common neighbour pair, again and again | `t`+`h` → `th` | 2.1 |
-| Chat memory | the history your code keeps and resends every turn | `ChatMemory.messages()` | 2.6 |
+| Chat memory | the history your code keeps and resends every turn | `ChatMemory.messages_to_send()` | 2.6 |
 | Code gate | code checks every tool call before it runs: who asked, how much | refund(500) blocked; "needs a human" | 3.4 |
 | Constrained decoding | the server only lets the model write tokens that fit a schema | `"format": schema` → 8/8 replies parse | 3.2 |
 | Context length | max tokens a model CAN see | qwen3:4b: 262 144 | 2.2 |
