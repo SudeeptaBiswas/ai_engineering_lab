@@ -33,7 +33,8 @@ chat_turn           answer_one_turn: save question -> model call -> tool calls?
   tool_gate           find_reason_to_block: may this call run?
   tool_runner         run_tool: check arguments, run, errors as text
   ... model call again with the results, until a reply has no tool calls (max 4)
-memory              only the question + final answer are saved
+  answer_check        correct_false_refund_claim: no "refund done" without a real refund
+memory              only the question + final (checked) answer are saved
 ```
 
 ## Files
@@ -45,6 +46,7 @@ memory              only the question + final answer are saved
 | `tools.py` | the 4 tools: arguments models + functions |
 | `tool_runner.py` | tool specs for the model; runs a tool, never raises |
 | `tool_gate.py` | the rules for which tool calls may run |
+| `answer_check.py` | the final answer: corrects a refund claim when no refund ran |
 | `memory.py` | `ChatMemory`: system message + history, trimmed |
 | `__main__.py` | makes `python -m assistant` work; `--debug` |
 
@@ -53,5 +55,9 @@ memory              only the question + final answer are saved
   calling a tool: "Refund order A-1002, amount 500." as the 5th question
   -> no tool call, but it said the refund was "recorded". The gate only
   sees tool calls, not words (3.4). Alone, the same question was blocked.
+  Now `answer_check.py` prints a correction (2 of 2 runs caught it). The
+  false text is still shown first: streaming prints before the check.
+- The check only knows refunds. Other false claims ("your order shipped")
+  are not checked.
 - The system prompt is fragile: adding "Answer in 1 to 3 short sentences."
   dropped tool use from 5/5 to 3/5 (see `cli.py`).

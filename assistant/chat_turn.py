@@ -3,6 +3,8 @@
 The tool loop (lesson 3.3), with the gate (lesson 3.4):
   send messages -> reply has tool calls? -> gate each call -> run it or block it
   -> send the results back -> ask again ... until a reply has no tool calls.
+Then the final answer is checked (answer_check.py): no refund claims
+without a refund that really ran.
 
 Only the question and the final answer go into memory. Tool messages live
 in this turn only: trimming could otherwise keep a tool result but drop the
@@ -15,6 +17,7 @@ Tests: 02_llm_fundamentals/2_6_assistant_v1/exercises_2_6_3_cli.py (plain turns)
 from dataclasses import dataclass, field
 from typing import Any
 
+from assistant.answer_check import correct_false_refund_claim
 from assistant.memory import ChatMemory, Message
 from assistant.ollama_client import ToolCall, stream_reply
 from assistant.tool_gate import find_reason_to_block
@@ -124,7 +127,8 @@ def answer_one_turn(memory: ChatMemory, user_question: str) -> str:
         2. Call the model. No tool calls -> that text is the final answer.
         3. Tool calls -> gate + run each, add the results, call the model again.
         4. After MAX_MODEL_CALLS_PER_TURN calls without an answer -> NO_ANSWER_TEXT.
-        5. Save the final answer in memory.
+        5. Correct a false refund claim (answer_check.py).
+        6. Save the final answer in memory.
     Args:
         memory: the chat so far.
         user_question: e.g. "Where is my order A-1001?".
@@ -147,6 +151,7 @@ def answer_one_turn(memory: ChatMemory, user_question: str) -> str:
         turn_messages.extend(tool_round_messages)
     if final_answer == NO_ANSWER_TEXT:
         print(ANSWER_PREFIX + NO_ANSWER_TEXT)
-    memory.add_message("assistant", final_answer)
-    log.debug("result: final_answer=%s", cut_text(final_answer))
-    return final_answer
+    checked_answer = correct_false_refund_claim(final_answer, turn_messages)
+    memory.add_message("assistant", checked_answer)
+    log.debug("result: checked_answer=%s", cut_text(checked_answer))
+    return checked_answer
