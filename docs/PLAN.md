@@ -106,7 +106,8 @@ Plus `docs/`, `resources/`, `pyproject.toml`, `uv.lock`.
 - Lesson code: explicit first, concise form in a `# concise:` comment
   (see DECISIONS.md, 2026-11-04).
 - Lesson code: full descriptive names; comments say what a variable holds
-  and what each expression does.
+  and what each expression does. Full rules: [CODE_STYLE.md](CODE_STYLE.md)
+  (from 4.1, DECISIONS 2026-11-15).
 - These lesson rules are checked by `lab_tools/lesson_rules.py` on every
   edit and commit (DECISIONS.md, 2026-11-09).
 - LESSON md: a "▶ Now run" line (with the command) right after the

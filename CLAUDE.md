@@ -17,6 +17,8 @@ Python 3.13 via uv 0.13.6 (`pyproject.toml` + `uv.lock`, `.venv` git-ignored).
 - `docs/PROGRESS.md` — hours + % per phase. Update when a topic finishes,
   and report the new % to the user.
 - `docs/DECISIONS.md` — requirement changes and why.
+- `docs/CODE_STYLE.md` — how lesson code and tests are written. Read
+  before writing any lesson file.
 - `docs/review/` — flows + quiz per topic, keyword glossaries. When a topic
   finishes, add its section to `REVIEW_NN_*.md` + its keywords to a glossary.
 - `NN_phase_name/` — lessons + exercises, one folder per phase.
@@ -34,7 +36,7 @@ Python 3.13 via uv 0.13.6 (`pyproject.toml` + `uv.lock`, `.venv` git-ignored).
   (`lab_tools/vscode_tests.py`) fails otherwise.
 
 ## Must never break
-- Files stay small: aim under 150 lines. Split before growing.
+- Files stay small: aim under 150 lines, max 250. Split before growing.
 - One concern per commit. Commit + push at each finished step.
 - New/changed code: 0 pyright errors before commit.
 - No secrets in the repo. Keys go in `.env` (git-ignored).

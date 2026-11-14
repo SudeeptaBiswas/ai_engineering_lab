@@ -2,6 +2,26 @@
 
 Newest first. One entry per change: what, replaces what, why.
 
+## 2026-11-15 — Code style guide for lesson code
+- What: [CODE_STYLE.md](CODE_STYLE.md), 11 rules: clear names with purpose,
+  same name across functions, one job per function, inputs as parameters,
+  docstring goal-first + "How:" steps, simple words, one step per line,
+  result in a variable before return, comment on multi-step lines,
+  `@debug` logging (start / steps / result) in examples, tests say what
+  they check. Applies from lesson 4.1. Line limit 150 → 250 (aim 150),
+  `lab_tools/lesson_rules.py` MAX_LINES changed to match.
+- Replaces: "full descriptive names" alone (PLAN "How we work"); hard 150.
+- Why: user's review of 3.4 (12 points): names like `SUSPICIOUS`,
+  `ask_json`, `item[0]` unclear; `ask_json(...)["injection"]` unreadable;
+  globals mixed with parameters; functions doing many jobs; no log of
+  the call order; docstrings don't say the goal.
+- Old lessons (≤ 3.4) not rewritten (not asked).
+- Same day, 2nd round: name by use (`reply_format`, not `reply_schema`);
+  name each value before comparing; log `expected=... got=...`; log
+  lines now start with `file:line` (`lab_tools/log.py`, all files);
+  `cut_text()` + `TEXT_CUT_LENGTH` (40) in one place; Java twin in code
+  comments dropped.
+
 ## 2026-11-13 — 3.3: user writes it; assistant v2 is its own step
 - What: 3.3 by hand: Claude writes lesson, tools, tests; user fills the
   4 stubs. assistant v2 (tools in `assistant/`) comes after, in its own

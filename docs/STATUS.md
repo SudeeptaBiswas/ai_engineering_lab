@@ -26,6 +26,11 @@ e. Open (user to decide): 4.1 by hand: write it (plan) or read Claude's
    solution. 3.3: user writes it (2026-11-13).
 
 ## Done
+- 2026-11-15 — code style guide `docs/CODE_STYLE.md` from the user's 3.4
+  review (12 points); applies from 4.1. Line limit 250 (aim 150);
+  lesson_rules MAX_LINES 250, check passes. DECISIONS 2026-11-15.
+  `lab_tools/log.py`: lines start with `file:line`; `cut_text()` with
+  `TEXT_CUT_LENGTH` (40, 0 = no cut). 3.4 sample rewrite: not wanted.
 - 2026-11-15 — topic 3.4 done (BISWAS), code by user (2026-11-14): 28
   passed in 40.22 s (2 real Ollama), pyright 0, lesson rules 0. User's
   edit to examples_3_4_2_tools.py kept (user's call): `support_turn` no

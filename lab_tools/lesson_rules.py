@@ -6,7 +6,7 @@ Checks every examples_*.py file (lesson code Claude writes):
   2. every "# --- explicit end ---" has a "# concise:" line right after
   3. no one-letter names ("_" is fine)
   4. every function has a docstring, with Args: (if it takes any) + Returns:
-  5. at most 150 lines
+  5. at most 250 lines (aim under 150; CODE_STYLE.md section 11)
 A line with "# rule-ok: <reason>" skips rules 1 and 3 on that line
 (e.g. a lesson whose topic IS comprehensions).
 Run it with lesson_rules_run.py.
@@ -15,7 +15,7 @@ Run it with lesson_rules_run.py.
 import ast
 from typing import cast
 
-MAX_LINES = 150
+MAX_LINES = 250
 EXPLICIT_END = "# --- explicit end ---"
 RULE_OK = "# rule-ok:"
 IDIOM_NODES: dict[type[ast.AST], str] = {
