@@ -2,6 +2,16 @@
 
 Newest first. One entry per change: what, replaces what, why.
 
+## 2026-11-15 — 4.1: user fills stubs; numpy added
+- What: lesson 4.1 written by Claude (lesson, 2 examples, 6 stubs in
+  `rag_4_1.py`, 30 tests); user fills the stubs. `uv add numpy`
+  (2.5.4; needed `--system-certs` on BISWAS).
+- Replaces: open STATUS question "4.1: write it or read the solution".
+- Why: user's choice (both "Recommended"). Topic is "with numpy".
+- Data: made-up handbook (13 sections) + generated release notes (108
+  versions), so the model can't know the facts. Generator script not
+  kept (one-off; seed 7).
+
 ## 2026-11-15 — assistant v2 (Claude writes it) + v1 restyled
 - What: Claude wrote v2: 3.3 tools + fake `refund`, tool loop in
   `chat_turn.py`, 3.4 gate in `tool_gate.py`, streaming kept. Tests in

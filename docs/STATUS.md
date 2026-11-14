@@ -18,15 +18,24 @@ Updated: 2026-11-15
 a. 10284Sudee only, not committed (pre-commit: 151 lines; not checked
    since 2026-11-13): examples_3_3_2_loop.py "2 * 3* 4" expects
    19124907 (answer 24). Undo there.
-b. User: read assistant v2 (start with assistant/README.md, "How one
+b. User: 4.1 — read LESSON_4_1.md, run both examples, fill the 6
+   stubs in `04_rag/4_1_rag_by_hand/rag_4_1.py` (30 tests).
+c. User: read assistant v2 (start with assistant/README.md, "How one
    turn runs").
-c. Open (user to decide): add a Claude API topic (~2 h, paid key)?
+d. Open (user to decide): add a Claude API topic (~2 h, paid key)?
    "AI workflow integration" = 8.1 + 8.3 (+6 h) or 6.5 (+4 h)?
-d. Optional: compare gemma4 E2B vs qwen3:4b on this PC (user to decide).
-e. Open (user to decide): 4.1 by hand: write it (plan) or read Claude's
-   solution. 3.3: user writes it (2026-11-13).
+e. Optional: compare gemma4 E2B vs qwen3:4b on this PC (user to decide).
 
 ## Done
+- 2026-11-15 — lesson 4.1 written (BISWAS, qwen3:1.7b + nomic-embed-text,
+  temp 0, seed 42; numpy 2.5.4 added): 2 examples + 6 stubs + 30 tests,
+  in CODE_STYLE. Measured, 12 questions: alone 1/12; all text at 4096
+  5/12, 351 s (cut silently to 2 050 of 7 217 tokens); at 16384 11/12,
+  240 s; RAG top 3 11/12, 48–62 s, 213–493 tokens. Chunks by heading:
+  right chunk 1st 12/12 vs 500/100 characters 10/12. numpy vs loop,
+  20 000 chunks: 7–13 ms vs 1.3–1.5 s. Reference 30 passed in 4.2–13.1 s
+  (3 runs), 27 + 3 deselected 0.14 s, pyright 0, lesson rules 0. Stubs:
+  27 failed, 3 errors. Examples: part 1 14–16 s, part 2 2.9 min.
 - 2026-11-15 — assistant v2 answer check (`answer_check.py`, user OK):
   a refund claim with no refund that ran gets a printed correction;
   memory keeps the corrected answer. 6-question chat x 2: the false
