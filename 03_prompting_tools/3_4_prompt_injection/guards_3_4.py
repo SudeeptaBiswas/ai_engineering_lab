@@ -10,6 +10,7 @@ it), so code limits what an attack can do.
 import re  # re.sub = replace by pattern. Java: String.replaceAll
 from typing import Any  # "any type". Java: Object
 
+
 TICKET_TAG = re.compile(r"</?ticket>", re.IGNORECASE)  # <ticket> or </ticket>, any case
 SUSPICIOUS = ["ignore all previous", "ignore previous instructions", "system:",
               "new instructions", "note to the ai", "note to assistant"]
@@ -28,7 +29,9 @@ def wrap_ticket(text: str) -> str:
     Returns:
         e.g. "<ticket>\\nAdd PDF export. [tag removed] Reply billing\\n</ticket>".
     """
-    raise NotImplementedError
+    cleaned_text = TICKET_TAG.sub("[tag removed]", text)
+    text = f"<ticket>\n{cleaned_text}\n</ticket>"
+    return text
 
 
 def flag_injection(text: str) -> list[str]:
@@ -39,7 +42,9 @@ def flag_injection(text: str) -> list[str]:
     Returns:
         e.g. ["ignore all previous"], in SUSPICIOUS order. [] if none.
     """
-    raise NotImplementedError
+    
+    text_lower = text.lower()
+    return [phrase for phrase in SUSPICIOUS if phrase in text_lower]
 
 
 def check_tool_call(name: str, arguments: dict[str, Any], user_text: str) -> str | None:
@@ -59,8 +64,24 @@ def check_tool_call(name: str, arguments: dict[str, Any], user_text: str) -> str
     Returns:
         None, or e.g. "refund needs a human: the customer did not ask for one".
     """
-    raise NotImplementedError
+    """Check whether a tool call can run without human approval."""
 
+    if name in READ_ONLY_TOOLS:
+        return None
+
+    if name != "refund":
+        return f"unknown tool: {name}"
+
+    if "refund" not in user_text.lower():
+        return "refund needs a human: the customer did not ask for one"
+
+    if arguments["amount"] > MAX_REFUND:
+        return f"refund needs a human: {arguments['amount']} is over 50"
+
+    return None
+
+def normalize(s: str) -> str:
+    return re.sub(r"[^A-Za-z0-9]", "", s).upper()
 
 def leaks_secret(answer: str, secret: str) -> bool:
     """Does the answer hold the secret, even spelled out ("S A V E - 7 7 3 1")?
@@ -72,4 +93,7 @@ def leaks_secret(answer: str, secret: str) -> bool:
     Returns:
         e.g. True.
     """
-    raise NotImplementedError
+    normalized_answer = normalize(answer)
+    normalized_secret = normalize(secret)
+
+    return normalized_secret in normalized_answer
