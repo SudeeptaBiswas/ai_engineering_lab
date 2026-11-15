@@ -18,15 +18,45 @@ Updated: 2026-11-15
 a. 10284Sudee only, not committed (pre-commit: 151 lines; not checked
    since 2026-11-13): examples_3_3_2_loop.py "2 * 3* 4" expects
    19124907 (answer 24). Undo there.
-b. User: 4.1 — read LESSON_4_1.md, run both examples, fill the 6
-   stubs in `04_rag/4_1_rag_by_hand/rag_4_1.py` (30 tests).
+b. User: 4.1 — read LESSON_4_1.md, run the 3 examples, fill the 6
+   stubs in `04_rag/4_1_rag_by_hand/rag_4_1.py` (31 tests).
 c. User: read assistant v2 (start with assistant/README.md, "How one
-   turn runs").
+   turn runs"). Restyled 2026-11-15; try `--debug` to see the call order.
+f. Next lesson (4.2): start from `docs/templates/LESSON_TEMPLATE.md`;
+   run the `lesson-reviewer` agent before hand-over.
 d. Open (user to decide): add a Claude API topic (~2 h, paid key)?
    "AI workflow integration" = 8.1 + 8.3 (+6 h) or 6.5 (+4 h)?
 e. Optional: compare gemma4 E2B vs qwen3:4b on this PC (user to decide).
 
 ## Done
+- 2026-11-15 — 4.1 reviewer findings: 10 fixed, 2 kept (DECISIONS same
+  day). Re-run on BISWAS: part 1 13.4 s, same top 3; part 3 165.3 s,
+  alone 1/12, RAG 11/12 (41.8 s), whole 2/2 cut at 2 050. Speed (scoring
+  only, after warm-up, 6 runs): 20 000 chunks numpy 5.9–7.2 ms, loop
+  589–684 ms. Reference 31 passed in 5.6–9.0 s (3 runs); stubs 28 failed
+  + 3 errors; rest of suite 210 passed in 94.59 s.
+- 2026-11-15 — assistant/ + 2.6 / 3.5 tests + 4.1 helpers to the latest
+  style (DECISIONS same day): `@debug` everywhere, why-docstrings, no
+  meaningful list positions, multiply `first_number` / `second_number`
+  (tool use 4/5 before and after, 2 runs each). Docs: CODE_STYLE rules
+  1, 3, 9, 10; PLAN (Java twin, docstring, approval); CLAUDE.md push
+  rule; 4 decisions backfilled. Tests: 209 passed in 76.94 s (with real
+  Ollama, 04_rag left out); 4.1 reference 30 passed in 9.34 s; stubs 27
+  failed + 3 errors; pyright 0; lesson rules 0. Real app run: multiply
+  + blocked refund 500 OK. Found: a PowerShell pipe puts `﻿`
+  before the first typed line; fixed in the next entry.
+- 2026-11-15 — rules kept by a script + template + reviewer (DECISIONS
+  same day): `lesson_rules.py` scope widened (assistant/, 2.6 / 3.5
+  tests, phase 04+, LESSON md sections; user code warns only), planted
+  breaks 11/11; first run found 15 misses, all fixed. LESSON template,
+  `lesson-reviewer` agent. `cli.py` drops `﻿` (+1 test).
+- 2026-11-15 — 4.1 reviewed to CODE_STYLE (DECISIONS same day): LESSON
+  md has problem / goal / how / steps / path + an `in → out` example per
+  exercise (new CODE_STYLE section 12). Examples split in 3 (search,
+  speed, answer). Re-run on BISWAS: part 1 17.2 s, part 2 2.4 s, part 3
+  214.8 s; same scores (alone 1/12, RAG 11/12, whole cut at 2 050).
+  Reference 30 passed in 9.69 s; stubs 27 failed + 3 errors; rest of
+  suite 207 passed in 89.19 s; pyright 0, lesson rules 0.
 - 2026-11-15 — lesson 4.1 written (BISWAS, qwen3:1.7b + nomic-embed-text,
   temp 0, seed 42; numpy 2.5.4 added): 2 examples + 6 stubs + 30 tests,
   in CODE_STYLE. Measured, 12 questions: alone 1/12; all text at 4096

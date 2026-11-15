@@ -2,6 +2,92 @@
 
 Newest first. One entry per change: what, replaces what, why.
 
+## 2026-11-15 — 4.1 reviewer findings: 10 fixed, 2 kept on purpose
+- What: the lesson-reviewer's 12 findings on 4.1 (STATUS). Fixed: 1
+  one-off numbers marked (*) in the LESSON; 3 one prompt wording (stubs =
+  examples); 4 real test reads "15-minute" too; 6 + 7 + 11 + 12 names
+  and one step per line; 8 speed timing = scoring only, after a warm-up;
+  9 `top_k` < 0 → [] tested (31 tests now); 10 `num_ctx`, `top_k`
+  explained.
+- Kept: 2 different names in examples vs stubs (on purpose: examples
+  must not hand over the stub answers; now a written exception in
+  CODE_STYLE rule 2 and in the reviewer, so it isn't flagged again).
+  5 documents joined before cutting: the release-notes title sticks to
+  the last handbook chunk; fixing it changes every measured number for
+  a small gain.
+- Measured change: numpy vs loop is ~100x (was "~150x"): the old loop
+  time included turning the vectors into lists.
+- Why: user: "fix only what is needed"; 2 has a reason, and changing it
+  would make the stub names match the examples' answers.
+
+## 2026-11-15 — Rules kept by a script, a template and a reviewer
+- What: `lesson_rules.py` now also checks `assistant/`, the 2.6 / 3.5
+  tests + fakes, and every `.py` from phase 04 on: `@debug` + a log line
+  (stubs and "No own log lines" helpers excepted), no "Checks" test
+  docstring, plus the old name / docstring / length rules. LESSON md from
+  4.1 on: the six sections of CODE_STYLE section 12, in order. Idiom
+  rules stay examples-only; examples before 4.1 keep the old rules.
+  `--all` mode added. Template `docs/templates/LESSON_TEMPLATE.md`;
+  `lesson-reviewer` agent in `.claude/agents/`.
+- User's code: files with `# lesson-rules: user-code` get warnings only,
+  never a blocked commit (user's call). Replaces "user's code not
+  checked" (2026-11-09).
+- Measured: planted breaks in a scratch repo, 11/11 handled as expected.
+  First run on the repo found 15 misses in code from this same day.
+- Also: `cli.py` drops "﻿" (a PowerShell pipe adds it to line 1),
+  with a test.
+- Why: user asked how to make sure rules are not forgotten. A rule in a
+  doc gets missed; a check that runs on every edit can't be.
+- Out of scope: `lab_tools/` itself (tooling, not lesson or app code).
+
+## 2026-11-15 — assistant/ + its tests brought to the latest style
+- What: every function Claude writes gets `@debug` + start/result logs
+  (examples, stubs, tests, fakes, `assistant/`); loop helpers excepted
+  (CODE_STYLE rule 9). Test docstrings say what + why, no "Checks:".
+  No list positions with meaning (`tool_specs[3]`, `REAL_STREAM_LINES[4]`).
+  Renames: `MODEL` → `CHAT_MODEL` (same as 4.1), `DONE_WORDS` →
+  `REFUND_DONE_WORDS`, `ORDER_LOOKUP` → `ORDER_LOOKUP_REPLY`.
+  answer_check returns; chat_turn prints the correction (rule 3).
+- multiply arguments `a` / `b` → `first_number` / `second_number`.
+  Measured, 5 multiply questions x 2 runs, fresh chat each: tool called
+  4/5 both ways (the same question, "17 items at 23.75", never calls it).
+  Right answers 5/5 → 4/5: that no-tool question, answered by the model
+  itself; a single rerun got it right. 3.3's `toolbox_3_3.py` keeps a / b.
+- Replaces: `@debug` in example files only; "Checks: ..." test docstrings.
+- Why: user's call (all 3 "Recommended"), asked to bring the old code
+  used in 4.1 prep up to the latest feedback.
+
+## 2026-11-15 — Commit + push only after the user approves
+- What: project CLAUDE.md, PLAN.md and the memory note now say: commit
+  and push each finished step only after the user approves.
+- Replaces: "commit + push at each finished step" / "push pre-approved".
+- Why: conflicted with the user's global review flow; user chose it.
+
+## 2026-11-15 — Backfill: decisions that were only in STATUS
+- 2026-11-12: pydantic 2.14.3 added (`uv add`, user OK) for lesson 1.6;
+  used by 3.2 and `assistant/tools.py`.
+- 2026-11-09: `assistant/` uses qwen3:1.7b + `think: False` (as lessons
+  since 2.3). Closes "not decided: model for the real app" (2026-11-06).
+  Open, optional: compare gemma4 E2B / qwen3:4b (STATUS queue).
+- 2026-11-15: user's own edit to `examples_3_4_2_tools.py` kept (user's
+  call), so LESSON_3_4 part 2 text no longer matches that file.
+- 2026-11-15: rewriting the 3.4 sample to CODE_STYLE: not wanted (user).
+
+## 2026-11-15 — Lesson .md follows the style guide too; 4.1 reviewed
+- What: CODE_STYLE.md section 12: each LESSON md has problem, goal,
+  how, steps, your path, then exercises with an `in → out` example per
+  function. Simple words, short sentences. LESSON_4_1.md rewritten.
+- 4.1 code reviewed against CODE_STYLE: `@debug` + start/result logs on
+  every example function; one step per line; no tuple positions
+  (`SearchTimes`, `EmbeddedHandbook`); print only in `main`; tests named
+  by behaviour, docstring says why. Speed part moved to its own file:
+  part 1 was 260 lines. Parts now: 1 search, 2 speed, 3 answer
+  (`examples_4_1_2_answer.py` → `examples_4_1_3_answer.py`).
+- Replaces: lesson md written as sections only (no goal / steps).
+- Why: user's feedback: the lesson must say the goal, how, and the
+  steps in simple words, with examples where needed.
+- Scope: lesson 4 and later. Older lessons not rewritten (not asked).
+
 ## 2026-11-15 — 4.1: user fills stubs; numpy added
 - What: lesson 4.1 written by Claude (lesson, 2 examples, 6 stubs in
   `rag_4_1.py`, 30 tests); user fills the stubs. `uv add numpy`
@@ -182,6 +268,7 @@ Newest first. One entry per change: what, replaces what, why.
   an EMPTY answer (all tokens went to thinking); with it 2.5 s, clean answer.
   qwen3:4b with `think: False` 8.5 s and its thinking leaks into the answer.
 - Not decided: model for the real app (`assistant/`, 2.6+). Revisit there.
+  (Later: qwen3:1.7b, see the 2026-11-15 backfill entry.)
 
 ## 2026-11-06 — One shared `check()` in lab_tools
 - What: `lab_tools/check.py`; every exercises file does

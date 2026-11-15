@@ -8,6 +8,20 @@ Bad examples are real lines from 3.4 (`examples_3_4_1_tickets.py`).
 Goal: read a function once and know **what it is for, what goes in, what
 comes out, and in which order things happen**, without jumping around.
 
+## How these rules are kept (so none is forgotten)
+1. **Script** `lab_tools/lesson_rules.py`: runs after every edit Claude
+   makes (hook) and on every commit (pre-commit). Checks names, docstrings,
+   `@debug` + log line, test docstrings, file length, LESSON md sections.
+   Scope and what blocks: top of `lab_tools/lesson_rules_run.py`.
+2. **Template** `docs/templates/LESSON_TEMPLATE.md`: section order + a
+   checklist for what a script can't judge.
+3. **Fresh eyes**: the `lesson-reviewer` agent (`.claude/agents/`) reviews
+   a lesson folder before it is handed over.
+4. **The user** reviews names and the "why".
+
+The user's own code (a stub file with `# lesson-rules: user-code`) gets
+the same checks as warnings only: they never block a commit.
+
 ## 1. Names say what it holds and what it is for
 A name answers "what is inside?" and "what do we use it for?".
 No vague words: `item`, `result`, `text`, `data`, `wrap`, `all`, `schema`.
@@ -33,20 +47,32 @@ No vague words: `item`, `result`, `text`, `data`, `wrap`, `all`, `schema`.
 - Booleans: a yes/no question (`is_attack`, `was_hijacked`).
 - **No `item[0]`, `ticket[2]`.** Tuples with positions → a `NamedTuple` or
   `@dataclass` with named fields: `ticket.text`, `ticket.correct_label`.
+  Same for a list position that means something: not `tool_specs[3]`
+  ("the 4th is refund"), but find it by name; not `REAL_STREAM_LINES[4]`,
+  but a constant `DONE_LINE`.
+- **Names the model reads are names too.** Tool argument fields are
+  shown to the model: `first_number`, not `a`. Measure before and after
+  a rename (2026-11-15: multiply called 4/5 both ways).
 
 ## 2. Same thing, same name, everywhere
 If the caller has `ticket_text`, the parameter is `ticket_text` too.
 Rename only when the content changes, e.g. `ticket_text` →
 `tagged_ticket_text` after adding `<ticket>` tags.
+**One exception, on purpose:** the examples and the stubs the user fills
+use different function names (4.1: `chunk_by_headings` vs
+`split_by_headings`), so the examples don't hand over the stub answers.
+Inside each file, the names stay the same.
 
 ## 3. One function, one job
 - If a function has an `if` for a different topic, move that part to its
   own function. 3.4 `triage_all` wraps tickets, calls the model, scores
   labels, finds hijacks and prints. That's 5 jobs → 5 functions.
 - **Inputs come from parameters.** Globals only for fixed settings that
-  never change per call (`OLLAMA_URL`, `MODEL`, prompts, schemas).
+  never change per call (`OLLAMA_URL`, `CHAT_MODEL`, prompts, schemas).
   Data being processed (tickets, texts) is always a parameter.
 - Prefer returning a value over printing inside. The caller (`main`) prints.
+  In `assistant/`, the chat screen is `chat_turn.py` + `cli.py`: only they
+  print. A checker (gate, answer check) returns; the turn prints.
 
 ## 4. Docstring: goal first, then how
 ```python
@@ -120,7 +146,8 @@ hijacked_count = sum(was_hijacked)  # True counts as 1, so this counts the hijac
 
 ## 9. Logging shows the order of events
 Use `from lab_tools.log import cut_text, debug, log` and put `@debug` on
-every function in example files. Each function logs:
+every function Claude writes: examples, stubs, tests, fakes, `assistant/`
+(user, 2026-11-15; before: examples only). Each function logs:
 - `start:` with its inputs; long text through `cut_text(...)`,
 - one line per main step,
 - every comparison: `expected=... got=...`,
@@ -135,12 +162,20 @@ examples_4_1.py:66   detect_by_keywords result: found_keywords=['ignore all prev
 examples_4_1.py:74   detect_by_model    expected=True got=True
 ```
 - Cut length: `TEXT_CUT_LENGTH` in `lab_tools/log.py` (40; 0 = no cut). One place for every file.
+- Exception: a small helper that runs once per item in a loop (per
+  message, per stream line) has no own log lines, or the log floods.
+  Its caller logs the total. Say so in its docstring
+  (e.g. `estimate_tokens`, text pieces in `parse_stream_line`).
+- A function that runs before the log level is set logs after it
+  (`assistant/__main__.py`: `hide_log_unless_asked` runs first).
 - `print` is only for the lesson's final output (scores, tables).
 
 ## 10. Tests say what they check
 - Test name = the behaviour: `test_refund_blocked_when_customer_did_not_ask`.
 - Docstring line 1 = **what we check and why it matters**:
   `"""A tool result asked for a refund, not the customer: the gate must block it."""`
+  Not `"""Checks: ..."""`: "checks" adds nothing, and the why goes missing.
+- The real-model tests log `expected=... got=...` too.
 - Each `parametrize` row gets a short comment saying what case it covers.
 - Put the result in a variable, log expected vs got, then assert. A
   failing test then shows the line number and both values in its log:
@@ -153,6 +188,19 @@ assert got_reason == expected_reason
 ## 11. File length
 Clear code is longer. Aim under 150 lines; up to 250 is fine when the
 rules above need it (see DECISIONS 2026-11-15). Over 250: split the file.
+
+## 12. Lesson .md files follow the same ideas
+User feedback 2026-11-15 (DECISIONS). The `LESSON_N_N.md` has, in this order:
+1. **The problem**: a real example that fails today (context first).
+2. **Goal**: one or two lines, what we want to reach, with a number.
+3. **How we get there**: the idea in plain words, before any term.
+4. **Steps**: numbered, one line each, with an example value per step.
+5. **Your path**: read → run → read → run → exercises.
+6. Sections, then **Exercises**: per function its goal and one
+   `in → out` example; edge cases listed, so nobody has to guess.
+
+Writing: short sentences, one idea per bullet, a term explained the
+first time. Add an example wherever a rule alone could be misread.
 
 ## Rules kept from before
 - Long form first, short form in a `# concise:` comment (DECISIONS 2026-11-04).

@@ -37,10 +37,16 @@ Python 3.13 via uv 0.13.6 (`pyproject.toml` + `uv.lock`, `.venv` git-ignored).
 
 ## Must never break
 - Files stay small: aim under 150 lines, max 250. Split before growing.
-- One concern per commit. Commit + push at each finished step.
+- One concern per commit. Commit + push each finished step, only after
+  the user approves it (DECISIONS 2026-11-15).
 - New/changed code: 0 pyright errors before commit.
 - No secrets in the repo. Keys go in `.env` (git-ignored).
 - Lesson code (`examples_*.py`): long form first, short form only in a
   `# concise:` comment; full names; docstrings with Args/Returns.
-  Enforced by `lab_tools/lesson_rules.py` (Claude hook + git pre-commit).
+  Enforced by `lab_tools/lesson_rules.py` (Claude hook + git pre-commit),
+  also for `assistant/`, its tests, and every file from phase 04 on
+  (`@debug` + log, test docstrings, LESSON md sections).
   New clone: `git config core.hooksPath .githooks` once.
+- New lesson: copy `docs/templates/LESSON_TEMPLATE.md`; stub files the
+  user fills get `# lesson-rules: user-code`. Before handing it over, run
+  the `lesson-reviewer` agent on the folder and fix what it finds.

@@ -8,11 +8,12 @@ Review notes and reasons for changes: [PLAN_REVIEW.md](PLAN_REVIEW.md).
 ## Mentor guidance
 - Step by step, practical, working code, small exercises.
 - Map Python ideas to Java ones where it helps.
-- Comment lesson code line by line: what it does + the Java equivalent.
-  Explain every new symbol or trick (lambda, `!r`, `**`, decorators).
-- Every function gets a Javadoc-style docstring: one line on what it does,
+- Comment lesson code line by line: what it does. Explain every new
+  symbol or trick (lambda, `!r`, `**`, decorators). Java twin in code
+  comments: dropped 2026-11-15 (a Java → Python table in the LESSON md is fine).
+- Every function gets a docstring: the goal first, then `How:` steps,
   then `Args:` / `Returns:` / `Raises:` (= `@param` / `@return` / `@throws`),
-  each with a real example value.
+  each with a real example value. Full rules: [CODE_STYLE.md](CODE_STYLE.md).
 - Build each idea by hand first, then with the framework.
 - Every new idea: real example first, then how it links to earlier and
   later lessons, then a short definition. Never a bare definition.
@@ -102,14 +103,20 @@ Plus `docs/`, `resources/`, `pyproject.toml`, `uv.lock`.
 - Learn and build: every topic adds something real to `assistant/`.
 - Follow the learning order below; Python is learned when needed.
 - Evals (05) are woven into RAG (04).
-- Each session: one small piece → test → commit → push.
+- Each session: one small piece → test → user reviews → commit → push
+  (only after the user approves; DECISIONS 2026-11-15).
 - Lesson code: explicit first, concise form in a `# concise:` comment
   (see DECISIONS.md, 2026-11-04).
 - Lesson code: full descriptive names; comments say what a variable holds
   and what each expression does. Full rules: [CODE_STYLE.md](CODE_STYLE.md)
   (from 4.1, DECISIONS 2026-11-15).
 - These lesson rules are checked by `lab_tools/lesson_rules.py` on every
-  edit and commit (DECISIONS.md, 2026-11-09).
+  edit and commit (DECISIONS.md, 2026-11-09; scope widened 2026-11-15:
+  assistant/, its tests, everything from phase 04, LESSON md sections).
+- New lesson: start from `docs/templates/LESSON_TEMPLATE.md`; the
+  `lesson-reviewer` agent reviews it before hand-over.
 - LESSON md: a "▶ Now run" line (with the command) right after the
   sections each examples file covers, so the md alone guides the order.
+  From 4.1: problem → goal → how → steps → your path → exercises with an
+  `in → out` example each (CODE_STYLE section 12).
 - Track in hours + %, not weeks: [PROGRESS.md](PROGRESS.md).
