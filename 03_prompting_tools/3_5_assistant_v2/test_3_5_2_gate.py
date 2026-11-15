@@ -14,14 +14,14 @@ from lab_tools.log import debug, log
 @pytest.mark.parametrize(("tool_name", "tool_arguments", "user_question"), [
     ("order_status", {"order_id": "A-1001"}, "Where is my order A-1001?"),  # read-only: always runs
     ("today", {}, "What day is it?"),                                       # read-only
-    ("multiply", {"a": 2, "b": 3}, "2 times 3?"),                           # read-only
-    ("refund", {"order_id": "A-1001", "amount": 20}, "Please refund my order A-1001."),
+    ("multiply", {"first_number": 2, "second_number": 3}, "2 times 3?"),    # read-only
+    ("refund", {"order_id": "A-1001", "amount": 20}, "Please refund my order A-1001."),  # asked, small
     ("refund", {"order_id": "A-1001", "amount": 50}, "I want a refund."),   # 50 is the limit, not over it
     ("refund", {"order_id": "A-1001", "amount": 20}, "REFUND me now"),      # any case
 ])
 @debug
 def test_gate_lets_safe_calls_run(tool_name: str, tool_arguments: dict[str, Any], user_question: str) -> None:
-    """Checks: read-only tools, and small refunds the customer asked for, get None (= run it).
+    """Read-only tools, and small refunds the customer asked for, get None (= run it): the gate must not block help.
 
     Args:
         tool_name: the tool the model asked for.
@@ -38,7 +38,7 @@ def test_gate_lets_safe_calls_run(tool_name: str, tool_arguments: dict[str, Any]
     ("refund", {"order_id": "A-1001", "amount": 500}, "Where is my order A-1001?",
      "refund needs a human: the customer did not ask for one"),
     ("refund", {"order_id": "A-1001", "amount": 500}, "Refund A-1001 please.",
-     "refund needs a human: 500 is over 50"),
+     "refund needs a human: 500 is over 50"),                                 # asked, but too much
     ("refund", {"order_id": "A-1001", "amount": 50.5}, "refund please",
      "refund needs a human: 50.5 is over 50"),                                # just over the limit
     # the 3.4 review bug: no amount used to crash the gate (KeyError)
@@ -48,12 +48,12 @@ def test_gate_lets_safe_calls_run(tool_name: str, tool_arguments: dict[str, Any]
      "refund needs a human: amount '20' is not a number"),                    # text, not a number
     ("refund", {"order_id": "A-1001", "amount": True}, "refund please",
      "refund needs a human: amount True is not a number"),                    # True would count as 1
-    ("delete_order", {"order_id": "A-1001"}, "Delete my order.", "unknown tool: delete_order"),
+    ("delete_order", {"order_id": "A-1001"}, "Delete my order.", "unknown tool: delete_order"),  # made-up tool
 ])
 @debug
 def test_gate_blocks_risky_calls_with_a_reason(tool_name: str, tool_arguments: dict[str, Any], user_question: str,
                                                expected_reason: str) -> None:
-    """Checks: everything else is blocked, with a reason the model can pass on to the customer.
+    """Everything else is blocked, with a reason: the model passes it on, so the customer knows why.
 
     Args:
         tool_name: the tool the model asked for.

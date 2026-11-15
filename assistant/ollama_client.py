@@ -18,7 +18,7 @@ from assistant.memory import Message
 from lab_tools.log import cut_text, debug, log
 
 OLLAMA_URL = "http://127.0.0.1:11434"  # not "localhost": 2 s slower on Windows (1.7)
-MODEL = "qwen3:1.7b"  # think=False works here; 4b leaks thinking (2.3)
+CHAT_MODEL = "qwen3:1.7b"  # think=False works here; 4b leaks thinking (2.3)
 NUM_CTX = 4096  # context size in tokens; the default `ollama ps` showed. Sent explicitly
 MAX_ANSWER_TOKENS = 300  # num_predict: hard limit on the answer length (2.3)
 TEMPERATURE = 0  # steady tool choices; 3.3 and 3.4 were measured at 0
@@ -42,6 +42,7 @@ class StreamPiece:
     tool_calls: list[ToolCall] = field(default_factory=list[ToolCall])  # a new empty list for each piece
 
 
+@debug
 def build_request_body(chat_messages: list[Message], tool_specs: list[dict[str, Any]]) -> dict[str, Any]:
     """Build the JSON body for one streaming POST /api/chat.
 
@@ -50,21 +51,24 @@ def build_request_body(chat_messages: list[Message], tool_specs: list[dict[str, 
         tool_specs: what the model reads about each tool (tool_runner.build_tool_specs()),
             or [] for no tools.
     Returns:
-        e.g. {"model": MODEL, "messages": [...], "stream": True, "think": False,
+        e.g. {"model": CHAT_MODEL, "messages": [...], "stream": True, "think": False,
               "tools": [...], "options": {...}}.
     """
-    options = {"num_ctx": NUM_CTX, "num_predict": MAX_ANSWER_TOKENS, "temperature": TEMPERATURE, "seed": SEED}
+    model_options = {"num_ctx": NUM_CTX, "num_predict": MAX_ANSWER_TOKENS, "temperature": TEMPERATURE,
+                     "seed": SEED}
     request_body: dict[str, Any] = {
-        "model": MODEL,
+        "model": CHAT_MODEL,
         "messages": chat_messages,
         "stream": True,  # the answer comes line by line
         "think": False,  # no hidden thinking text
         "tools": tool_specs,
-        "options": options,
+        "options": model_options,
     }
+    log.debug("result: %d messages, %d tools, options=%s", len(chat_messages), len(tool_specs), model_options)
     return request_body
 
 
+@debug
 def parse_stream_line(stream_line: str) -> StreamPiece:
     """Read one stream line: the answer text in it and any tool calls.
 
@@ -78,7 +82,8 @@ def parse_stream_line(stream_line: str) -> StreamPiece:
     Returns:
         e.g. StreamPiece(text="AG", tool_calls=[]).
     """
-    if not stream_line.strip():  # blank line: nothing to parse
+    is_blank_line = stream_line.strip() == ""
+    if is_blank_line:  # nothing to parse
         empty_piece = StreamPiece(text="")
         return empty_piece
     line_json: dict[str, Any] = json.loads(stream_line)
@@ -88,9 +93,12 @@ def parse_stream_line(stream_line: str) -> StreamPiece:
     tool_calls: list[ToolCall] = []
     for raw_tool_call in raw_tool_calls:
         function_part: dict[str, Any] = raw_tool_call["function"]  # {"name": ..., "arguments": {...}}
-        tool_call = ToolCall(tool_name=function_part["name"], tool_arguments=function_part.get("arguments", {}))
-        tool_calls.append(tool_call)
+        tool_name = function_part["name"]
+        tool_arguments = function_part.get("arguments", {})  # no "arguments" key -> {}
+        tool_calls.append(ToolCall(tool_name=tool_name, tool_arguments=tool_arguments))
     stream_piece = StreamPiece(text=answer_text, tool_calls=tool_calls)
+    if len(tool_calls) > 0:  # text pieces come every few letters: log only tool calls, or the log floods
+        log.debug("result: %s", stream_piece)
     return stream_piece
 
 

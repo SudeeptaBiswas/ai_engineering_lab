@@ -17,7 +17,7 @@ Tests: 02_llm_fundamentals/2_6_assistant_v1/exercises_2_6_3_cli.py (plain turns)
 from dataclasses import dataclass, field
 from typing import Any
 
-from assistant.answer_check import correct_false_refund_claim
+from assistant.answer_check import CORRECTION_TEXT, correct_false_refund_claim
 from assistant.memory import ChatMemory, Message
 from assistant.ollama_client import ToolCall, stream_reply
 from assistant.tool_gate import find_reason_to_block
@@ -81,10 +81,12 @@ def get_tool_result(tool_call: ToolCall, user_question: str) -> str:
         The text the model gets back, e.g. "shipped on 2026-11-10, ..." or
         "error: blocked: refund needs a human: the customer did not ask for one".
     """
+    log.debug("start: %s", tool_call)
     block_reason = find_reason_to_block(tool_call.tool_name, tool_call.tool_arguments, user_question)
     if block_reason is not None:
         print(f"  (blocked {tool_call.tool_name}: {block_reason})")
         blocked_text = f"error: blocked: {block_reason}"
+        log.debug("result: %s", blocked_text)
         return blocked_text
     print(f"  (using {tool_call.tool_name} {tool_call.tool_arguments})")
     tool_result_text = run_tool(tool_call.tool_name, tool_call.tool_arguments)
@@ -92,11 +94,13 @@ def get_tool_result(tool_call: ToolCall, user_question: str) -> str:
     return tool_result_text
 
 
+@debug
 def build_tool_round_messages(model_reply: ModelReply, user_question: str) -> list[Message]:
     """Build the messages that go back to the model after it asked for tools.
 
-    How (3.3 part 1): first the model's own reply (it must see what it asked),
-    then one "tool" message with the result of each call.
+    How (3.3 part 1):
+        1. First the model's own reply, with its tool calls (it must see what it asked).
+        2. Then one "tool" message per call, with that call's result (gate + run).
     Args:
         model_reply: a reply with at least one tool call.
         user_question: the customer's message this turn.
@@ -104,6 +108,7 @@ def build_tool_round_messages(model_reply: ModelReply, user_question: str) -> li
         e.g. [{"role": "assistant", "content": "", "tool_calls": [...]},
               {"role": "tool", "tool_name": "order_status", "content": "shipped ..."}].
     """
+    log.debug("start: %d tool calls", len(model_reply.tool_calls))
     tool_calls_for_ollama: list[dict[str, Any]] = []  # back in Ollama's own shape
     for tool_call in model_reply.tool_calls:
         function_part = {"name": tool_call.tool_name, "arguments": tool_call.tool_arguments}
@@ -115,6 +120,7 @@ def build_tool_round_messages(model_reply: ModelReply, user_question: str) -> li
         tool_result_text = get_tool_result(tool_call, user_question)
         tool_result_message: Message = {"role": "tool", "tool_name": tool_call.tool_name, "content": tool_result_text}
         tool_round_messages.append(tool_result_message)
+    log.debug("result: %d messages", len(tool_round_messages))
     return tool_round_messages
 
 
@@ -127,7 +133,7 @@ def answer_one_turn(memory: ChatMemory, user_question: str) -> str:
         2. Call the model. No tool calls -> that text is the final answer.
         3. Tool calls -> gate + run each, add the results, call the model again.
         4. After MAX_MODEL_CALLS_PER_TURN calls without an answer -> NO_ANSWER_TEXT.
-        5. Correct a false refund claim (answer_check.py).
+        5. Correct a false refund claim (answer_check.py); print the correction.
         6. Save the final answer in memory.
     Args:
         memory: the chat so far.
@@ -152,6 +158,9 @@ def answer_one_turn(memory: ChatMemory, user_question: str) -> str:
     if final_answer == NO_ANSWER_TEXT:
         print(ANSWER_PREFIX + NO_ANSWER_TEXT)
     checked_answer = correct_false_refund_claim(final_answer, turn_messages)
+    was_corrected = checked_answer != final_answer
+    if was_corrected:
+        print(f"  ({CORRECTION_TEXT})")
     memory.add_message("assistant", checked_answer)
     log.debug("result: checked_answer=%s", cut_text(checked_answer))
     return checked_answer

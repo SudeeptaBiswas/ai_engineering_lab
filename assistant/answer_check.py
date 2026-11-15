@@ -5,7 +5,7 @@ Why: the gate (tool_gate.py) only sees tool calls, not words. Measured
 has been recorded" without calling refund at all. Code checks what goes
 out, the same way the gate checks what runs.
 
-The answer is already on screen (streaming), so a false claim gets a
+The answer is already on screen (streaming), so chat_turn.py prints a
 correction line, and memory keeps the corrected answer.
 
 Tests: 03_prompting_tools/3_5_assistant_v2/test_3_5_5_answer_check.py
@@ -15,15 +15,16 @@ from assistant.memory import Message
 from lab_tools.log import cut_text, debug, log
 
 REFUND_TOOL_NAME = "refund"
-DONE_WORDS = ("processed", "recorded", "issued", "completed", "refunded", "approved")  # "it happened" words
+REFUND_DONE_WORDS = ("processed", "recorded", "issued", "completed", "refunded", "approved")  # "it happened"
 CORRECTION_TEXT = ("Correction: no refund was made. Please ask for it again; "
                    "amounts over 50 need a human.")
 
 
+@debug
 def claims_refund_done(answer_text: str) -> bool:
     """Decide if an answer says a refund happened.
 
-    How: the answer mentions "refund" AND one of DONE_WORDS, any case.
+    How: the answer mentions "refund" AND one of REFUND_DONE_WORDS, any case.
     It also fires on "has not been processed": harmless, because the check
     only acts when no refund ran, so the correction is true anyway.
     Args:
@@ -34,15 +35,18 @@ def claims_refund_done(answer_text: str) -> bool:
     answer_lower = answer_text.lower()
     mentions_refund = REFUND_TOOL_NAME in answer_lower
     has_done_word = False
-    for done_word in DONE_WORDS:
+    for done_word in REFUND_DONE_WORDS:
         if done_word in answer_lower:
             has_done_word = True
     # --- explicit end ---
-    # concise: has_done_word = any(done_word in answer_lower for done_word in DONE_WORDS)
+    # concise: has_done_word = any(done_word in answer_lower for done_word in REFUND_DONE_WORDS)
     claims_done = mentions_refund and has_done_word
+    log.debug("answer=%s mentions_refund=%s has_done_word=%s -> %s", cut_text(answer_text), mentions_refund,
+              has_done_word, claims_done)
     return claims_done
 
 
+@debug
 def refund_really_ran(turn_messages: list[Message]) -> bool:
     """Look through this turn's tool results: did a refund run and succeed?
 
@@ -55,9 +59,12 @@ def refund_really_ran(turn_messages: list[Message]) -> bool:
     """
     refund_succeeded = False
     for message in turn_messages:
-        is_refund_result = message["role"] == "tool" and message.get("tool_name") == REFUND_TOOL_NAME
-        if is_refund_result and not message["content"].startswith("error:"):
+        is_tool_result = message["role"] == "tool"
+        is_from_refund = message.get("tool_name") == REFUND_TOOL_NAME
+        is_error_text = message["content"].startswith("error:")
+        if is_tool_result and is_from_refund and not is_error_text:
             refund_succeeded = True
+    log.debug("result: %d messages, refund_succeeded=%s", len(turn_messages), refund_succeeded)
     return refund_succeeded
 
 
@@ -68,7 +75,7 @@ def correct_false_refund_claim(final_answer: str, turn_messages: list[Message]) 
     How:
         1. No refund claim -> keep the answer.
         2. A refund really ran this turn -> keep the answer.
-        3. Else -> print CORRECTION_TEXT and add it to the answer.
+        3. Else -> add CORRECTION_TEXT to the answer.
     Args:
         final_answer: the model's final text this turn.
         turn_messages: all messages of this turn, tool results included.
@@ -81,7 +88,6 @@ def correct_false_refund_claim(final_answer: str, turn_messages: list[Message]) 
     if not claims_done or really_ran:
         log.debug("result: kept as is")
         return final_answer
-    print(f"  ({CORRECTION_TEXT})")
     corrected_answer = f"{final_answer} {CORRECTION_TEXT}"
     log.debug("result: corrected")
     return corrected_answer

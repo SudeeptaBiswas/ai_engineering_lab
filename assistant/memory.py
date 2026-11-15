@@ -36,6 +36,8 @@ class Message(TypedDict):
 def estimate_tokens(text: str) -> int:
     """Guess how many tokens a text is, without asking the model.
 
+    No own log lines: it runs once per message on every budget check;
+    drop_oldest_until_under_budget logs the total (CODE_STYLE rule 9).
     How: about 4 characters = 1 token, rounded up (lesson 2.1). Real counts
     are higher (2.6 part 1: 33 real vs 16 estimated), so the budget in
     cli.py stays well under the model's context size.
@@ -67,6 +69,7 @@ class ChatMemory:
 
         It is a NEW list each time, so the caller can add tool messages to it
         without changing the memory (test_messages_to_send_is_a_copy).
+        No own log lines: estimated_token_count calls it in a loop.
         Returns:
             e.g. [{"role": "system", ...}, {"role": "user", "content": "hi"}].
         """
@@ -80,6 +83,7 @@ class ChatMemory:
     def estimated_token_count(self) -> int:
         """Guess the tokens of everything messages_to_send() returns.
 
+        No own log lines: drop_oldest_until_under_budget calls it in a loop.
         Returns:
             Sum of estimate_tokens(content) over all messages, system included, e.g. 5.
         """
@@ -121,6 +125,8 @@ class ChatMemory:
             has_more_than_newest = len(self.history) > 1
         log.debug("result: %d messages, ~%d tokens", len(self.history), self.estimated_token_count())
 
+    @debug
     def forget_chat(self) -> None:
         """Forget all questions and answers (the /reset command). The rules stay."""
+        log.debug("start: forgetting %d messages", len(self.history))
         self.history = []

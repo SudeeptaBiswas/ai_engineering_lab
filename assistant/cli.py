@@ -22,8 +22,10 @@ MAX_HISTORY_TOKENS = 2000
 EXIT_COMMANDS = ("/exit", "/quit")
 RESET_COMMAND = "/reset"
 INPUT_PROMPT = "you> "
+BYTE_ORDER_MARK = "﻿"  # invisible; strip() keeps it, so "/exit" would not match (seen 2026-11-15)
 
 
+@debug
 def read_typed_line() -> str | None:
     """Wait for the user to type one line.
 
@@ -32,9 +34,13 @@ def read_typed_line() -> str | None:
         None at the end of input (Ctrl+Z on Windows, Ctrl+D elsewhere).
     """
     try:
-        typed_line = input(INPUT_PROMPT).strip()
+        raw_line = input(INPUT_PROMPT)
     except EOFError:  # input() raises this when there is no more input
+        log.debug("result: None (end of input)")
         return None
+    typed_line = raw_line.strip()  # drop spaces and the line break at both ends
+    typed_line = typed_line.removeprefix(BYTE_ORDER_MARK)  # a PowerShell pipe adds it to line 1
+    log.debug("result: %r", typed_line)
     return typed_line
 
 
@@ -46,6 +52,7 @@ def answer_and_survive_errors(memory: ChatMemory, user_question: str) -> None:
         memory: the chat so far.
         user_question: e.g. "What is RAG?".
     """
+    log.debug("start: user_question=%r", user_question)
     try:
         answer_one_turn(memory, user_question)
     except httpx.HTTPError as http_error:
@@ -63,11 +70,12 @@ def main() -> None:
         empty line     -> skip it (send nothing)
         anything else  -> answer it
     """
+    log.debug("start: max_history_tokens=%d", MAX_HISTORY_TOKENS)
     memory = ChatMemory(SYSTEM_PROMPT, MAX_HISTORY_TOKENS)
     while True:
         typed_line = read_typed_line()
-        log.debug("typed_line=%r", typed_line)
         if typed_line is None or typed_line in EXIT_COMMANDS:
+            log.debug("result: chat ended by %r", typed_line)
             return
         if typed_line == RESET_COMMAND:
             memory.forget_chat()

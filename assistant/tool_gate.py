@@ -22,6 +22,7 @@ MAX_REFUND_WITHOUT_HUMAN = 50  # larger refunds need a person to confirm
 REFUND_REQUEST_WORD = "refund"  # must appear in the customer's own question
 
 
+@debug
 def find_refund_problem(tool_arguments: dict[str, Any], user_question: str) -> str | None:
     """Check a refund call against the refund rules.
 
@@ -35,16 +36,24 @@ def find_refund_problem(tool_arguments: dict[str, Any], user_question: str) -> s
     Returns:
         None = OK, or the reason, e.g. "refund needs a human: 500 is over 50".
     """
-    customer_asked_for_refund = REFUND_REQUEST_WORD in user_question.lower()
-    if not customer_asked_for_refund:
-        return "refund needs a human: the customer did not ask for one"
+    log.debug("start: %s user_question=%s", tool_arguments, cut_text(user_question))
+    question_lower = user_question.lower()
+    customer_asked_for_refund = REFUND_REQUEST_WORD in question_lower
     refund_amount = tool_arguments.get("amount")  # None if the model left it out
     # bool is a kind of int in Python (True == 1), so rule it out on its own
-    if isinstance(refund_amount, bool) or not isinstance(refund_amount, (int, float)):
-        return f"refund needs a human: amount {refund_amount!r} is not a number"
-    if refund_amount > MAX_REFUND_WITHOUT_HUMAN:
-        return f"refund needs a human: {refund_amount} is over {MAX_REFUND_WITHOUT_HUMAN}"
-    return None
+    is_bool = isinstance(refund_amount, bool)
+    is_number = isinstance(refund_amount, (int, float)) and not is_bool
+    log.debug("customer_asked_for_refund=%s amount=%r is_number=%s", customer_asked_for_refund,
+              refund_amount, is_number)
+    refund_problem: str | None = None
+    if not customer_asked_for_refund:
+        refund_problem = "refund needs a human: the customer did not ask for one"
+    elif is_bool or not isinstance(refund_amount, (int, float)):  # = not is_number; isinstance tells pyright the type
+        refund_problem = f"refund needs a human: amount {refund_amount!r} is not a number"
+    elif refund_amount > MAX_REFUND_WITHOUT_HUMAN:
+        refund_problem = f"refund needs a human: {refund_amount} is over {MAX_REFUND_WITHOUT_HUMAN}"
+    log.debug("result: %s", refund_problem)
+    return refund_problem
 
 
 @debug

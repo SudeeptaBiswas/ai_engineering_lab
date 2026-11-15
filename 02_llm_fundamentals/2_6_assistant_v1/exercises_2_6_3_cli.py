@@ -16,7 +16,7 @@ from lab_tools.log import debug, log
 @debug
 def test_answer_is_shown_returned_and_remembered(monkeypatch: pytest.MonkeyPatch,
                                                   capsys: pytest.CaptureFixture[str]) -> None:
-    """Checks: one turn prints the streamed answer, returns it, and saves question + answer.
+    """One turn prints the answer, returns it, and saves question + answer: the next turn needs both.
 
     Args:
         monkeypatch: pytest's tool to swap functions for one test.
@@ -35,7 +35,7 @@ def test_answer_is_shown_returned_and_remembered(monkeypatch: pytest.MonkeyPatch
 
 @debug
 def test_second_turn_sends_the_first_turn(monkeypatch: pytest.MonkeyPatch) -> None:
-    """Checks THE memory feature: turn 2 sends turn 1's question AND answer to the model.
+    """Turn 2 sends turn 1's question AND answer: THE memory feature (the model itself remembers nothing).
 
     Args:
         monkeypatch: pytest's tool to swap functions for one test.
@@ -52,7 +52,7 @@ def test_second_turn_sends_the_first_turn(monkeypatch: pytest.MonkeyPatch) -> No
 @pytest.mark.parametrize("exit_command", ["/exit", "/quit"])
 @debug
 def test_exit_command_stops_the_chat(monkeypatch: pytest.MonkeyPatch, exit_command: str) -> None:
-    """Checks: after /exit (or /quit) nothing more is read or sent.
+    """After /exit (or /quit) nothing more is read or sent: the user can always stop the chat.
 
     Args:
         monkeypatch: pytest's tool to swap functions for one test.
@@ -60,26 +60,39 @@ def test_exit_command_stops_the_chat(monkeypatch: pytest.MonkeyPatch, exit_comma
     """
     fake_model = use_fakes(monkeypatch, [exit_command, "never sent"])
     main()
-    log.debug("expected 0 calls, got %d", len(fake_model.sent_messages_per_call))
+    log.debug("expected=0 calls got=%d", len(fake_model.sent_messages_per_call))
     assert fake_model.sent_messages_per_call == []
 
 
 @debug
 def test_empty_lines_send_nothing(monkeypatch: pytest.MonkeyPatch) -> None:
-    """Checks: Enter on an empty line (or only spaces) does not call the model.
+    """Enter on an empty line (or only spaces) does not call the model: no wasted 5-second call.
 
     Args:
         monkeypatch: pytest's tool to swap functions for one test.
     """
     fake_model = use_fakes(monkeypatch, ["", "   ", "/exit"])
     main()
-    log.debug("expected 0 calls, got %d", len(fake_model.sent_messages_per_call))
+    log.debug("expected=0 calls got=%d", len(fake_model.sent_messages_per_call))
+    assert fake_model.sent_messages_per_call == []
+
+
+@debug
+def test_piped_first_line_with_byte_order_mark_still_exits(monkeypatch: pytest.MonkeyPatch) -> None:
+    """A PowerShell pipe puts an invisible "\\ufeff" before line 1: "/exit" must still stop the chat.
+
+    Args:
+        monkeypatch: pytest's tool to swap functions for one test.
+    """
+    fake_model = use_fakes(monkeypatch, ["﻿/exit", "never sent"])
+    main()
+    log.debug("expected=0 calls got=%d", len(fake_model.sent_messages_per_call))
     assert fake_model.sent_messages_per_call == []
 
 
 @debug
 def test_reset_forgets_the_chat(monkeypatch: pytest.MonkeyPatch) -> None:
-    """Checks: after /reset the next call has only the rules + the new question.
+    """After /reset the next call has only the rules + the new question: a fresh start, nothing old.
 
     Args:
         monkeypatch: pytest's tool to swap functions for one test.
@@ -93,21 +106,21 @@ def test_reset_forgets_the_chat(monkeypatch: pytest.MonkeyPatch) -> None:
 
 @debug
 def test_end_of_input_ends_the_chat(monkeypatch: pytest.MonkeyPatch) -> None:
-    """Checks: Ctrl+Z / Ctrl+D (EOFError from input) ends main() cleanly, no crash.
+    """Ctrl+Z / Ctrl+D (EOFError from input) ends main() cleanly: piped input must not crash.
 
     Args:
         monkeypatch: pytest's tool to swap functions for one test.
     """
     fake_model = use_fakes(monkeypatch, ["hi"])  # no /exit: the next input() raises EOFError
     main()
-    log.debug("expected 1 call, got %d", len(fake_model.sent_messages_per_call))
+    log.debug("expected=1 call got=%d", len(fake_model.sent_messages_per_call))
     assert len(fake_model.sent_messages_per_call) == 1
 
 
 @debug
 def test_ollama_down_prints_error_and_goes_on(monkeypatch: pytest.MonkeyPatch,
                                               capsys: pytest.CaptureFixture[str]) -> None:
-    """Checks: an HTTP error prints a message and the chat keeps going (no traceback).
+    """An HTTP error prints a message and the chat keeps going: Ollama can restart, the chat survives.
 
     Args:
         monkeypatch: pytest's tool to swap functions for one test.
@@ -116,7 +129,7 @@ def test_ollama_down_prints_error_and_goes_on(monkeypatch: pytest.MonkeyPatch,
     fake_model = use_fakes(monkeypatch, ["hi", "again", "/exit"], fail_first_call=True)
     main()
     printed_text = capsys.readouterr().out
-    log.debug("expected 2 calls, got %d; printed=%r", len(fake_model.sent_messages_per_call), printed_text)
+    log.debug("expected=2 calls got=%d; printed=%r", len(fake_model.sent_messages_per_call), printed_text)
     assert len(fake_model.sent_messages_per_call) == 2
     assert "error" in printed_text.lower()
 
@@ -124,7 +137,7 @@ def test_ollama_down_prints_error_and_goes_on(monkeypatch: pytest.MonkeyPatch,
 @pytest.mark.ollama
 @debug
 def test_real_model_remembers_turn_one() -> None:
-    """Checks with the real model: turn 2 can use what was said in turn 1."""
+    """With the real model, turn 2 uses what was said in turn 1: memory works end to end."""
     memory = ChatMemory(SYSTEM_PROMPT, MAX_HISTORY_TOKENS)
     answer_one_turn(memory, "My favourite colour is green.")
     second_answer = answer_one_turn(memory, "What is my favourite colour? One word.")

@@ -12,6 +12,7 @@ import pytest
 import assistant.chat_turn as chat_turn_module
 from assistant.memory import Message
 from assistant.ollama_client import StreamPiece
+from lab_tools.log import debug, log
 
 
 class FakeModel:
@@ -29,6 +30,7 @@ class FakeModel:
         self.sent_messages_per_call: list[list[Message]] = []  # one list of messages per call
         self.fail_first_call = fail_first_call
 
+    @debug
     def stream_reply(self, chat_messages: list[Message], tool_specs: list[dict[str, Any]]) -> Iterator[StreamPiece]:
         """Same parameters as the real stream_reply. Hands out "Answer" then " N".
 
@@ -40,12 +42,15 @@ class FakeModel:
         """
         self.sent_messages_per_call.append(list(chat_messages))  # list(...) = a copy
         call_number = len(self.sent_messages_per_call)
-        if self.fail_first_call and call_number == 1:
+        must_fail = self.fail_first_call and call_number == 1
+        log.debug("fake call %d: %d messages, must_fail=%s", call_number, len(chat_messages), must_fail)
+        if must_fail:
             raise httpx.ConnectError("Ollama is not running")
         yield StreamPiece(text="Answer")
         yield StreamPiece(text=f" {call_number}")
 
 
+@debug
 def use_fakes(monkeypatch: pytest.MonkeyPatch, typed_lines: list[str], fail_first_call: bool = False) -> FakeModel:
     """Swap input() and stream_reply for fakes.
 
@@ -58,9 +63,11 @@ def use_fakes(monkeypatch: pytest.MonkeyPatch, typed_lines: list[str], fail_firs
     Returns:
         The FakeModel, to look at .sent_messages_per_call afterwards.
     """
+    log.debug("start: typed_lines=%s fail_first_call=%s", typed_lines, fail_first_call)
     lines_left = list(typed_lines)  # a copy we can take lines from
     fake_model = FakeModel(fail_first_call)
 
+    @debug
     def fake_input(input_prompt: str = "") -> str:
         """Stand in for input(): hand out the next typed line.
 
@@ -70,8 +77,10 @@ def use_fakes(monkeypatch: pytest.MonkeyPatch, typed_lines: list[str], fail_firs
             The next typed line.
         """
         if len(lines_left) == 0:
+            log.debug("result: no lines left -> EOFError")
             raise EOFError
         next_line = lines_left.pop(0)
+        log.debug("result: %r", next_line)
         return next_line
 
     monkeypatch.setattr("builtins.input", fake_input)  # input() lives in the builtins module
@@ -79,6 +88,7 @@ def use_fakes(monkeypatch: pytest.MonkeyPatch, typed_lines: list[str], fail_firs
     return fake_model
 
 
+@debug
 def message_texts(chat_messages: list[Message]) -> list[str]:
     """Take just the texts of one call's messages.
 
@@ -90,4 +100,5 @@ def message_texts(chat_messages: list[Message]) -> list[str]:
     texts: list[str] = []
     for message in chat_messages:
         texts.append(message["content"])
+    log.debug("result: %s", texts)
     return texts

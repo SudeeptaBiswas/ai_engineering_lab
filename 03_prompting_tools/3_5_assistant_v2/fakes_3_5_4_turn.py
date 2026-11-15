@@ -12,6 +12,7 @@ import assistant.chat_turn as chat_turn_module
 from assistant.memory import Message
 from assistant.ollama_client import StreamPiece
 from assistant.tool_runner import run_tool
+from lab_tools.log import debug, log
 
 
 class ScriptedModel:
@@ -29,6 +30,7 @@ class ScriptedModel:
         self.scripted_replies = scripted_replies
         self.sent_messages_per_call: list[list[Message]] = []
 
+    @debug
     def stream_reply(self, chat_messages: list[Message], tool_specs: list[dict[str, Any]]) -> Iterator[StreamPiece]:
         """Same parameters as the real stream_reply. Hands out the next scripted reply.
 
@@ -40,10 +42,13 @@ class ScriptedModel:
         """
         self.sent_messages_per_call.append(list(chat_messages))  # list(...) = a copy
         call_index = len(self.sent_messages_per_call) - 1  # 0 for the first call
-        for stream_piece in self.scripted_replies[call_index]:
+        scripted_reply = self.scripted_replies[call_index]
+        log.debug("fake call %d: %d messages -> %s", call_index + 1, len(chat_messages), scripted_reply)
+        for stream_piece in scripted_reply:
             yield stream_piece
 
 
+@debug
 def use_scripted_model(monkeypatch: pytest.MonkeyPatch, scripted_replies: list[list[StreamPiece]]) -> ScriptedModel:
     """Swap stream_reply in chat_turn for a ScriptedModel.
 
@@ -53,11 +58,13 @@ def use_scripted_model(monkeypatch: pytest.MonkeyPatch, scripted_replies: list[l
     Returns:
         The ScriptedModel, to look at .sent_messages_per_call afterwards.
     """
+    log.debug("start: %d scripted calls", len(scripted_replies))
     scripted_model = ScriptedModel(scripted_replies)
     monkeypatch.setattr(chat_turn_module, "stream_reply", scripted_model.stream_reply)  # where chat_turn looks it up
     return scripted_model
 
 
+@debug
 def spy_on_run_tool(monkeypatch: pytest.MonkeyPatch) -> list[str]:
     """Write down the name of every tool that really runs; the tools still run as normal.
 
@@ -68,6 +75,7 @@ def spy_on_run_tool(monkeypatch: pytest.MonkeyPatch) -> list[str]:
     """
     tools_that_ran: list[str] = []
 
+    @debug
     def run_tool_and_note_it(tool_name: str, tool_arguments: dict[str, Any]) -> str:
         """Note the tool name, then run the real tool.
 
@@ -79,7 +87,9 @@ def spy_on_run_tool(monkeypatch: pytest.MonkeyPatch) -> list[str]:
         """
         tools_that_ran.append(tool_name)
         tool_result_text = run_tool(tool_name, tool_arguments)
+        log.debug("noted %s; tools_that_ran=%s", tool_name, tools_that_ran)
         return tool_result_text
 
     monkeypatch.setattr(chat_turn_module, "run_tool", run_tool_and_note_it)
+    log.debug("result: run_tool is now watched")
     return tools_that_ran

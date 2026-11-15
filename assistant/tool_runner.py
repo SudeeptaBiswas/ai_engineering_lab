@@ -15,6 +15,7 @@ from assistant.tools import TOOLS_BY_NAME, Tool
 from lab_tools.log import debug, log
 
 
+@debug
 def build_tool_spec(tool_name: str, tool: Tool) -> dict[str, Any]:
     """Describe one tool the way Ollama's "tools" list wants it.
 
@@ -28,9 +29,11 @@ def build_tool_spec(tool_name: str, tool: Tool) -> dict[str, Any]:
     arguments_schema = tool.arguments_model.model_json_schema()  # the model reads this to fill the arguments
     function_part = {"name": tool_name, "description": tool.description, "parameters": arguments_schema}
     tool_spec: dict[str, Any] = {"type": "function", "function": function_part}
+    log.debug("result: %s fields=%s", tool_name, list(arguments_schema.get("properties", {})))
     return tool_spec
 
 
+@debug
 def build_tool_specs() -> list[dict[str, Any]]:
     """Describe every tool in TOOLS_BY_NAME, in order, for the request body.
 
@@ -39,26 +42,31 @@ def build_tool_specs() -> list[dict[str, Any]]:
     """
     tool_specs: list[dict[str, Any]] = []
     for tool_name, tool in TOOLS_BY_NAME.items():
-        tool_specs.append(build_tool_spec(tool_name, tool))
+        tool_spec = build_tool_spec(tool_name, tool)
+        tool_specs.append(tool_spec)
+    log.debug("result: %d tool specs", len(tool_specs))
     return tool_specs
 
 
+@debug
 def describe_validation_problems(validation_error: ValidationError) -> str:
     """Turn pydantic's error list into one short line the model can read.
 
     Args:
-        validation_error: e.g. from MultiplyArguments.model_validate({"a": 2}).
+        validation_error: e.g. from MultiplyArguments.model_validate({"first_number": 2}).
     Returns:
-        e.g. "b: Field required" (several problems joined by "; ").
+        e.g. "second_number: Field required" (several problems joined by "; ").
     """
     problem_texts: list[str] = []
     for problem in validation_error.errors():
         location_parts: list[str] = []
-        for location_part in problem["loc"]:  # e.g. ("b",) or ("items", 0)
+        for location_part in problem["loc"]:  # e.g. ("second_number",) or ("items", 0)
             location_parts.append(str(location_part))
-        field_location = ".".join(location_parts)  # e.g. "b" or "items.0"
-        problem_texts.append(f"{field_location}: {problem['msg']}")
+        field_location = ".".join(location_parts)  # e.g. "second_number" or "items.0"
+        problem_message = problem["msg"]  # e.g. "Field required"
+        problem_texts.append(f"{field_location}: {problem_message}")
     problems_line = "; ".join(problem_texts)
+    log.debug("result: %s", problems_line)
     return problems_line
 
 
@@ -72,9 +80,9 @@ def run_tool(tool_name: str, tool_arguments: dict[str, Any]) -> str:
         3. Run the tool's function with the checked arguments.
     Args:
         tool_name: e.g. "multiply".
-        tool_arguments: what the model sent, e.g. {"a": 4821, "b": 3967}.
+        tool_arguments: what the model sent, e.g. {"first_number": 4821, "second_number": 3967}.
     Returns:
-        e.g. "19124907", or "error: b: Field required".
+        e.g. "19124907", or "error: second_number: Field required".
     """
     log.debug("start: %s(%s)", tool_name, tool_arguments)
     tool = TOOLS_BY_NAME.get(tool_name)  # None if the model made up a name

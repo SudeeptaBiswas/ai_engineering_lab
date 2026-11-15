@@ -31,7 +31,7 @@ NO_TOOLS_RAN: list[Message] = []
 ])
 @debug
 def test_claims_refund_done_spots_done_words(answer_text: str, expected_claim: bool) -> None:
-    """Checks: "refund" + a "done" word = a claim; refund talk without one is not.
+    """The word "refund" + a "done" word = a claim; refund talk without one is not: a refusal must not get a correction.
 
     Args:
         answer_text: the model's answer.
@@ -49,7 +49,7 @@ def test_claims_refund_done_spots_done_words(answer_text: str, expected_claim: b
 ])
 @debug
 def test_false_claim_gets_a_correction(turn_messages: list[Message], expected_answer: str) -> None:
-    """Checks: the correction is added only when no refund succeeded this turn.
+    """The correction is added only when no refund succeeded this turn: a true claim stays untouched.
 
     Args:
         turn_messages: this turn's tool results.
@@ -62,7 +62,7 @@ def test_false_claim_gets_a_correction(turn_messages: list[Message], expected_an
 
 @debug
 def test_answer_without_claim_is_kept_as_is() -> None:
-    """Checks: a normal answer passes untouched, even with no tools run."""
+    """A normal answer passes untouched, even with no tools run: the check only acts on refund claims."""
     normal_answer = "Your order A-1001 arrives on 2026-11-14."
     checked_answer = correct_false_refund_claim(normal_answer, NO_TOOLS_RAN)
     log.debug("expected=%r got=%r", normal_answer, checked_answer)
@@ -72,8 +72,9 @@ def test_answer_without_claim_is_kept_as_is() -> None:
 @debug
 def test_turn_with_false_claim_is_corrected_in_memory(monkeypatch: pytest.MonkeyPatch,
                                                       capsys: pytest.CaptureFixture[str]) -> None:
-    """Checks the whole turn: the model claims a refund without calling the tool; the user sees
-    a correction and memory keeps the corrected answer (so later turns don't copy the claim).
+    """A refund claimed without the tool gets a printed correction, and memory keeps the corrected answer.
+
+    Why: else later turns copy the false claim (measured 2026-11-15, 5th question of a chat).
 
     Args:
         monkeypatch: pytest's tool to swap functions for one test.
@@ -84,15 +85,17 @@ def test_turn_with_false_claim_is_corrected_in_memory(monkeypatch: pytest.Monkey
     answer_one_turn(memory, "Refund order A-1002, amount 500.")
     printed_text = capsys.readouterr().out
     remembered_messages = memory.messages_to_send()
-    remembered_answer = remembered_messages[-1]["content"]
-    log.debug("remembered_answer=%r", remembered_answer)
+    last_message = remembered_messages[-1]  # the answer saved last
+    remembered_answer = last_message["content"]
+    expected_answer = f"{FALSE_CLAIM} {CORRECTION_TEXT}"
+    log.debug("expected=%r got=%r", expected_answer, remembered_answer)
     assert CORRECTION_TEXT in printed_text
-    assert remembered_answer == f"{FALSE_CLAIM} {CORRECTION_TEXT}"
+    assert remembered_answer == expected_answer
 
 
 @debug
 def test_turn_with_real_refund_is_not_corrected(monkeypatch: pytest.MonkeyPatch) -> None:
-    """Checks the whole turn: a small refund the customer asked for runs, so its claim stays.
+    """A small refund the customer asked for runs, so its claim stays: no false alarm on a true claim.
 
     Args:
         monkeypatch: pytest's tool to swap functions for one test.
