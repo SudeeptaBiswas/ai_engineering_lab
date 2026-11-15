@@ -1,4 +1,4 @@
-"""Part 1 of 2: cut the documents into chunks, embed them, search with numpy. Needs Ollama + nomic-embed-text.
+"""Part 1 of 3: cut the documents into chunks, embed them, search with numpy. Needs Ollama + nomic-embed-text.
 
 Run (~15 s):
   uv run python 04_rag/4_1_rag_by_hand/examples_4_1_1_search.py
@@ -6,10 +6,10 @@ Run (~15 s):
   1. documents : how big are the handbook + release notes?
   2. chunks    : cut by "## " headings vs every 500 characters
   3. search    : 3 questions -> the 3 best chunks, with scores
-  4. speed     : numpy vs a Python loop, 122 and 20 000 chunks
 """
 
 import time  # time.perf_counter() = a stopwatch
+from dataclasses import dataclass
 from pathlib import Path
 
 import httpx
@@ -20,14 +20,22 @@ from lab_tools.log import cut_text, debug, log
 
 OLLAMA_URL = "http://127.0.0.1:11434"
 EMBEDDING_MODEL = "nomic-embed-text"
-FOLDER = Path(__file__).parent  # this file's folder
+LESSON_FOLDER = Path(__file__).parent  # this file's folder
 DOCUMENT_FILE_NAMES = ["handbook_4_1.md", "release_notes_4_1.md"]
 CHARACTERS_PER_TOKEN = 4  # rough rule (2.1); real counts were ~1.1x more here
 SEARCH_QUESTIONS = ["Can I get my money back?", "In which app version did dark mode arrive?",
                     "How long does the password reset link work?"]
-TOP_K = 3
+TOP_K = 3  # how many chunks to keep per question
 
-Matrix = npt.NDArray[np.float64]  # rows = texts, columns = numbers
+EmbeddingMatrix = npt.NDArray[np.float64]  # one row per text, 768 columns (numbers)
+
+
+@dataclass
+class ScoredChunk:
+    """One search hit: how close it is to the question, and its first line."""
+
+    score: float  # dot product with the question vector, e.g. 0.64
+    first_line: str  # e.g. "## Refunds"
 
 
 @debug
@@ -39,56 +47,73 @@ def load_documents() -> str:
     """
     document_texts: list[str] = []
     for file_name in DOCUMENT_FILE_NAMES:
-        file_path = FOLDER / file_name  # / joins path parts
-        document_texts.append(file_path.read_text(encoding="utf-8"))
-    all_text = "\n\n".join(document_texts)
-    log.debug("result: %d characters", len(all_text))
-    return all_text
+        file_path = LESSON_FOLDER / file_name  # / joins path parts
+        file_text = file_path.read_text(encoding="utf-8")
+        document_texts.append(file_text)
+    documents_text = "\n\n".join(document_texts)
+    log.debug("result: %d characters", len(documents_text))
+    return documents_text
 
 
-def chunk_by_headings(document_text: str) -> list[str]:
-    """Cut the text before every line that starts with "## ", so each section is one chunk.
+@debug
+def chunk_by_headings(documents_text: str) -> list[str]:
+    """Cut the text into chunks, one per "## " section, so each chunk is about one topic.
 
+    How:
+        1. Go through the lines and collect them.
+        2. A line starting with "## " closes the chunk so far and starts a new one.
+        3. After the last line, close the last chunk.
     Args:
-        document_text: e.g. load_documents().
+        documents_text: e.g. load_documents().
     Returns:
         e.g. ["# Lumen Notes support handbook ...", "## Accounts and sign-up ...", ...].
     """
+    log.debug("start: %d characters", len(documents_text))
     chunks: list[str] = []
     current_lines: list[str] = []
-    for line in document_text.split("\n"):
+    for line in documents_text.split("\n"):
         starts_new_section = line.startswith("## ")
         if starts_new_section and len(current_lines) > 0:
-            chunks.append("\n".join(current_lines).strip())
+            chunk_text = "\n".join(current_lines)  # lines -> one text
+            chunks.append(chunk_text.strip())
             current_lines = []
         current_lines.append(line)
-    chunks.append("\n".join(current_lines).strip())
+    last_chunk_text = "\n".join(current_lines)
+    chunks.append(last_chunk_text.strip())
+    log.debug("result: %d chunks", len(chunks))
     return chunks
 
 
-def chunk_by_size(document_text: str, chunk_size: int, overlap: int) -> list[str]:
-    """Cut the text every chunk_size characters; each piece repeats the last `overlap` characters.
+@debug
+def chunk_by_size(documents_text: str, chunk_size: int, overlap: int) -> list[str]:
+    """Cut the text into pieces of chunk_size characters; each piece repeats the last `overlap` characters.
 
+    How:
+        1. Take the characters from start to start + chunk_size.
+        2. Move start on by chunk_size - overlap.
+        3. Stop after the piece that reaches the end of the text.
     Args:
-        document_text: e.g. load_documents().
+        documents_text: e.g. load_documents().
         chunk_size: e.g. 500.
         overlap: e.g. 100, so a sentence cut at a border is whole in one of the two pieces.
     Returns:
         e.g. 65 pieces of up to 500 characters.
     """
+    log.debug("start: %d characters, chunk_size=%d overlap=%d", len(documents_text), chunk_size, overlap)
     chunks: list[str] = []
     start = 0
-    while start < len(document_text):
+    while start < len(documents_text):
         end = start + chunk_size
-        chunks.append(document_text[start:end])
-        if end >= len(document_text):  # this piece reached the end: no extra piece
+        chunks.append(documents_text[start:end])
+        if end >= len(documents_text):  # this piece reached the end: no extra piece
             break
         start = start + chunk_size - overlap
+    log.debug("result: %d chunks", len(chunks))
     return chunks
 
 
 @debug
-def embed_texts(texts: list[str]) -> Matrix:
+def embed_texts(texts: list[str]) -> EmbeddingMatrix:
     """Turn many texts into vectors with ONE call (batching, 2.5).
 
     Args:
@@ -96,19 +121,26 @@ def embed_texts(texts: list[str]) -> Matrix:
     Returns:
         A matrix, one row per text, e.g. shape (122, 768).
     """
+    log.debug("start: %d texts, first %s", len(texts), cut_text(texts[0]))
     request_body = {"model": EMBEDDING_MODEL, "input": texts}
     response = httpx.post(f"{OLLAMA_URL}/api/embed", json=request_body, timeout=300.0)
     response.raise_for_status()
-    embeddings = response.json()["embeddings"]  # a list of lists of numbers
+    reply_json = response.json()
+    embeddings = reply_json["embeddings"]  # a list of lists of numbers
     embedding_matrix = np.array(embeddings, dtype=np.float64)  # list of lists -> a 2-D numpy array
     log.debug("result: shape %s", embedding_matrix.shape)
     return embedding_matrix
 
 
 @debug
-def top_rows_by_score(question_vector: npt.NDArray[np.float64], chunk_vectors: Matrix, top_k: int) -> list[int]:
-    """Score every chunk against the question in one step, then keep the best row numbers.
+def find_top_rows(question_vector: npt.NDArray[np.float64], chunk_vectors: EmbeddingMatrix,
+                  top_k: int) -> list[int]:
+    """Find the chunks closest in meaning to the question: their row numbers, best first.
 
+    How:
+        1. Score every chunk in one step: chunk_vectors @ question_vector.
+        2. Sort the row numbers, highest score first.
+        3. Keep the first top_k.
     Args:
         question_vector: shape (768,).
         chunk_vectors: shape (number of chunks, 768).
@@ -116,6 +148,7 @@ def top_rows_by_score(question_vector: npt.NDArray[np.float64], chunk_vectors: M
     Returns:
         Row numbers, best first, e.g. [7, 2, 30].
     """
+    log.debug("start: %d chunks, top_k=%d", chunk_vectors.shape[0], top_k)
     scores = chunk_vectors @ question_vector  # @ = matrix times vector: one dot product per row
     best_first = np.argsort(-scores)  # argsort sorts low -> high; minus flips it to high -> low
     top_rows: list[int] = []
@@ -125,74 +158,48 @@ def top_rows_by_score(question_vector: npt.NDArray[np.float64], chunk_vectors: M
     return top_rows
 
 
-def show_search(question: str, chunk_texts: list[str], chunk_vectors: Matrix) -> None:
-    """Print the top chunks for one question: score + first line of each.
+@debug
+def search_chunks(question: str, chunk_texts: list[str], chunk_vectors: EmbeddingMatrix) -> list[ScoredChunk]:
+    """Find the TOP_K chunks for one question, with their scores, for printing.
 
+    How:
+        1. Embed the question.
+        2. Find the best rows (find_top_rows).
+        3. For each row: its score and the chunk's first line.
     Args:
         question: e.g. "Can I get my money back?".
         chunk_texts: the chunks.
         chunk_vectors: their vectors, same order.
+    Returns:
+        e.g. [ScoredChunk(0.64, "## Refunds"), ScoredChunk(0.55, "## Billing"), ...].
     """
+    log.debug("start: question=%r", question)
     question_vectors = embed_texts([question])
     question_vector = question_vectors[0]  # [0] = the only row
-    top_rows = top_rows_by_score(question_vector, chunk_vectors, TOP_K)
-    print(f"  {question}")
+    top_rows = find_top_rows(question_vector, chunk_vectors, TOP_K)
+    scored_chunks: list[ScoredChunk] = []
     for row_number in top_rows:
-        score = float(chunk_vectors[row_number] @ question_vector)
-        first_line = chunk_texts[row_number].split("\n")[0]
-        print(f"    {score:.2f}  {first_line[:60]}")
-
-
-def python_loop_scores(question_vector: list[float], chunk_vectors: list[list[float]]) -> list[float]:
-    """The same scores without numpy: a dot product per chunk, written as loops (2.5).
-
-    Args:
-        question_vector: 768 numbers.
-        chunk_vectors: one list of 768 numbers per chunk.
-    Returns:
-        One score per chunk.
-    """
-    scores: list[float] = []
-    for chunk_vector in chunk_vectors:
-        total = 0.0
-        for position in range(len(question_vector)):
-            total += question_vector[position] * chunk_vector[position]
-        scores.append(total)
-    return scores
-
-
-def compare_speed(chunk_count: int) -> None:
-    """Time numpy vs the Python loop on random unit vectors (no Ollama needed).
-
-    Args:
-        chunk_count: e.g. 122 or 20000.
-    """
-    random_generator = np.random.default_rng(42)  # seed 42: same numbers every run
-    chunk_vectors = random_generator.normal(size=(chunk_count, 768))
-    chunk_vectors = chunk_vectors / np.linalg.norm(chunk_vectors, axis=1, keepdims=True)  # length 1 each
-    question_vector = chunk_vectors[0]
-    start = time.perf_counter()
-    top_rows_by_score(question_vector, chunk_vectors, TOP_K)
-    numpy_seconds = time.perf_counter() - start
-    start = time.perf_counter()
-    python_loop_scores(question_vector.tolist(), chunk_vectors.tolist())
-    loop_seconds = time.perf_counter() - start
-    print(f"  {chunk_count:>6} chunks: numpy {numpy_seconds * 1000:.1f} ms, Python loop {loop_seconds * 1000:.0f} ms")
+        chunk_vector = chunk_vectors[row_number]
+        score = float(chunk_vector @ question_vector)  # dot product; numpy number -> float
+        chunk_lines = chunk_texts[row_number].split("\n")
+        scored_chunks.append(ScoredChunk(score=score, first_line=chunk_lines[0]))
+    log.debug("result: %s", scored_chunks)
+    return scored_chunks
 
 
 if __name__ == "__main__":
-    all_text = load_documents()
-    print(f"1. documents: {len(all_text)} characters, ~{len(all_text) // CHARACTERS_PER_TOKEN} tokens (estimate)\n")
-    heading_chunks = chunk_by_headings(all_text)
-    size_chunks = chunk_by_size(all_text, 500, 100)
+    documents_text = load_documents()
+    estimated_tokens = len(documents_text) // CHARACTERS_PER_TOKEN
+    print(f"1. documents: {len(documents_text)} characters, ~{estimated_tokens} tokens (estimate)\n")
+    heading_chunks = chunk_by_headings(documents_text)
+    size_chunks = chunk_by_size(documents_text, 500, 100)
     print(f"2. chunks: by heading {len(heading_chunks)}, by 500/100 characters {len(size_chunks)}")
-    start = time.perf_counter()
+    embed_start = time.perf_counter()
     heading_vectors = embed_texts(heading_chunks)
-    print(f"   embedded {len(heading_chunks)} chunks in {time.perf_counter() - start:.1f} s (once, then reused)\n")
+    embed_seconds = time.perf_counter() - embed_start
+    print(f"   embedded {len(heading_chunks)} chunks in {embed_seconds:.1f} s (once, then reused)\n")
     print("3. search (chunks by heading):")
     for search_question in SEARCH_QUESTIONS:
-        show_search(search_question, heading_chunks, heading_vectors)
-    print("\n4. speed:")
-    compare_speed(len(heading_chunks))
-    compare_speed(20000)
-    log.debug("done; first chunk %s", cut_text(heading_chunks[0]))
+        print(f"  {search_question}")
+        for scored_chunk in search_chunks(search_question, heading_chunks, heading_vectors):
+            print(f"    {scored_chunk.score:.2f}  {scored_chunk.first_line[:60]}")

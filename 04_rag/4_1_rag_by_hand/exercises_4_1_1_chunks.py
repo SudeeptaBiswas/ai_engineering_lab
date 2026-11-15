@@ -12,6 +12,8 @@ from rag_4_1 import HEADING_START, split_by_headings, split_by_size
 
 HANDBOOK_PATH = Path(__file__).parent / "handbook_4_1.md"  # next to this file
 HANDBOOK_SECTION_COUNT = 13  # "## " headings in handbook_4_1.md
+HANDBOOK_CHUNK_SIZE = 500  # the size compared in the lesson (section 2)
+HANDBOOK_OVERLAP = 100
 
 
 @pytest.mark.parametrize(("document_text", "expected_chunks"), [
@@ -27,11 +29,12 @@ HANDBOOK_SECTION_COUNT = 13  # "## " headings in handbook_4_1.md
     ("Just one paragraph.", ["Just one paragraph."]),
     # nothing in, nothing out
     ("", []),
+    # only empty lines and spaces: no empty chunk
     ("\n\n  \n", []),
 ])
 @debug
-def test_split_by_headings(document_text: str, expected_chunks: list[str]) -> None:
-    """Checks: one chunk per section, nothing lost, nothing empty.
+def test_split_by_headings_gives_one_chunk_per_section(document_text: str, expected_chunks: list[str]) -> None:
+    """One chunk per section, nothing lost, nothing empty: an empty chunk would waste a top-3 place.
 
     Args:
         document_text: a small Markdown text.
@@ -43,14 +46,19 @@ def test_split_by_headings(document_text: str, expected_chunks: list[str]) -> No
 
 
 @debug
-def test_split_by_headings_on_the_handbook() -> None:
-    """Checks on the real file: the title + 13 sections, each section starting with its heading."""
+def test_split_by_headings_keeps_every_handbook_section() -> None:
+    """The real handbook gives the title + 13 sections, each starting with its heading.
+
+    Why: the heading is often the best match for a question ("## Refunds").
+    """
     handbook_text = HANDBOOK_PATH.read_text(encoding="utf-8")
     chunks = split_by_headings(handbook_text)
-    log.debug("expected %d chunks, got %d", HANDBOOK_SECTION_COUNT + 1, len(chunks))
-    assert len(chunks) == HANDBOOK_SECTION_COUNT + 1
-    for chunk in chunks[1:]:
-        assert chunk.startswith(HEADING_START)
+    expected_chunk_count = HANDBOOK_SECTION_COUNT + 1  # + 1 = the title chunk before the first heading
+    log.debug("expected=%d got=%d", expected_chunk_count, len(chunks))
+    assert len(chunks) == expected_chunk_count
+    section_chunks = chunks[1:]  # all but the title
+    for section_chunk in section_chunks:
+        assert section_chunk.startswith(HEADING_START)
 
 
 @pytest.mark.parametrize(("document_text", "chunk_size", "overlap", "expected_chunks"), [
@@ -61,8 +69,11 @@ def test_split_by_headings_on_the_handbook() -> None:
     ("", 4, 1, []),                                      # nothing in, nothing out
 ])
 @debug
-def test_split_by_size(document_text: str, chunk_size: int, overlap: int, expected_chunks: list[str]) -> None:
-    """Checks: fixed-size pieces with overlap, and no extra piece at the end.
+def test_split_by_size_cuts_pieces_with_overlap(document_text: str, chunk_size: int, overlap: int,
+                                               expected_chunks: list[str]) -> None:
+    """Fixed-size pieces, each repeating the end of the one before, and no extra piece at the end.
+
+    Why: the overlap keeps a sentence cut at a border whole in one of the two pieces.
 
     Args:
         document_text: the text to cut.
@@ -83,26 +94,29 @@ def test_split_by_size(document_text: str, chunk_size: int, overlap: int, expect
 ])
 @debug
 def test_split_by_size_rejects_bad_numbers(chunk_size: int, overlap: int) -> None:
-    """Checks: numbers that would loop forever or make no sense raise ValueError.
+    """Numbers that would loop forever or make no sense raise ValueError, instead of hanging.
 
     Args:
         chunk_size: characters per piece.
         overlap: characters shared with the piece before.
     """
+    log.debug("expected=ValueError for chunk_size=%d overlap=%d", chunk_size, overlap)
     with pytest.raises(ValueError):
         split_by_size("abcdefghij", chunk_size, overlap)
 
 
 @debug
 def test_split_by_size_on_the_handbook_loses_nothing() -> None:
-    """Checks on the real file: every piece is at most 500 characters, and gluing them back
-    (dropping each overlap) gives the handbook again."""
+    """On the real handbook: no piece over 500 characters, and gluing the pieces back gives the handbook.
+
+    Why: a lost character could be the one fact a question needs.
+    """
     handbook_text = HANDBOOK_PATH.read_text(encoding="utf-8")
-    chunks = split_by_size(handbook_text, chunk_size=500, overlap=100)
+    chunks = split_by_size(handbook_text, chunk_size=HANDBOOK_CHUNK_SIZE, overlap=HANDBOOK_OVERLAP)
     rebuilt_text = chunks[0]
     for chunk in chunks[1:]:
-        rebuilt_text = rebuilt_text + chunk[100:]  # skip the 100 characters already there
-    log.debug("%d chunks; rebuilt %d of %d characters", len(chunks), len(rebuilt_text), len(handbook_text))
+        rebuilt_text = rebuilt_text + chunk[HANDBOOK_OVERLAP:]  # skip the characters already there
+    log.debug("%d chunks; expected=%d got=%d characters", len(chunks), len(handbook_text), len(rebuilt_text))
     for chunk in chunks:
-        assert len(chunk) <= 500
+        assert len(chunk) <= HANDBOOK_CHUNK_SIZE
     assert rebuilt_text == handbook_text

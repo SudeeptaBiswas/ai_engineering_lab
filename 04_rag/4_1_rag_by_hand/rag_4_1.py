@@ -1,10 +1,13 @@
 """Lesson 4.1 exercises: RAG by hand. YOU fill the 6 functions that raise NotImplementedError.
 
-Fill them until every test in this folder passes:
+Goal: answer a question from our own documents, in 3 steps: cut them into chunks,
+find the chunks that fit the question, give only those to the model.
+Fill the functions until every test in this folder passes:
   uv run pytest 04_rag/4_1_rag_by_hand -v          (Ollama off? add -m "not ollama")
 Start with exercises_4_1_1_chunks.py (no Ollama), then exercises_4_1_2_search.py.
-The settings at the top are given; don't change them.
+The settings at the top are given; don't change them. Style: docs/CODE_STYLE.md.
 """
+# lesson-rules: user-code  (style problems here are shown as warnings, never block a commit)
 
 import httpx  # pyright: ignore[reportUnusedImport] — until embed_texts uses it
 import numpy as np
@@ -18,8 +21,9 @@ CHAT_MODEL = "qwen3:1.7b"
 EMBEDDING_MODEL = "nomic-embed-text"  # 768 numbers per text, each vector has length 1.0 (2.5)
 HEADING_START = "## "  # a Markdown section heading; "### " (a sub-heading) does not match
 CHUNK_SEPARATOR = "\n\n---\n\n"  # between chunks in the prompt, so the model sees where one ends
-RAG_SYSTEM_PROMPT = ("You are the support assistant for Lumen Notes. Answer in 1 to 2 sentences, "
-                     "using only the text below. If the text does not say, answer: I don't know.")
+# Same words as examples_4_1_3_answer.py, where RAG got 11/12 right
+RAG_SYSTEM_PROMPT = ("You are the support assistant for Lumen Notes. Answer in 1 to 2 sentences. "
+                     "Use only the text below. If the text does not say, answer: I don't know.")
 REQUEST_TIMEOUT_SECONDS = 300.0
 
 EmbeddingMatrix = npt.NDArray[np.float64]  # one row per text, 768 columns (numbers)
@@ -100,9 +104,14 @@ def find_top_chunks(question_vector: npt.NDArray[np.float64], chunk_vectors: Emb
     raise NotImplementedError
 
 
+@debug
 def build_rag_messages(question: str, top_chunk_texts: list[str]) -> list[Message]:
-    """Build the chat messages: the rules + the found chunks as system message, the question as user.
+    """Build the chat messages, so the model reads the found chunks before the question.
 
+    How:
+        1. Join the chunks with CHUNK_SEPARATOR.
+        2. System message = RAG_SYSTEM_PROMPT, an empty line, then the joined chunks.
+        3. User message = the question, alone.
     Args:
         question: e.g. "How long does the password reset link work?".
         top_chunk_texts: e.g. ["## Passwords and sign-in\\n...expires after 15 minutes..."].
@@ -118,11 +127,12 @@ def answer_question(question: str, chunk_texts: list[str], chunk_vectors: Embedd
     """Answer a question from the documents: find the best chunks, then ask the model with them.
 
     How:
-        1. Embed the question; find_top_chunks; take those chunk texts.
-        2. build_rag_messages.
-        3. POST /api/chat: model CHAT_MODEL, stream False, think False,
+        1. Embed the question (embed_texts).
+        2. Find the best rows (find_top_chunks) and take those chunk texts.
+        3. Build the messages (build_rag_messages).
+        4. POST /api/chat: model CHAT_MODEL, stream False, think False,
            options {"temperature": 0, "seed": 42, "num_predict": 200}; raise_for_status().
-        4. Return reply["message"]["content"].
+        5. Return reply["message"]["content"].
     Args:
         question: e.g. "How long does the password reset link work?".
         chunk_texts: all chunks, e.g. from split_by_headings.
