@@ -42,7 +42,20 @@ def split_by_headings(document_text: str) -> list[str]:
     Returns:
         e.g. ["# Title", "## Refunds\\nWithin 14 days.", "## Sync\\nEvery 60 s."]; [] for "".
     """
-    raise NotImplementedError
+    chunks: list[str] = []
+    current_line: list[str] = []
+    for line in document_text.split("\n"):
+        starts_new_chunk = line.startswith("## ")
+        if starts_new_chunk and len(current_line) > 0:
+            chunk_text = "\n".join(current_line)
+            chunks.append(chunk_text.strip())
+            current_line = []
+       # if line.strip():
+        current_line.append(line) 
+    last_chunk_text = "\n".join(current_line).strip()
+    if last_chunk_text:
+        chunks.append(last_chunk_text.strip())
+    return chunks
 
 
 @debug
@@ -62,7 +75,20 @@ def split_by_size(document_text: str, chunk_size: int, overlap: int) -> list[str
     Raises:
         ValueError: e.g. overlap 4 with chunk_size 4 (start would never move).
     """
-    raise NotImplementedError
+    if chunk_size <= 0:
+        raise ValueError("chunk_size must be greater than 0")
+
+    if overlap < 0 or overlap >= chunk_size:
+        raise ValueError("overlap must satisfy 0 <= overlap < chunk_size")
+    chunks: list[str] = []
+    start: int = 0
+    while start < len(document_text):
+        end = start + chunk_size
+        chunks.append(document_text[start:end])
+        if end >= len(document_text):
+            break
+        start = start + chunk_size - overlap
+    return chunks
 
 
 @debug
@@ -81,7 +107,16 @@ def embed_texts(texts: list[str]) -> EmbeddingMatrix:
         ValueError: texts is empty.
         httpx.HTTPStatusError: bad status, e.g. 404 = model not pulled.
     """
-    raise NotImplementedError
+    if not texts:
+        raise ValueError("texts is empty")
+    request_body = {"model": EMBEDDING_MODEL, "input": texts}
+    response = httpx.post(f"{OLLAMA_URL}/api/embed", json=request_body, timeout=300.0)
+    response.raise_for_status()
+    reply_json = response.json()
+    embeddings = reply_json["embeddings"]  # a list of lists of numbers
+    embedding_matrix = np.array(embeddings, dtype=np.float64)  # list of lists -> a 2-D numpy array
+    log.debug("result: shape %s", embedding_matrix.shape)
+    return embedding_matrix
 
 
 @debug
@@ -101,7 +136,15 @@ def find_top_chunks(question_vector: npt.NDArray[np.float64], chunk_vectors: Emb
     Returns:
         e.g. [12, 3, 40].
     """
-    raise NotImplementedError
+    if top_k <= 0:
+        return []
+    scores = chunk_vectors @ question_vector
+    best_first_order = np.argsort(-scores)
+    top_rows: list[int] = []
+    for row_number in best_first_order[:top_k]:
+        top_rows.append(int(row_number))
+     
+    return top_rows
 
 
 @debug
@@ -119,8 +162,11 @@ def build_rag_messages(question: str, top_chunk_texts: list[str]) -> list[Messag
         [{"role": "system", "content": RAG_SYSTEM_PROMPT + "\\n\\n" + the chunks joined by
           CHUNK_SEPARATOR}, {"role": "user", "content": question}].
     """
-    raise NotImplementedError
+    SYSTEM_PROMPT = RAG_SYSTEM_PROMPT + "\n\n"  + CHUNK_SEPARATOR.join(top_chunk_texts)
 
+    message:list[Message] = [{"role": "system", "content": SYSTEM_PROMPT},
+                              {"role": "user", "content": question}]
+    return message
 
 @debug
 def answer_question(question: str, chunk_texts: list[str], chunk_vectors: EmbeddingMatrix, top_k: int) -> str:
@@ -141,5 +187,24 @@ def answer_question(question: str, chunk_texts: list[str], chunk_vectors: Embedd
     Returns:
         e.g. "The reset link expires after 15 minutes."
     """
-    raise NotImplementedError
+    question_embed_text = embed_texts([question])[0]
+    top_chunk_ids = find_top_chunks(question_embed_text, chunk_vectors, top_k)
+    top_chunk_list:list[str] = []
+    for row_number in top_chunk_ids:
+            chunk_text = chunk_texts[row_number]
+            #score = float(chunk_vector @ question_vector)  # dot product; numpy number -> float
+            #chunk_lines = chunk_texts[row_number].split("\n")
+            #scored_chunks.append(ScoredChunk(score=score, first_line=chunk_lines[0]))
+            top_chunk_list.append(chunk_text)
+    
+    messages = build_rag_messages(question, top_chunk_list)
+    model_options = {"temperature": 0, "seed": 42, "num_predict": 200}  # same answer every run, max 200 tokens
+    request_body = {"model": CHAT_MODEL, "messages": messages, "stream": False,
+                    "think": False, "options": model_options}
+    response = httpx.post(f"{OLLAMA_URL}/api/chat", json=request_body, timeout=900.0)
+    response.raise_for_status()
+    reply_json = response.json()
+    answer_text = reply_json["message"]["content"]  # the model's reply, as text
+    
+    return answer_text
 

@@ -1,7 +1,7 @@
 # Glossary: Python + pytest keywords
 
 A–Z. One line each, with the Java twin. Topic = where it was taught.
-Process + quiz: [REVIEW_01_python.md](REVIEW_01_python.md).
+Process + quiz: [REVIEW_01_python.md](REVIEW_01_python.md), numpy: [REVIEW_04_rag.md](REVIEW_04_rag.md).
 
 | Term | Plain meaning | Java twin / example | Topic |
 |---|---|---|---|
@@ -41,13 +41,17 @@ Process + quiz: [REVIEW_01_python.md](REVIEW_01_python.md).
 | `json.loads` / `json.dumps` | text → dict / dict → text | Jackson `readValue` / `writeValueAsString` | 1.7 |
 | Lax vs strict (pydantic) | lax converts when clear (`"3"` → 3, `true` → 1); strict refuses | Jackson coercion on / off | 1.6 |
 | `Literal["a", "b"]` | only these exact values (case-sensitive) | `enum` | 1.6 |
+| Local name hides a global | assigning `X = X + ...` inside a function makes `X` local, so reading it first fails (unbound) | use a new name, e.g. `system_text` | 4.1 |
 | `localhost` vs `127.0.0.1` | localhost tries IPv6 first on Windows | 2.16 s vs 0.02 s per call | 1.7 |
 | Marker (`@pytest.mark.x`) | a label; `-m "not x"` skips, `-m x` runs only those | `@Tag("x")` | 1.9 |
+| Matrix multiply `@` (numpy) | `table @ vector` = one dot product per row; inner sizes must match | `(122, 768) @ (768,)` → 122 scores; a loop of `dot()` | 4.1 |
 | `model_json_schema()` | a pydantic model's rules as a JSON Schema dict | Jackson `JsonSchemaGenerator` | 3.2 |
 | `model_validate_json` | JSON text → checked object in one step; `model_dump()` back to dict | `mapper.readValue(json, X.class)` | 1.6 |
 | Module | one .py file: many functions, constants, classes | (Java: one class per file) | 1.5 |
 | `monkeypatch.setattr` | swap a function for one test, put back after | Mockito | 1.9 |
 | Mutable default | `def f(x=[])` shares ONE list across calls | fix: `x=None` | 1.3 |
+| `np.argsort(-scores, kind="stable")` | row numbers, highest score first; stable = ties keep their order | sort indices by value, descending | 4.1 |
+| `np.ndarray` + `.shape` | a numpy table of numbers; `(1, 768)` = 1 row, `(768,)` = one vector; `[0]` takes row 0 | `double[][]` / `double[]` | 4.1 |
 | Package | folder + `__init__.py` | Java package = folder | 1.5 |
 | `parametrize` | one test, many rows, each its own result | `@ParameterizedTest` | 1.9 |
 | `pathlib.Path` | file paths; `p / "a.txt"` | `java.nio.file.Path` | 1.7 |

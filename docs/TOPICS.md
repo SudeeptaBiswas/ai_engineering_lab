@@ -28,7 +28,7 @@ Lvl: B = Basic, I = Intermediate, A = Advanced (PLAN.md, Levels).
 | 3.3 | Raw tool calling over HTTP | 2.5 | 2026-11-13 | B |
 | 3.4 | Prompt injection basics | 1.5 | 2026-11-14 | B |
 | **04** | **RAG** | **38** | | |
-| 4.1 | RAG by hand: chunk, embed, search with numpy | 5 | | B |
+| 4.1 | RAG by hand: chunk, embed, search with numpy | 5 | 2026-11-16 | B |
 | 4.2 | Loading PDFs, cleaning text | 3 | | B |
 | 4.3 | Chunking strategies | 3 | | B |
 | 4.4 | Chroma vector DB | 3 | | B |

@@ -2,7 +2,7 @@
 
 A–Z. One line each. Numbers are measured in the lessons (10284Sudee / BISWAS,
 CPU only). Topic = where it was taught; open that LESSON for the full story.
-Process + quiz: [REVIEW_02_llm.md](REVIEW_02_llm.md), [REVIEW_03_prompting.md](REVIEW_03_prompting.md) (3.1–3.4).
+Process + quiz: [REVIEW_02_llm.md](REVIEW_02_llm.md), [REVIEW_03_prompting.md](REVIEW_03_prompting.md) (3.1–3.4), [REVIEW_04_rag.md](REVIEW_04_rag.md) (4.1).
 
 | Term | Plain meaning | Example / number | Topic |
 |---|---|---|---|
@@ -13,6 +13,8 @@ Process + quiz: [REVIEW_02_llm.md](REVIEW_02_llm.md), [REVIEW_03_prompting.md](R
 | Batching | send many texts in one call | 5 notes: 1 call 0.38–0.60 s vs 5 calls 1.34–1.92 s | 2.5 |
 | BPE | build tokens by gluing the most common neighbour pair, again and again | `t`+`h` → `th` | 2.1 |
 | Chat memory | the history your code keeps and resends every turn | `ChatMemory.messages_to_send()` | 2.6 |
+| Chunk | one piece of a document, embedded and searched on its own | handbook + notes: 122 chunks by heading | 4.1 |
+| Chunking | how you cut documents; it decides what search finds | by heading 12/12 right chunk 1st, by 500 chars 10/12 | 4.1 |
 | Code gate | code checks every tool call before it runs: who asked, how much | refund(500) blocked; "needs a human" | 3.4 |
 | Constrained decoding | the server only lets the model write tokens that fit a schema | `"format": schema` → 8/8 replies parse | 3.2 |
 | Context length | max tokens a model CAN see | qwen3:4b: 262 144 | 2.2 |
@@ -48,6 +50,7 @@ Process + quiz: [REVIEW_02_llm.md](REVIEW_02_llm.md), [REVIEW_03_prompting.md](R
 | `num_predict` | max tokens to write: a hard cut, not "be short" | 12 → stops mid-sentence | 2.3, 2.4 |
 | Ollama | runs LLMs on your PC, port 11434 | pull/list/show/run/ps/rm ≈ Docker | 2.2 |
 | Output parsing | code checks the reply's shape; never trust it | "**bug**" → bug; a sentence → None | 3.1 |
+| Overlap (chunks) | each piece repeats the end of the one before, so a cut sentence is whole once | size 4, overlap 1: abcd, defg, ghij | 4.1 |
 | Parameters (weights) | numbers the model learned | 4b = 4 billion | 2.2 |
 | Pre-training | read huge text, learn to guess the next piece | step 1 of 3 | 2.1 |
 | Preference tuning | people rank answers, model learns what they like | step 3 of 3 | 2.1 |
@@ -55,7 +58,7 @@ Process + quiz: [REVIEW_02_llm.md](REVIEW_02_llm.md), [REVIEW_03_prompting.md](R
 | Prompt injection | untrusted text the model follows as your orders; direct (user) or indirect (in data) | ticket attacks hijacked 6/6 | 3.4 |
 | Prompt pattern | a known way to write messages so the answer comes back in the shape you need | system rules, few-shot, step-by-step | 3.1 |
 | Quantization | store each weight in fewer bits: smaller, faster, a bit less precise | GB ≈ billions × bits ÷ 8 | 2.2 |
-| RAG | find the useful text first, send only that to the model | phase 04 | 2.1, 2.5 |
+| RAG | Retrieve the chunks that fit, Augment the prompt with them, Generate the answer | alone 1/12 → RAG 11/12, 213–493 tokens | 2.1, 2.5, 4.1 |
 | Retry with feedback | send the bad reply + the error list back, ask again | 7/8 valid by try 2, but 2/8 right | 3.2 |
 | Sampling | weighted random pick of the next token | like a loot table | 2.4 |
 | Score (accuracy) | share of answers equal to the expected ones | 7 of 8 right = 0.875 | 3.1 |
@@ -77,6 +80,7 @@ Process + quiz: [REVIEW_02_llm.md](REVIEW_02_llm.md), [REVIEW_03_prompting.md](R
 | Tool loop | POST, run the calls, send results, POST again until a plain answer; max N rounds | 7/8 right, 30.1–34.8 s | 3.3 |
 | Tool result (role) | `{"role": "tool", "tool_name": ..., "content": ...}`, one per call | errors go back as "error: ..." text | 3.3 |
 | top_k | keep only the k best tokens before the pick | qwen3 default 20; `top_k 1` = greedy | 2.4 |
+| top_k (RAG) | how many of the best chunks go into the prompt (not the sampling top_k) | 4.1: top 3 | 4.1 |
 | top_p | keep the best tokens until they cover p | qwen3 default 0.95 | 2.4 |
 | Trimming | drop the oldest messages to stay under a token budget | budget 2000, system message always kept | 2.6 |
 | Untrusted text | any text you didn't write: tickets, tool results, PDFs, web pages | treat as data, never orders | 3.4 |

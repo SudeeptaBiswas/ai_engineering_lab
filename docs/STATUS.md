@@ -1,25 +1,20 @@
 # Status
 
-Updated: 2026-11-15
+Updated: 2026-11-16
 
 ## Now
-- 1.1–1.7 + 1.9 + 2.1–2.6 + 3.1–3.4 done. Overall 15.1% (phase 01:
-  87%, 02: 100%, 03: 100%).
+- 1.1–1.7 + 1.9 + 2.1–2.6 + 3.1–3.4 + 4.1 done. Overall 17.6% (phase 01:
+  87%, 02: 100%, 03: 100%, 04: 13%).
 - assistant v2 works (`uv run python -m assistant`, `--debug` for the
   log): 4 tools + gate. Code by Claude, in CODE_STYLE.md. User to read it.
   Lesson rules checked by a hook.
 - Review rule (DECISIONS 2026-11-08): critical issue → a check; minor → the
   "End-of-course review" list at the bottom.
 - From 2.6: exercises are pytest tests (DECISIONS 2026-11-09).
-- Three levels (DECISIONS 2026-11-11): Basic 46 h left → apply (est.
-  2026-12-08), Intermediate 60 h, Advanced 63 h. Order: PLAN.md.
+- Three levels (DECISIONS 2026-11-11): Basic 41 h left → apply (est.
+  2026-12-07), Intermediate 60 h, Advanced 63 h. Order: PLAN.md.
 
 ## Queue
-a. 10284Sudee only, not committed (pre-commit: 151 lines; not checked
-   since 2026-11-13): examples_3_3_2_loop.py "2 * 3* 4" expects
-   19124907 (answer 24). Undo there.
-b. User: 4.1 — read LESSON_4_1.md, run the 3 examples, fill the 6
-   stubs in `04_rag/4_1_rag_by_hand/rag_4_1.py` (31 tests).
 c. User: read assistant v2 (start with assistant/README.md, "How one
    turn runs"). Restyled 2026-11-15; try `--debug` to see the call order.
 f. Next lesson (4.2): start from `docs/templates/LESSON_TEMPLATE.md`;
@@ -29,6 +24,15 @@ d. Open (user to decide): add a Claude API topic (~2 h, paid key)?
 e. Optional: compare gemma4 E2B vs qwen3:4b on this PC (user to decide).
 
 ## Done
+- 2026-11-16 — topic 4.1 done (10284Sudee), code by user, hints only:
+  31 passed in 4.95 s (3 real Ollama), pyright 0; full suite 241 passed
+  in 122.40 s. Bugs hit on the way: missing `:` / `for x =`, overlap
+  added instead of subtracted, no number check (endless loop →
+  MemoryError), `"\\n\\n"` copied from a docstring, `(1, 768)` question
+  table instead of row `[0]`. 10284Sudee had no numpy in `.venv` until
+  `uv run` synced it. Style notes below. REVIEW_04 started (7 quiz),
+  +4 AI and +4 Python keywords. Queue a (examples_3_3_2_loop.py local
+  edit) gone: file matches git.
 - 2026-11-15 — 4.1 reviewer findings: 10 fixed, 2 kept (DECISIONS same
   day). Re-run on BISWAS: part 1 13.4 s, same top 3; part 3 165.3 s,
   alone 1/12, RAG 11/12 (41.8 s), whole 2/2 cut at 2 050. Speed (scoring
@@ -233,6 +237,23 @@ e. Optional: compare gemma4 E2B vs qwen3:4b on this PC (user to decide).
 # End-of-course review
 Minor notes, batched for the end (DECISIONS 2026-11-08). BUG = wrong result,
 should get a check instead.
+
+## Review notes 4.1 (2026-11-16)
+- BUG: `find_top_chunks` uses `np.argsort(-scores)` without
+  `kind="stable"`. The ties test passes only because 3 rows is small;
+  on big tables equal scores may swap.
+- `split_by_headings`: `"## "` typed instead of `HEADING_START`;
+  `current_line` holds many lines (`current_lines`); `.strip()` twice on
+  the last chunk; commented-out `# if line.strip():` left in.
+- `embed_texts` 300.0, `answer_question` 900.0: use `REQUEST_TIMEOUT_SECONDS`.
+- `build_rag_messages`: local `SYSTEM_PROMPT` in capitals (looks like a
+  constant); `message` holds 2 messages; `message:list` → `messages: list`;
+  1 blank line before `answer_question` (want 2).
+- `answer_question`: `question_embed_text` is a vector (`question_vector`);
+  loop body indented 8 spaces; 3 commented-out lines.
+- Line 12 `# pyright: ignore[reportUnusedImport]` stale (httpx used now);
+  line 17 still needs it (`cut_text` unused). Trailing spaces: lines 54,
+  146, 199, 208.
 
 ## Review notes 3.4 (2026-11-15)
 - BUG: `check_tool_call` with a refund that has no `amount` → `KeyError`
