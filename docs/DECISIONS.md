@@ -2,6 +2,23 @@
 
 Newest first. One entry per change: what, replaces what, why.
 
+## 2026-11-16 — 4.2: pypdf, a built sample PDF, layout mode
+- What: `pypdf` 7.1.0 added (`uv add`, user OK). The sample PDF is built
+  by `make_pdf_4_2.py` from the 4.1 handbook, by fixed rules (header,
+  footer, cut words, fi/fl ligatures, no-break space after numbers, one
+  scanned page). Pages read in pypdf's `"layout"` mode.
+- Rejected: pymupdf (AGPL, native wheel), pdfplumber (slower, more
+  deps); a user-supplied real PDF (numbers would depend on the file).
+  `"plain"` mode: 0 paragraph gaps vs 42 in layout (4.3 cuts at paragraphs).
+- Why: same facts as 4.1, so the 4.1 questions measure the cleaning.
+  pypdf is what LangChain's `PyPDFLoader` uses (4.5).
+- Measured: exact-text answers 3/9 raw → 9/9 clean; vector search right
+  chunk 1st 8/9 → 9/9 (the miss was a near tie, 0.485 vs 0.483).
+- Not done: OCR for scanned pages, columns, tables, heading detection.
+- `.gitattributes`: `*.pdf binary`. The built PDF has no NUL byte, so
+  git took it for text and would turn LF into CRLF on checkout
+  (`core.autocrlf true`); that breaks the byte offsets inside the PDF.
+
 ## 2026-11-15 — 4.1 reviewer findings: 10 fixed, 2 kept on purpose
 - What: the lesson-reviewer's 12 findings on 4.1 (STATUS). Fixed: 1
   one-off numbers marked (*) in the LESSON; 3 one prompt wording (stubs =

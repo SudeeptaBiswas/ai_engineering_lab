@@ -17,13 +17,24 @@ Updated: 2026-11-16
 ## Queue
 c. User: read assistant v2 (start with assistant/README.md, "How one
    turn runs"). Restyled 2026-11-15; try `--debug` to see the call order.
-f. Next lesson (4.2): start from `docs/templates/LESSON_TEMPLATE.md`;
-   run the `lesson-reviewer` agent before hand-over.
+f. User: do lesson 4.2 (`04_rag/4_2_pdf_loading/LESSON_4_2.md`), fill
+   the 7 stubs in `pdf_text_4_2.py`. Hints only. No Ollama needed for
+   tests. Other PC: `uv sync` (pypdf added).
+g. Your 4.1 fix in `rag_4_1.py` (`kind="stable"`) is not committed yet.
 d. Open (user to decide): add a Claude API topic (~2 h, paid key)?
    "AI workflow integration" = 8.1 + 8.3 (+6 h) or 6.5 (+4 h)?
 e. Optional: compare gemma4 E2B vs qwen3:4b on this PC (user to decide).
 
 ## Done
+- 2026-11-16 — lesson 4.2 written (10284Sudee, pypdf 7.1.0, nomic-embed-text,
+  DECISIONS same day): PDF builder + 3 examples + 7 stubs + 32 tests (2 files,
+  no Ollama). Measured: plain mode 0 paragraph gaps, layout 42; raw text 14
+  strange words, 3/9 answers by exact text → clean 0, 9/9; search right
+  chunk 1st 8/9 → 9/9 (3 runs), tokens 1 884 → 1 757. Parts: 0.8 s, 0.6 s,
+  15.2–18.4 s. Reference 32 passed in 0.27–0.63 s (6 runs); stubs 29 failed +
+  3 errors; pyright 0, lesson rules 0. lesson-reviewer: 17 findings, all fixed
+  (ligature codes in md, stale example values, part 2 split, names, logs).
+  Full suite: 241 passed + the 32 stub fails. `pdf_file_4_2.py` split off.
 - 2026-11-16 — topic 4.1 done (10284Sudee), code by user, hints only:
   31 passed in 4.95 s (3 real Ollama), pyright 0; full suite 241 passed
   in 122.40 s. Bugs hit on the way: missing `:` / `for x =`, overlap

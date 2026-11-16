@@ -1,2 +1,4 @@
 # Hook scripts must keep LF: with CRLF, "--staged" gets a hidden CR and the check silently passes.
 .githooks/* text eol=lf
+# PDFs: byte offsets inside the file must not change, so no LF -> CRLF (4.2).
+*.pdf binary
