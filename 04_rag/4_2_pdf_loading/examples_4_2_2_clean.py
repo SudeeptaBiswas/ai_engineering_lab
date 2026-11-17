@@ -39,8 +39,11 @@ class StepResult:
 
 
 def pattern_of_line(line: str) -> str:
-    """The line's pattern: no spaces at the ends, each run of digits -> "#".
+    """Make lines that differ only in numbers look the same, so "Page 1 of 6" and "Page 2 of 6" count as one repeated footer.
 
+    How:
+        1. Remove spaces at both ends (layout mode puts spaces in front of a centred footer).
+        2. Replace each run of digits with "#".
     No own log lines: runs once per line; its callers log the totals.
     Args:
         line: e.g. "        Page 2 of 6".
@@ -171,7 +174,9 @@ def collect_words(document_text: str) -> set[str]:
 
 @debug
 def measure_text(page_texts: list[str], source_words: set[str]) -> str:
-    """One table row: strange words, answer phrases found by plain `in`, characters.
+    """Score the pages after one step: one table row with 3 numbers.
+
+    Strange words: not in the source handbook, e.g. "sett" from "Sett-ings" (fewer = cleaner). Answers: ANSWER_PHRASES found as exact text (more = better).
 
     Args:
         page_texts: the pages after some cleaning step.

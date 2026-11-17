@@ -166,8 +166,14 @@ A PDF has no `## ` left, so cutting by heading is not possible (4.3).
   The glue can't tell. Rare; we accept it (a test says so).
 - **NFKC changes more than ligatures**: `m²` → `m2`, `½` → `1⁄2`.
   Fine for search; keep the raw text if you must show exact signs.
-- **Headers need 2+ pages.** A one-page PDF keeps its header. A real
-  sentence on half the pages ("Contact support.") would be removed too.
+- **The header rule only counts. It can't read.** It removes any line
+  that shows up on half the pages or more. Two ways that goes wrong:
+  - *Too few pages*: a 1-page PDF. Its header shows up on 1 page only,
+    so it looks like normal text and **stays**.
+  - *A real sentence repeats*: a 6-page manual ends 3 pages with
+    "Contact support at help@lumen.example." 3 of 6 = half, so that
+    line is **removed**, though it is real content.
+  So after cleaning, look at what `find_repeated_lines` returned.
 - **Columns and tables**: layout mode reads straight across the page,
   so two columns get mixed line by line. Check a page by eye first.
 - **Headings are lost.** Bold 13-point "Refunds" is just a line now.
