@@ -23,6 +23,9 @@ f. User: do lesson 4.2 (`04_rag/4_2_pdf_loading/LESSON_4_2.md`), fill
 d. Open (user to decide): add a Claude API topic (~2 h, paid key)?
    "AI workflow integration" = 8.1 + 8.3 (+6 h) or 6.5 (+4 h)?
 e. Optional: compare gemma4 E2B vs qwen3:4b on this PC (user to decide).
+h. Open (user to decide): interview gaps in `docs/INTERVIEW_NOTES.md`
+   (Accenture AI/ML): add an "ML basics" block (~10–12 h guess) and
+   Kubernetes basics (~3 h guess)?
 
 ## Done
 - 2026-11-16 — lesson 4.2 written (10284Sudee, pypdf 7.1.0, nomic-embed-text,

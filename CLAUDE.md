@@ -17,6 +17,8 @@ Python 3.13 via uv 0.13.6 (`pyproject.toml` + `uv.lock`, `.venv` git-ignored).
 - `docs/PROGRESS.md` — hours + % per phase. Update when a topic finishes,
   and report the new % to the user.
 - `docs/DECISIONS.md` — requirement changes and why.
+- `docs/INTERVIEW_NOTES.md` — real interview questions vs the course
+  (covered / planned / gap). Add new ones the user shares.
 - `docs/CODE_STYLE.md` — how lesson code and tests are written. Read
   before writing any lesson file.
 - `docs/review/` — flows + quiz per topic, keyword glossaries. When a topic
