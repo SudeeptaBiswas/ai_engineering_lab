@@ -139,7 +139,7 @@ def find_top_chunks(question_vector: npt.NDArray[np.float64], chunk_vectors: Emb
     if top_k <= 0:
         return []
     scores = chunk_vectors @ question_vector
-    best_first_order = np.argsort(-scores)
+    best_first_order = np.argsort(-scores, kind="stable")
     top_rows: list[int] = []
     for row_number in best_first_order[:top_k]:
         top_rows.append(int(row_number))

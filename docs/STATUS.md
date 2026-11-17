@@ -1,6 +1,6 @@
 # Status
 
-Updated: 2026-11-16
+Updated: 2026-11-17
 
 ## Now
 - 1.1–1.7 + 1.9 + 2.1–2.6 + 3.1–3.4 + 4.1 done. Overall 17.6% (phase 01:
@@ -20,7 +20,6 @@ c. User: read assistant v2 (start with assistant/README.md, "How one
 f. User: do lesson 4.2 (`04_rag/4_2_pdf_loading/LESSON_4_2.md`), fill
    the 7 stubs in `pdf_text_4_2.py`. Hints only. No Ollama needed for
    tests. Other PC: `uv sync` (pypdf added).
-g. Your 4.1 fix in `rag_4_1.py` (`kind="stable"`) is not committed yet.
 d. Open (user to decide): add a Claude API topic (~2 h, paid key)?
    "AI workflow integration" = 8.1 + 8.3 (+6 h) or 6.5 (+4 h)?
 e. Optional: compare gemma4 E2B vs qwen3:4b on this PC (user to decide).
