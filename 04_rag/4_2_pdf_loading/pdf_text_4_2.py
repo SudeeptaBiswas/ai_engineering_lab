@@ -10,13 +10,13 @@ The settings, CleanPage and line_pattern are given; don't change them. Style: do
 # lesson-rules: user-code  (style problems here are shown as warnings, never block a commit)
 
 import re
-import unicodedata  # pyright: ignore[reportUnusedImport] — until fix_characters uses it
+import unicodedata  # Unicode tables: normalize() turns look-alike characters into plain ones
 from dataclasses import dataclass
 from pathlib import Path
 
-from pypdf import PdfReader  # pyright: ignore[reportUnusedImport] — until read_pdf_pages uses it
+from pypdf import PdfReader
 
-from lab_tools.log import cut_text, debug, log  # pyright: ignore[reportUnusedImport] — until your code logs
+from lab_tools.log import cut_text, debug, log
 
 PDF_EXTRACTION_MODE = "layout"  # keeps empty lines between paragraphs; "plain" (the default) drops them
 MIN_PAGE_SHARE_FOR_REPEATED = 0.5  # a line on half the pages or more is a header or footer
@@ -59,7 +59,14 @@ def read_pdf_pages(pdf_path: Path) -> list[str]:
     Raises:
         FileNotFoundError: no such file (PdfReader raises it for you).
     """
-    raise NotImplementedError
+    log.debug("start: %s, mode=%s", pdf_path.name, PDF_EXTRACTION_MODE)
+    reader = PdfReader(pdf_path)  # opens the file; reads pages only when asked
+    page_texts: list[str] = []
+    for page in reader.pages:
+        page_text = page.extract_text(extraction_mode=PDF_EXTRACTION_MODE)
+        page_texts.append(page_text)
+    log.debug("result: %d pages", len(page_texts))
+    return page_texts
 
 
 @debug
@@ -75,7 +82,22 @@ def find_repeated_lines(page_texts: list[str]) -> set[str]:
     Returns:
         e.g. {"Head", "Page # of #"}; set() for one page or none (nothing to compare).
     """
-    raise NotImplementedError
+    log.debug("start: %d pages", len(page_texts))
+    pages_per_pattern: dict[str, int] = {}
+    for page_text in page_texts:
+        patterns_on_page: set[str] = set()
+        for line in page_text.split("\n"):
+            if line.strip() != "":
+                patterns_on_page.add(line_pattern(line))
+        for line_on_pattern in patterns_on_page:
+            pages_per_pattern[line_on_pattern] = pages_per_pattern.get(line_on_pattern, 0) + 1  # .get(key, 0): 0 if new
+    header_footer_patterns: set[str] = set()
+    for line_on_pattern in pages_per_pattern:
+        page_count = pages_per_pattern[line_on_pattern]
+        if page_count >= 2 and page_count >= MIN_PAGE_SHARE_FOR_REPEATED * len(page_texts):
+            header_footer_patterns.add(line_on_pattern)
+    log.debug("result: %s", header_footer_patterns)
+    return header_footer_patterns
 
 
 @debug
@@ -92,7 +114,14 @@ def remove_repeated_lines(page_text: str, repeated_patterns: set[str]) -> str:
     Returns:
         e.g. "A\\n\\nB".
     """
-    raise NotImplementedError
+    log.debug("start: %s, %d patterns", cut_text(page_text), len(repeated_patterns))
+    kept_lines: list[str] = []
+    for line in page_text.split("\n"):
+        if line_pattern(line) not in repeated_patterns:
+            kept_lines.append(line)
+    kept_text = "\n".join(kept_lines)
+    log.debug("result: %d -> %d characters", len(page_text), len(kept_text))
+    return kept_text
 
 
 @debug
@@ -107,7 +136,10 @@ def fix_characters(page_text: str) -> str:
     Returns:
         e.g. "confirmation link works for 48 hours".
     """
-    raise NotImplementedError
+    log.debug("start: %s", cut_text(page_text))
+    plain_text = unicodedata.normalize("NFKC", page_text)  # NFKC: each look-alike -> its plain twin
+    log.debug("result: %d -> %d characters", len(page_text), len(plain_text))
+    return plain_text
 
 
 @debug
@@ -123,7 +155,10 @@ def join_broken_words(page_text: str) -> str:
     Returns:
         e.g. "the confirmation link". "Retry-After" (no line break) stays as it is.
     """
-    raise NotImplementedError
+    log.debug("start: %s", cut_text(page_text))
+    glued_text = re.sub(r"(\w)-\n *([a-z])", r"\1\2", page_text)  # \1, \2 = the 2 letters the ( ) found
+    log.debug("result: %d -> %d characters", len(page_text), len(glued_text))
+    return glued_text
 
 
 @debug
@@ -140,7 +175,19 @@ def join_paragraph_lines(page_text: str) -> str:
     Returns:
         e.g. "Refunds\\n\\nYou can get a refund within 14 days."; "" for only spaces.
     """
-    raise NotImplementedError
+    log.debug("start: %s", cut_text(page_text))
+    paragraph_texts: list[str] = []
+    paragraph_lines: list[str] = []
+    for line in page_text.split("\n") + [""]:  # + [""]: one more empty line closes the last paragraph
+        if line.strip() == "":
+            if len(paragraph_lines) > 0:
+                paragraph_texts.append(" ".join(paragraph_lines))
+            paragraph_lines = []
+        else:
+            paragraph_lines.append(" ".join(line.split()))  # split() with no argument: at any run of spaces
+    one_line_text = "\n\n".join(paragraph_texts)
+    log.debug("result: %d paragraphs", len(paragraph_texts))
+    return one_line_text
 
 
 @debug
@@ -157,4 +204,19 @@ def clean_pdf_pages(pdf_path: Path) -> list[CleanPage]:
     Returns:
         e.g. [CleanPage(1, "Lumen Notes support handbook\\n\\n..."), ..., CleanPage(5, "...")].
     """
-    raise NotImplementedError
+    log.debug("start: %s", pdf_path.name)
+    page_texts = read_pdf_pages(pdf_path)
+    repeated_patterns = find_repeated_lines(page_texts)
+    clean_pages: list[CleanPage] = []
+    for page_index, page_text in enumerate(page_texts):  # enumerate: (0, first page), (1, second page), ...
+        page_number = page_index + 1
+        without_repeats = remove_repeated_lines(page_text, repeated_patterns)
+        plain_text = fix_characters(without_repeats)
+        glued_text = join_broken_words(plain_text)
+        clean_text = join_paragraph_lines(glued_text)
+        if clean_text == "":
+            log.debug("page %d is empty after cleaning (a scan?): skipped", page_number)
+        else:
+            clean_pages.append(CleanPage(page_number, clean_text))
+    log.debug("result: %d of %d pages", len(clean_pages), len(page_texts))
+    return clean_pages

@@ -17,9 +17,9 @@ Updated: 2026-11-18
 ## Queue
 c. User: read assistant v2 (start with assistant/README.md, "How one
    turn runs"). Restyled 2026-11-15; try `--debug` to see the call order.
-f. User: do lesson 4.2 (`04_rag/4_2_pdf_loading/LESSON_4_2.md`), fill
-   the 7 stubs in `pdf_text_4_2.py`. Hints only. No Ollama needed for
-   tests. Other PC: `uv sync` (pypdf added).
+f. 4.2 stubs filled 2026-11-18 (user 2, Claude 5; DECISIONS): 32/32 pass.
+   User: read `pdf_text_4_2.py`, then mark 4.2 done (TOPICS, PROGRESS,
+   review). Other PC: `uv sync` (pypdf added).
 d. Open (user to decide): add a Claude API topic (~2 h, paid key)?
    "AI workflow integration" = 8.1 + 8.3 (+6 h) or 6.5 (+4 h)?
 e. Optional: compare gemma4 E2B vs qwen3:4b on this PC (user to decide).

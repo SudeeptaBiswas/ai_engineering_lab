@@ -2,6 +2,12 @@
 
 Newest first. One entry per change: what, replaces what, why.
 
+## 2026-11-18 — 4.2: Claude filled the last 5 stubs
+- What: user wrote `read_pdf_pages` + `find_repeated_lines`, then asked
+  "implement pdf_text_4_2". Claude filled the other 5 in the example style.
+- Replaces: user fills all 7 stubs (STATUS item f). "Hints only" still
+  stands for other exercises unless the user asks again.
+
 ## 2026-11-16 — 4.2: pypdf, a built sample PDF, layout mode
 - What: `pypdf` 7.1.0 added (`uv add`, user OK). The sample PDF is built
   by `make_pdf_4_2.py` from the 4.1 handbook, by fixed rules (header,
