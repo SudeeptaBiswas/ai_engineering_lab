@@ -1,6 +1,6 @@
 # Status
 
-Updated: 2026-11-17
+Updated: 2026-11-18
 
 ## Now
 - 1.1–1.7 + 1.9 + 2.1–2.6 + 3.1–3.4 + 4.1 done. Overall 17.6% (phase 01:
@@ -25,7 +25,8 @@ d. Open (user to decide): add a Claude API topic (~2 h, paid key)?
 e. Optional: compare gemma4 E2B vs qwen3:4b on this PC (user to decide).
 h. Open (user to decide): interview gaps in `docs/INTERVIEW_NOTES.md`
    (Accenture AI/ML): add an "ML basics" block (~10–12 h guess) and
-   Kubernetes basics (~3 h guess)?
+   Kubernetes basics (~3 h guess)? Plus 2026-11-18 post (F1–F14): a
+   "how a model reads a prompt" topic (~2 h) and SQL + latency (~3 h)?
 
 ## Done
 - 2026-11-16 — lesson 4.2 written (10284Sudee, pypdf 7.1.0, nomic-embed-text,
