@@ -51,6 +51,23 @@ hallucinations rise, agent loops.
 Count: 4 covered, 8 planned or partly, 4 gaps (F3, F5, F10, F14). The post's
 closing "Interview Kit" ad is ignored.
 
+## Post — "production-ready RAG" (shared 2026-11-19)
+Source: a post the user pasted. Learning note: "embed + store" is the
+demo. Production = what happens when data changes, users grow, and
+ingestion fails. Don't write "production-ready" unless you can answer these.
+
+| # | Question | Status | Where / note |
+|---|---|---|---|
+| P1 | User uploads a new document: what happens? | covered | 4.1 by hand; 4.4 (Chroma), 4.6 planned |
+| P2 | Same document uploaded twice (dedup) | gap | idea: chunk id = content hash, so re-upload overwrites |
+| P3 | Existing document updated (versioning) | gap | idea: doc_id + version in metadata, delete old then add new |
+| P4 | Remove outdated embeddings (stale content) | gap | = P3; delete by doc_id metadata |
+| P5 | Embedding fails halfway (recovery) | partly | 6.2 retries; idempotent re-run + ingest status = gap |
+| P6 | One user's docs never retrieved by another | gap | idea: user_id metadata filter on every query; 7.7 is MCP auth only |
+| P7 | Observability: know when ingest/retrieval breaks | partly planned | 5.4 Langfuse (retrieval); ingest logs/counts = gap |
+
+Count: 1 covered, 2 partly, 4 gaps (P2, P3, P4, P6). Closing ad ignored.
+
 ## Open (user to decide)
 1. Add an "ML basics" block: learning types, KNN, SVM, pandas +
    scikit-learn (missing values, train, evaluate), Transformer attention,
@@ -60,4 +77,7 @@ closing "Interview Kit" ad is ignored.
 3. From the 2026-11-18 post: a "how a model reads a prompt" topic after
    2.1 (Transformer, attention, prefill, KV cache; ~2 h guess), and
    SQL + latency/caching basics (~3 h guess). Item 1 already holds attention.
+4. From the 2026-11-19 post: add "production ingestion" to 4.4 or 10.2 —
+   content-hash ids, doc_id + version, delete stale, idempotent re-run,
+   per-user filter, ingest counts (~2–3 h guess). Closes P2–P6.
 If yes: add to TOPICS + PLAN, and log it in DECISIONS.
