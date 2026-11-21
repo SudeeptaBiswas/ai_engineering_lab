@@ -10,6 +10,7 @@ Process + quiz: [REVIEW_01_python.md](REVIEW_01_python.md), numpy: [REVIEW_04_ra
 | `__repr__` / `__str__` | debug text / user text of an object | `toString()` | 1.4 |
 | ABC + `@abstractmethod` | an explicit contract that fails early if a method is missing | `interface` | 1.4 |
 | `approx` (pytest) | float compare with a tiny allowed error | `assertEquals(0.15, x, 1e-6)` | 1.9 |
+| `ascii(text)` | prints hidden characters as codes | `ﬁ`, ` `; Java: `StringEscapeUtils` | 4.2 |
 | `assert` (pytest) | the check; on fail pytest prints both sides | `assertEquals` | 1.9 |
 | `BaseModel` (pydantic) | a class whose type hints are checked at runtime | record + Jackson + Bean Validation | 1.6 |
 | `Callable[[Any], str]` | type of a function: takes one arg, returns str | `Function<Object, String>` | 3.3 |
@@ -55,6 +56,7 @@ Process + quiz: [REVIEW_01_python.md](REVIEW_01_python.md), numpy: [REVIEW_04_ra
 | Package | folder + `__init__.py` | Java package = folder | 1.5 |
 | `parametrize` | one test, many rows, each its own result | `@ParameterizedTest` | 1.9 |
 | `pathlib.Path` | file paths; `p / "a.txt"` | `java.nio.file.Path` | 1.7 |
+| `PdfReader(path).pages` (pypdf) | one Page per PDF page; `page.extract_text(extraction_mode="layout")` | PDFBox `PDFTextStripper` | 4.2 |
 | `@property` | a getter that reads like a field | getter | 1.4 |
 | `pyproject.toml` | project + dependencies | `pom.xml` | 1.1 |
 | `python -m package` | runs the package's `__main__.py` | `Main-Class` in a jar manifest | 2.6 |
@@ -77,6 +79,7 @@ Process + quiz: [REVIEW_01_python.md](REVIEW_01_python.md), numpy: [REVIEW_04_ra
 | `try / except / else / finally` | `else` runs only if no error | try/catch/finally | 1.5 |
 | `tuple` | fixed, immutable sequence; unpack with `a, b = t` | record / `List.of` | 1.2, 1.3 |
 | `TypedDict` | a dict with known keys; checked by pyright, plain dict at runtime | a record, compile-time only | 2.6 |
+| `unicodedata.normalize("NFKC", s)` | look-alike characters → plain ones | `Normalizer.normalize(s, Form.NFKC)` | 4.2 |
 | `uv` | installs Python + packages, runs files | Maven / Gradle | 1.1 |
 | `uv.lock` | exact versions; commit it | Gradle lockfile | 1.1 |
 | `ValidationError` (pydantic) | lists ALL problems: `loc`, `type`, `msg` each (not `ValueError`) | `ConstraintViolationException` | 1.6 |

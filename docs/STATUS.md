@@ -1,25 +1,23 @@
 # Status
 
-Updated: 2026-11-18
+Updated: 2026-11-21
 
 ## Now
-- 1.1–1.7 + 1.9 + 2.1–2.6 + 3.1–3.4 + 4.1 done. Overall 17.6% (phase 01:
-  87%, 02: 100%, 03: 100%, 04: 13%).
+- 1.1–1.7 + 1.9 + 2.1–2.6 + 3.1–3.4 + 4.1–4.2 done. Overall 19.1% (phase
+  01: 87%, 02: 100%, 03: 100%, 04: 21%). Next: 4.3 chunking.
 - assistant v2 works (`uv run python -m assistant`, `--debug` for the
   log): 4 tools + gate. Code by Claude, in CODE_STYLE.md. User to read it.
   Lesson rules checked by a hook.
 - Review rule (DECISIONS 2026-11-08): critical issue → a check; minor → the
   "End-of-course review" list at the bottom.
 - From 2.6: exercises are pytest tests (DECISIONS 2026-11-09).
-- Three levels (DECISIONS 2026-11-11): Basic 41 h left → apply (est.
-  2026-12-07), Intermediate 60 h, Advanced 63 h. Order: PLAN.md.
+- Three levels (DECISIONS 2026-11-11): Basic 38 h left → apply (est.
+  2026-12-10), Intermediate 60 h, Advanced 63 h. Order: PLAN.md.
 
 ## Queue
 c. User: read assistant v2 (start with assistant/README.md, "How one
    turn runs"). Restyled 2026-11-15; try `--debug` to see the call order.
-f. 4.2 stubs filled 2026-11-18 (user 2, Claude 5; DECISIONS): 32/32 pass.
-   User: read `pdf_text_4_2.py`, then mark 4.2 done (TOPICS, PROGRESS,
-   review). Other PC: `uv sync` (pypdf added).
+f. Other PC (10284Sudee): `uv sync` (pypdf added in 4.2).
 d. Open (user to decide): add a Claude API topic (~2 h, paid key)?
    "AI workflow integration" = 8.1 + 8.3 (+6 h) or 6.5 (+4 h)?
 e. Optional: compare gemma4 E2B vs qwen3:4b on this PC (user to decide).
@@ -29,6 +27,9 @@ h. Open (user to decide): interview gaps in `docs/INTERVIEW_NOTES.md`
    "how a model reads a prompt" topic (~2 h) and SQL + latency (~3 h)?
 
 ## Done
+- 2026-11-21 — topic 4.2 done (BISWAS; user 2 of 7 stubs, Claude 5,
+  DECISIONS 2026-11-18): 32 passed in 4.01 s, pyright 0. REVIEW_04 4.2
+  (6 quiz), +4 AI and +3 Python keywords. Basic level: 38 h left.
 - 2026-11-16 — lesson 4.2 written (10284Sudee, pypdf 7.1.0, nomic-embed-text,
   DECISIONS same day): PDF builder + 3 examples + 7 stubs + 32 tests (2 files,
   no Ollama). Measured: plain mode 0 paragraph gaps, layout 42; raw text 14

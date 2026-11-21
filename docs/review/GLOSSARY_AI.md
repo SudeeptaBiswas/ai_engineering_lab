@@ -2,7 +2,7 @@
 
 A–Z. One line each. Numbers are measured in the lessons (10284Sudee / BISWAS,
 CPU only). Topic = where it was taught; open that LESSON for the full story.
-Process + quiz: [REVIEW_02_llm.md](REVIEW_02_llm.md), [REVIEW_03_prompting.md](REVIEW_03_prompting.md) (3.1–3.4), [REVIEW_04_rag.md](REVIEW_04_rag.md) (4.1).
+Process + quiz: [REVIEW_02_llm.md](REVIEW_02_llm.md), [REVIEW_03_prompting.md](REVIEW_03_prompting.md) (3.1–3.4), [REVIEW_04_rag.md](REVIEW_04_rag.md) (4.1–4.2).
 
 | Term | Plain meaning | Example / number | Topic |
 |---|---|---|---|
@@ -33,21 +33,25 @@ Process + quiz: [REVIEW_02_llm.md](REVIEW_02_llm.md), [REVIEW_03_prompting.md](R
 | FP16 / Q8_0 / Q4_K_M | quantization formats: 16 / 8.5 / ~5 bits per weight | qwen3:4b: 8.0 / 4.2 / 2.5 GB | 2.2 |
 | Greedy | always pick the top token | T 0 → same answer 10/10 | 2.1, 2.4 |
 | Hallucination | picks what sounds right, not what is right | "Blue." with no history (2.3) | 2.1 |
+| Header / footer (PDF) | a line on half the pages or more; digits → `#` so "Page 2 of 6" matches | 5 headers + 5 footers removed | 4.2 |
 | Instruction tuning | training on (question, good answer) pairs | step 2 of 3 | 2.1 |
 | JSON Schema | a JSON description of a JSON shape: types, `enum`, `minimum`, `maxLength`, `required` | made from a pydantic model | 3.2 |
 | Keepalive | Ollama keeps a model in RAM after a call | 5 min; 2nd call load 9.4 s → 0.009 s | 2.2 |
 | KV cache | memory for the text being read; grows with context | why RAM ≈ file × 1.3 | 2.2 |
 | Least privilege | give the model only the tools the task needs, read-only where you can | order_status yes, delete_order no | 3.4 |
+| Ligature | two letters drawn as one sign; breaks exact search | `conﬁrmation` (`ﬁ`): 19 in the handbook | 4.2 |
 | Load time | copy the model file into RAM (first call) | qwen3:4b 9.4 s, 1.7b 1.9 s | 2.2 |
 | Logits | raw score the model gives every vocabulary token | cat 2.0, mat 1.0, rat 0.5 | 2.1 |
 | LLM | a next-token guesser, run in a loop | IntelliJ autocomplete for any text | 2.1 |
 | Messages | the chat: a list of {role, content} | system, user, assistant | 2.3 |
 | NDJSON | one JSON object per line (streaming format) | last line has `done: true` + stats | 2.3 |
+| NFKC | Unicode form: look-alike signs → plain twin | `ﬁ` → `fi`, no-break space → space; exact 3/9 → 9/9 | 4.2 |
 | No memory (stateless) | every call starts from zero; your code resends history | like a stateless REST call | 2.1, 2.3 |
 | Norm | arrow length: sqrt(dot(a, a)) | norm([3, 4]) = 5 | 2.5 |
 | Normalized vector | length 1.0, so cosine = dot | nomic vectors are | 2.5 |
 | `num_ctx` | Ollama option: context size in tokens; over it, messages are dropped silently | default 4096 here; 1024 gave "Blue" | 2.6 |
 | `num_predict` | max tokens to write: a hard cut, not "be short" | 12 → stops mid-sentence | 2.3, 2.4 |
+| OCR | picture of text → text; scans have no letters | page 6 (a scan) gives `""` | 4.2 |
 | Ollama | runs LLMs on your PC, port 11434 | pull/list/show/run/ps/rm ≈ Docker | 2.2 |
 | Output parsing | code checks the reply's shape; never trust it | "**bug**" → bug; a sentence → None | 3.1 |
 | Overlap (chunks) | each piece repeats the end of the one before, so a cut sentence is whole once | size 4, overlap 1: abcd, defg, ghij | 4.1 |
