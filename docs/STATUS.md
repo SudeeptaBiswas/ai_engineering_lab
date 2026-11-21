@@ -15,6 +15,8 @@ Updated: 2026-11-21
   2026-12-10), Intermediate 60 h, Advanced 63 h. Order: PLAN.md.
 
 ## Queue
+g. User: lesson 4.3 chunking — read LESSON_4_3.md, run parts 1–3, fill
+   the 6 stubs in `chunking_4_3.py` (36 tests, no Ollama). Hints only.
 c. User: read assistant v2 (start with assistant/README.md, "How one
    turn runs"). Restyled 2026-11-15; try `--debug` to see the call order.
 f. Other PC (10284Sudee): `uv sync` (pypdf added in 4.2).
@@ -29,6 +31,16 @@ h. Open (user to decide): interview gaps in `docs/INTERVIEW_NOTES.md`
    serving" topic (~3 h guess). INTERVIEW_NOTES Open 1–5.
 
 ## Done
+- 2026-11-22 — lesson 4.3 written (BISWAS, nomic-embed-text, Ollama
+  0.40.16): 3 examples + `chunk_stats_4_3.py` + 6 stubs + 36 tests (2 files,
+  no Ollama); text = 4.2 clean handbook. Measured, 12 questions, whole answer
+  sentence: characters 200/0 right 1st 6/12, 500/100 11/12, 2000/400 8/12;
+  paragraphs + headings 500 12/12, 1 161 characters to read vs 1 438;
+  orphan headings 10 → 0; by meaning 12/12, 5 lowest pairs = 5 section starts.
+  Same scores in 2 runs; part 2 49–57 s, part 3 ~18 s. Reference 36 passed
+  in 0.19–0.33 s (4 runs); stubs 36 failed; pyright 0, lesson rules 0.
+  lesson-reviewer: 12 findings, all fixed. Full suite 273 passed + the 36
+  stub fails (122.54 s). Plus TCS interview post in INTERVIEW_NOTES.
 - 2026-11-21 — topic 4.2 done (BISWAS; user 2 of 7 stubs, Claude 5,
   DECISIONS 2026-11-18): 32 passed in 4.01 s, pyright 0. REVIEW_04 4.2
   (6 quiz), +4 AI and +3 Python keywords. Basic level: 38 h left.
