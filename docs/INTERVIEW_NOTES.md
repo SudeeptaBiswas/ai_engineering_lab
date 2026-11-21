@@ -68,6 +68,31 @@ ingestion fails. Don't write "production-ready" unless you can answer these.
 
 Count: 1 covered, 2 partly, 4 gaps (P2, P3, P4, P6). Closing ad ignored.
 
+## TCS — Agentic AI Engineer (shared 2026-11-21)
+Source: an interview experience post the user pasted. Checked 2026-11-21.
+Learning note: explain implementation choices and trade-offs, not just terms.
+
+| # | Question | Status | Where / note |
+|---|---|---|---|
+| T1.1 | Build an LLM inference microservice | planned | 8.1, 8.3 (FastAPI around Ollama), 8.4 Docker |
+| T1.2 | KV cache; inference optimization (batching) | partly | 2.2 KV cache = memory for the context; how it speeds decoding + batching = gap (= F4) |
+| T1.3 | HPA (autoscaling) for LLM services | gap | Kubernetes (= R2.3) |
+| T1.4 | Quantization and distillation | partly | quantization covered 2.2 (Q4_K_M, GB measured); distillation = gap |
+| T1.5 | Hallucinations and repetitive output | partly | 4.1 "I don't know" rule, 4.10 + 5.3 planned; repetition (repeat_penalty, sampling) = gap, near 2.4 |
+| T1.6 | LLM-as-a-Judge | planned | 5.3 |
+| T1.7 | Document versions in RAG | gap | = P3 |
+| T1.8 | Large tables from PDFs into RAG | gap | 4.2 only warns ("check a page by eye"); table extraction not taught |
+| T1.9 | Micro F1 vs macro F1 | gap | ML basics (Open 1); 5.2 has recall@k, MRR only |
+| T1.10 | Imbalanced datasets | gap | ML basics (Open 1) |
+| T2.1 | Your project architecture | planned | 10.1 (= R2.1) |
+| T2.2 | Latency metrics you measure | partly | 2.2 tokens/s, load time; time to first token, p95 = gap (= F14) |
+| T2.3 | Frameworks for LLM deployment | partly | Ollama covered (2.2); vLLM / TGI = gap |
+| T2.4 | Build a summarizer agent in LangGraph | planned | 6.5–6.7 |
+
+Count: 0 covered, 4 planned, 5 partly, 5 gaps (T1.3, T1.7, T1.8, T1.9,
+T1.10). 4 of the 5 gaps repeat earlier posts (R2.3, P3, Open 1). New
+gap: T1.8 tables in PDFs. Closing ad ignored.
+
 ## Open (user to decide)
 1. Add an "ML basics" block: learning types, KNN, SVM, pandas +
    scikit-learn (missing values, train, evaluate), Transformer attention,
@@ -80,4 +105,7 @@ Count: 1 covered, 2 partly, 4 gaps (P2, P3, P4, P6). Closing ad ignored.
 4. From the 2026-11-19 post: add "production ingestion" to 4.4 or 10.2 —
    content-hash ids, doc_id + version, delete stale, idempotent re-run,
    per-user filter, ingest counts (~2–3 h guess). Closes P2–P6.
+5. From the 2026-11-21 post: tables in PDFs (T1.8) in 4.3 or 4.11, and
+   an "inference + serving" topic in phase 08 (KV cache, batching,
+   distillation, vLLM, latency metrics, autoscaling; ~3 h guess).
 If yes: add to TOPICS + PLAN, and log it in DECISIONS.
