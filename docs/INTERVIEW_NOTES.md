@@ -93,6 +93,33 @@ Count: 0 covered, 4 planned, 5 partly, 5 gaps (T1.3, T1.7, T1.8, T1.9,
 T1.10). 4 of the 5 gaps repeat earlier posts (R2.3, P3, Open 1). New
 gap: T1.8 tables in PDFs. Closing ad ignored.
 
+## Post — "AI Engineer, 15 questions to practice" (shared 2026-11-22)
+Source: a post the user pasted (a recruiter, USA roles). Checked 2026-11-22.
+Learning note: be ready to explain your own project: architecture,
+challenges, how you solved them.
+
+| # | Question | Status | Where / note |
+|---|---|---|---|
+| A1 | How does RAG work? | covered | 4.1 (by hand), 4.2 (PDF), 4.3 (chunking) |
+| A2 | Reduce LLM hallucinations | partly | 4.1 "I don't know" rule, 3.5 answer check; 4.10 citations + 5.3 judge planned |
+| A3 | RAG vs fine-tuning: when which | gap | fine-tuning not in the course; RAG side covered (4.1) |
+| A4 | LangChain vs LangGraph | planned | 4.5, 6.5 |
+| A5 | Prevent agent loops | planned | 6.7 (loops, max steps), 6.11 (= F13) |
+| A6 | When to use multi-agent | planned | 6.9, 6.10 |
+| A7 | Handle overfitting | gap | ML basics (Open 1) |
+| A8 | Evaluate model performance | partly planned | LLM/RAG: 5.1–5.3; classic ML metrics = gap (= T1.9) |
+| A9 | Deploy ML models | planned | 8.1, 8.3, 8.4 (FastAPI + Docker) |
+| A10 | Deploy AI models on AWS / Azure | gap | no cloud in the course; Docker 8.4 is the local step |
+| A11 | Monitor models in production | partly planned | 5.4 Langfuse; ingest/alerts = gap (= P7) |
+| A12 | Optimize inference costs | partly | 2.2 quantization; 4.1–4.3 measured tokens / characters sent; caching = gap |
+| A13 | Build an end-to-end AI app | planned | capstone 10.1–10.7 |
+| A14 | Reduce LLM latency | partly | 2.2 speeds measured; latency topic = gap (= F14, T2.2) |
+| A15 | Secure enterprise AI apps | partly | 3.4 prompt injection + gate covered; 7.7, 8.5 planned |
+
+Count: 1 covered, 6 planned (2 partly), 5 partly, 3 gaps (A3, A7, A10).
+A7 repeats Open 1. New gaps: A3 RAG vs fine-tuning, A10 cloud deploy.
+Closing ad ignored.
+
 ## Open (user to decide)
 1. Add an "ML basics" block: learning types, KNN, SVM, pandas +
    scikit-learn (missing values, train, evaluate), Transformer attention,
@@ -108,4 +135,8 @@ gap: T1.8 tables in PDFs. Closing ad ignored.
 5. From the 2026-11-21 post: tables in PDFs (T1.8) in 4.3 or 4.11, and
    an "inference + serving" topic in phase 08 (KV cache, batching,
    distillation, vLLM, latency metrics, autoscaling; ~3 h guess).
+6. From the 2026-11-22 post: "RAG vs fine-tuning" as a short concept
+   section (when each fits, cost, data needed; ~1 h guess, could sit in
+   4.6 or 10.1), and cloud deploy basics, one of AWS / Azure, after 8.4
+   (~3 h guess).
 If yes: add to TOPICS + PLAN, and log it in DECISIONS.

@@ -28,7 +28,8 @@ h. Open (user to decide): interview gaps in `docs/INTERVIEW_NOTES.md`
    Kubernetes basics (~3 h guess)? Plus 2026-11-18 post (F1–F14): a
    "how a model reads a prompt" topic (~2 h) and SQL + latency (~3 h)?
    Plus 2026-11-21 TCS post (T1–T2): tables in PDFs, an "inference +
-   serving" topic (~3 h guess). INTERVIEW_NOTES Open 1–5.
+   serving" topic (~3 h guess). Plus 2026-11-22 post (A1–A15): RAG vs
+   fine-tuning (~1 h), cloud deploy (~3 h). INTERVIEW_NOTES Open 1–6.
 
 ## Done
 - 2026-11-22 — lesson 4.3 written (BISWAS, nomic-embed-text, Ollama
