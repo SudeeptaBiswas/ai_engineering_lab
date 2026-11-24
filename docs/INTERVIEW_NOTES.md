@@ -120,6 +120,27 @@ Count: 1 covered, 6 planned (2 partly), 5 partly, 3 gaps (A3, A7, A10).
 A7 repeats Open 1. New gaps: A3 RAG vs fine-tuning, A10 cloud deploy.
 Closing ad ignored.
 
+## Interviewer post — "what went wrong?" (shared 2026-11-23)
+Source: a post the user pasted (an interviewer of AI engineers). Checked
+2026-11-23. Learning note: "everything worked fine" sounds like a tutorial.
+Tell what failed, why, what you changed, and the trade-off you accepted.
+Your measured numbers are the story.
+
+| # | Question | Status | Where / note |
+|---|---|---|---|
+| W1 | Biggest problem in your RAG system? | covered | 4.3: cut at 200 characters split 5 of 12 answer sentences ("Each attachment ca" / "n be at most 200 MB") |
+| W2 | Retrieval that failed | covered | 4.3: characters 200/0 = 6/12 right 1st; boundaries at 500 = 12/12. 4.1 too |
+| W3 | Model gave poor answers | partly | 4.1 "found is not answered"; 5.3 judge planned |
+| W4 | Latency became too high | gap | = F14, T2.2 |
+| W5 | An approach that didn't work; a decision you changed | covered | 4.3: 9 short-phrase questions showed no difference, so the eval moved to 12 whole answer sentences. DECISIONS.md logs more |
+| W6 | A trade-off you accepted | covered | 4.3: meaning cut 12/12 but embeds 93 sentences first (3.9–5.0 s); paragraphs + headings also 12/12, so kept the cheap way |
+| W7 | Agent selected the wrong tool | partly | 3.3: model skipped the tool for "A-1001"; 6.2, 6.11 planned |
+| W8 | Did you compare embedding models? | gap | only nomic-embed-text used; idea: rerun the 4.3 eval with a 2nd model (~1 h guess, 4.4 or 5.2) |
+| W9 | How did you know it improved? | partly | 4.3: 12-question eval, same score in 2 runs; 5.1–5.2 planned |
+
+Count: 4 covered, 3 partly, 2 gaps (W4 repeats F14; new gap W8).
+Closing ad ignored.
+
 ## Open (user to decide)
 1. Add an "ML basics" block: learning types, KNN, SVM, pandas +
    scikit-learn (missing values, train, evaluate), Transformer attention,
@@ -139,4 +160,8 @@ Closing ad ignored.
    section (when each fits, cost, data needed; ~1 h guess, could sit in
    4.6 or 10.1), and cloud deploy basics, one of AWS / Azure, after 8.4
    (~3 h guess).
+7. From the 2026-11-23 post: compare 2 embedding models on the 4.3 eval
+   (~1 h guess, in 4.4 or 5.2), and a "what went wrong" line per topic
+   in REVIEW (failure, why, fix, trade-off) to tell in interviews (~0 h,
+   written when a topic finishes).
 If yes: add to TOPICS + PLAN, and log it in DECISIONS.
