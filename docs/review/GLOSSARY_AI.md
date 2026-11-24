@@ -2,7 +2,7 @@
 
 A–Z. One line each. Numbers are measured in the lessons (10284Sudee / BISWAS,
 CPU only). Topic = where it was taught; open that LESSON for the full story.
-Process + quiz: [REVIEW_02_llm.md](REVIEW_02_llm.md), [REVIEW_03_prompting.md](REVIEW_03_prompting.md) (3.1–3.4), [REVIEW_04_rag.md](REVIEW_04_rag.md) (4.1–4.2).
+Process + quiz: [REVIEW_02_llm.md](REVIEW_02_llm.md), [REVIEW_03_prompting.md](REVIEW_03_prompting.md) (3.1–3.4), [REVIEW_04_rag.md](REVIEW_04_rag.md) (4.1–4.3).
 
 | Term | Plain meaning | Example / number | Topic |
 |---|---|---|---|
@@ -14,6 +14,7 @@ Process + quiz: [REVIEW_02_llm.md](REVIEW_02_llm.md), [REVIEW_03_prompting.md](R
 | BPE | build tokens by gluing the most common neighbour pair, again and again | `t`+`h` → `th` | 2.1 |
 | Chat memory | the history your code keeps and resends every turn | `ChatMemory.messages_to_send()` | 2.6 |
 | Chunk | one piece of a document, embedded and searched on its own | handbook + notes: 122 chunks by heading | 4.1 |
+| Chunk size | max characters per chunk: too small cuts answers, too big blurs the vector | right 1st: 200 → 6/12, 500 → 11/12, 2000 → 8/12 | 4.3 |
 | Chunking | how you cut documents; it decides what search finds | by heading 12/12 right chunk 1st, by 500 chars 10/12 | 4.1 |
 | Code gate | code checks every tool call before it runs: who asked, how much | refund(500) blocked; "needs a human" | 3.4 |
 | Constrained decoding | the server only lets the model write tokens that fit a schema | `"format": schema` → 8/8 replies parse | 3.2 |
@@ -55,6 +56,7 @@ Process + quiz: [REVIEW_02_llm.md](REVIEW_02_llm.md), [REVIEW_03_prompting.md](R
 | Ollama | runs LLMs on your PC, port 11434 | pull/list/show/run/ps/rm ≈ Docker | 2.2 |
 | Output parsing | code checks the reply's shape; never trust it | "**bug**" → bug; a sentence → None | 3.1 |
 | Overlap (chunks) | each piece repeats the end of the one before, so a cut sentence is whole once | size 4, overlap 1: abcd, defg, ghij | 4.1 |
+| Packing (chunks) | add whole pieces to a chunk while it fits, then start the next; never cuts a piece | `["aa", "bb", "cc"]`, max 5 → `["aa bb", "cc"]` | 4.3 |
 | Parameters (weights) | numbers the model learned | 4b = 4 billion | 2.2 |
 | Pre-training | read huge text, learn to guess the next piece | step 1 of 3 | 2.1 |
 | Preference tuning | people rank answers, model learns what they like | step 3 of 3 | 2.1 |
@@ -63,11 +65,13 @@ Process + quiz: [REVIEW_02_llm.md](REVIEW_02_llm.md), [REVIEW_03_prompting.md](R
 | Prompt pattern | a known way to write messages so the answer comes back in the shape you need | system rules, few-shot, step-by-step | 3.1 |
 | Quantization | store each weight in fewer bits: smaller, faster, a bit less precise | GB ≈ billions × bits ÷ 8 | 2.2 |
 | RAG | Retrieve the chunks that fit, Augment the prompt with them, Generate the answer | alone 1/12 → RAG 11/12, 213–493 tokens | 2.1, 2.5, 4.1 |
+| Recursive chunking | cut at the biggest boundary that fits: paragraph, else sentence, else word, else characters | 500: 12/12; = LangChain's `RecursiveCharacterTextSplitter` (4.5) | 4.3 |
 | Retry with feedback | send the bad reply + the error list back, ask again | 7/8 valid by try 2, but 2/8 right | 3.2 |
 | Sampling | weighted random pick of the next token | like a loot table | 2.4 |
 | Score (accuracy) | share of answers equal to the expected ones | 7 of 8 right = 0.875 | 3.1 |
 | Secret leak | the model gives out what its prompt holds; check answers letters-only | SAVE-7731 leaked 4/5 | 3.4 |
 | Seed | fixes the randomness: same seed + settings + prompt → same answer | `"seed": 42` → Fizzluff x5 | 2.4 |
+| Semantic chunking | cut where two sentences in a row are least alike (by embeddings) | 5 lowest pairs = 5 section starts; 1 embed per sentence | 4.3 |
 | Semantic search | find text by meaning: embed, cosine, sort, top k | login query → reset-password note 0.68 | 2.5 |
 | Softmax | turns scores into odds that add up to 100% | 2.0/1.0/0.5 → 63/23/14% | 2.1 |
 | Step-by-step (chain of thought) | ask for the steps, then a fixed last line `Answer: <n>` | maths 5/6 → 6/6; 49.6 s vs 31.4 s | 3.1 |

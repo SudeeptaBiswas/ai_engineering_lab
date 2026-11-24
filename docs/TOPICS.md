@@ -30,7 +30,7 @@ Lvl: B = Basic, I = Intermediate, A = Advanced (PLAN.md, Levels).
 | **04** | **RAG** | **38** | | |
 | 4.1 | RAG by hand: chunk, embed, search with numpy | 5 | 2026-11-16 | B |
 | 4.2 | Loading PDFs, cleaning text | 3 | 2026-11-21 | B |
-| 4.3 | Chunking strategies | 3 | | B |
+| 4.3 | Chunking strategies | 3 | 2026-11-25 | B |
 | 4.4 | Chroma vector DB | 3 | | B |
 | 4.5 | LangChain basics: models, prompts, chains | 4 | | B |
 | 4.6 | Project: PDF Q&A RAG | 6 | | B |

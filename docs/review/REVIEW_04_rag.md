@@ -47,3 +47,24 @@ PDF → pypdf extract_text(layout) → one text per page
 <details><summary>Q4. Two ways the header rule goes wrong?</summary>A 1-page PDF: its header is on 1 page only, so it stays. A real sentence on half the pages: it is removed.</details>
 <details><summary>Q5. Page 6 gives an empty string. Why, and the fix?</summary>It is a scan: a picture of text, no letters. Needs OCR (e.g. Tesseract). Not in this course.</details>
 <details><summary>Q6. Why keep the PDF page number in `CleanPage`?</summary>For answers like "see page 3" (4.10). Empty pages are skipped, so the list position is not the page number.</details>
+
+## 4.3 Chunking strategies
+```
+clean text → pieces: paragraphs (heading glued to the next) or sentences
+  → pack: add whole pieces while chunk + joiner + piece <= max, then a new chunk
+recursive: too big? cut at "\n\n", else ". ", else " ", else every max characters
+meaning:   embed every sentence → similarity to the next → cut at the lowest 10%
+```
+- **Size is a trade-off.** 200: answers cut in two, right 1st 6/12. 2000: one blurred vector, 8/12.
+- **Cut at boundaries.** Paragraphs + headings at 500: 12/12, 1 161 characters to read vs 1 438.
+- **A heading stays with its text.** Plain paragraphs: 10 chunks end on a heading; glued: 0.
+- **Packing never cuts a piece.** A piece over the max is its own chunk.
+- **Recursive keeps the separators**: `"".join(chunks)` gives the text back.
+- **By meaning costs one embed per sentence.** Same 12/12 here; for text with no headings.
+
+<details><summary>Q1. Why does 200 characters, no overlap, find the right chunk first only 6/12?</summary>The answer sentence is cut in two: one chunk has the topic, the next has the number. Neither holds the whole answer.</details>
+<details><summary>Q2. Why is 2000 characters worse (8/12) than 500?</summary>One vector for a page of topics is a blur: refunds, storage and sync share it, so each question matches only a bit.</details>
+<details><summary>Q3. Why glue a heading to the paragraph after it?</summary>Alone it lands at the end of a chunk as noise, and the next chunk loses its topic name. 4.10 needs it to say "see Refunds".</details>
+<details><summary>Q4. In `pack_pieces`, why check `current_chunk == ""` first?</summary>The first piece of a chunk has no joiner in front. Without it, a chunk starts with `" "` or `"\n\n"`.</details>
+<details><summary>Q5. `chunk_by_meaning`: why check "no sentences" before the length check?</summary>With 0 sentences, one fewer is -1, so the ValueError would fire wrongly, and `sentences[0]` would crash.</details>
+<details><summary>Q6. The 5 least alike sentence pairs: what were they?</summary>All 5 were section starts (e.g. "...Nothing is deleted." | "Refunds"). The embeddings found the headings without being told.</details>

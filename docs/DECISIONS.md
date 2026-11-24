@@ -2,6 +2,15 @@
 
 Newest first. One entry per change: what, replaces what, why.
 
+## 2026-11-25 — 4.3: Claude gave code for 2 stubs; file kept at 269 lines
+- What: user wrote `split_into_sentences`, `pack_pieces`,
+  `chunk_by_sentences`, `chunk_recursively` (adapted from the example
+  with Claude's fixes). On request, Claude gave the code for
+  `chunk_by_paragraphs` and `chunk_by_meaning`; the user pasted it.
+- Replaces: "hints only" for these 2 (as 2026-11-18 for 4.2).
+- `chunking_4_3.py` is 269 lines (max 250). Pre-commit warned (user
+  code: warning only). User chose not to split it.
+
 ## 2026-11-18 — 4.2: Claude filled the last 5 stubs
 - What: user wrote `read_pdf_pages` + `find_repeated_lines`, then asked
   "implement pdf_text_4_2". Claude filled the other 5 in the example style.

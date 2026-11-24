@@ -41,6 +41,7 @@ Process + quiz: [REVIEW_01_python.md](REVIEW_01_python.md), numpy: [REVIEW_04_ra
 | `is` vs `==` | same object vs same value | `==` vs `.equals()` | 1.2 |
 | `json.loads` / `json.dumps` | text → dict / dict → text | Jackson `readValue` / `writeValueAsString` | 1.7 |
 | Lax vs strict (pydantic) | lax converts when clear (`"3"` → 3, `true` → 1); strict refuses | Jackson coercion on / off | 1.6 |
+| `list.extend(other)` | add every item of another list (`append` adds the list as one item) | `addAll` | 4.3 |
 | `Literal["a", "b"]` | only these exact values (case-sensitive) | `enum` | 1.6 |
 | Local name hides a global | assigning `X = X + ...` inside a function makes `X` local, so reading it first fails (unbound) | use a new name, e.g. `system_text` | 4.1 |
 | `localhost` vs `127.0.0.1` | localhost tries IPv6 first on Windows | 2.16 s vs 0.02 s per call | 1.7 |
@@ -63,6 +64,8 @@ Process + quiz: [REVIEW_01_python.md](REVIEW_01_python.md), numpy: [REVIEW_04_ra
 | `raise_for_status()` | turn a 4xx/5xx into an exception (404 is not one by itself) | `if (code >= 400) throw` | 1.7 |
 | `raises` (pytest) | test passes only if that error happens | `assertThrows` | 1.9 |
 | `re.compile(p, re.IGNORECASE)` | a ready pattern, any case; `</?ticket>` = open or close tag | `Pattern.compile(p, CASE_INSENSITIVE)` | 3.4 |
+| Recursive function | calls itself on a smaller problem; needs a stop case | `chunk_recursively(piece, max, separators[1:])` | 4.3 |
+| `re.split(r"(?<=[.!?])\s+", text)` | cut at every match; `(?<=...)` = "right after this", so the `.` stays | `text.split(regex)` | 4.3 |
 | `re.sub(p, new, text)` | replace every match; `[^A-Za-z0-9]` → "" keeps letters + digits | `replaceAll` | 3.4 |
 | `reversed()` | walk a list from the end | `Collections.reverse` / `descendingIterator` | 3.1 |
 | `self` | the current object, written out | `this` | 1.4 |
@@ -71,6 +74,7 @@ Process + quiz: [REVIEW_01_python.md](REVIEW_01_python.md), numpy: [REVIEW_04_ra
 | `split(":", 1)` | cut at the first `:` only (1 = max cuts) | `split(":", 2)` (2 = max parts) | 3.1 |
 | `splitlines()` | text → list of lines, any line ending | `s.lines().toList()` | 3.1 |
 | Spy | a fake that writes down what it received | Mockito `verify` / captor | 1.9 |
+| `str.endswith((a, b))` | ends with any of these (a tuple) | `s.endsWith(a) \|\| s.endsWith(b)` | 4.3 |
 | `str.find` / `str.rfind` | index of the first / last match, -1 if none (no exception) | `indexOf` / `lastIndexOf` | 3.2 |
 | `sys.path` | where imports are looked up: script folder, then .venv | classpath | 1.5 |
 | Timeout | always give one on HTTP calls | 500-token answer took ~70 s | 1.7 |

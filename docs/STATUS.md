@@ -1,10 +1,10 @@
 # Status
 
-Updated: 2026-11-21
+Updated: 2026-11-25
 
 ## Now
-- 1.1–1.7 + 1.9 + 2.1–2.6 + 3.1–3.4 + 4.1–4.2 done. Overall 19.1% (phase
-  01: 87%, 02: 100%, 03: 100%, 04: 21%). Next: 4.3 chunking.
+- 1.1–1.7 + 1.9 + 2.1–2.6 + 3.1–3.4 + 4.1–4.3 done. Overall 20.6% (phase
+  01: 87%, 02: 100%, 03: 100%, 04: 29%). Next: 4.4 Chroma vector DB.
 - assistant v2 works (`uv run python -m assistant`, `--debug` for the
   log): 4 tools + gate. Code by Claude, in CODE_STYLE.md. User to read it.
   Lesson rules checked by a hook.
@@ -15,8 +15,10 @@ Updated: 2026-11-21
   2026-12-10), Intermediate 60 h, Advanced 63 h. Order: PLAN.md.
 
 ## Queue
-g. User: lesson 4.3 chunking — read LESSON_4_3.md, run parts 1–3, fill
-   the 6 stubs in `chunking_4_3.py` (36 tests, no Ollama). Hints only.
+g. Claude: write lesson 4.4 Chroma vector DB (needs `chromadb`, user OK
+   to install first).
+i. Claude: 3.3 `test_ask_real` fails (tool call written as text, 2 of 2
+   runs) since Ollama 0.40.17. Look into it (user to decide when).
 c. User: read assistant v2 (start with assistant/README.md, "How one
    turn runs"). Restyled 2026-11-15; try `--debug` to see the call order.
 f. Other PC (10284Sudee): `uv sync` (pypdf added in 4.2).
@@ -34,6 +36,12 @@ h. Open (user to decide): interview gaps in `docs/INTERVIEW_NOTES.md`
    Open 1–7.
 
 ## Done
+- 2026-11-25 — topic 4.3 done (BISWAS; user 4 of 6 stubs, Claude gave
+  code for 2, DECISIONS same day): 36 passed, pyright 0. REVIEW_04 4.3
+  (6 quiz), +4 AI and +4 Python keywords. Basic level: 35 h left. Full
+  suite: 308 passed, 1 failed in 114.67 s — 3.3 `test_ask_real` (order
+  A-1001): the model wrote the tool call as text, no real call; failed
+  again alone. Ollama now 0.40.17 (was 0.40.16 on 2026-11-22). Queue i.
 - 2026-11-22 — lesson 4.3 written (BISWAS, nomic-embed-text, Ollama
   0.40.16): 3 examples + `chunk_stats_4_3.py` + 6 stubs + 36 tests (2 files,
   no Ollama); text = 4.2 clean handbook. Measured, 12 questions, whole answer
@@ -269,6 +277,13 @@ h. Open (user to decide): interview gaps in `docs/INTERVIEW_NOTES.md`
 # End-of-course review
 Minor notes, batched for the end (DECISIONS 2026-11-08). BUG = wrong result,
 should get a check instead.
+
+## Review notes 4.3 (2026-11-25)
+- Line 14 `# pyright: ignore[reportUnusedImport]` stale (`re` used now).
+- `split_into_sentences`: start log says `max %d` (no max here; log the
+  text, as `split_into_paragraphs` does); blank line before the result log.
+- 3 blank lines before `chunk_by_sentences` (want 2).
+- File 269 lines (max 250): user chose to keep it (2026-11-25).
 
 ## Review notes 4.1 (2026-11-16)
 - BUG: `find_top_chunks` uses `np.argsort(-scores)` without
