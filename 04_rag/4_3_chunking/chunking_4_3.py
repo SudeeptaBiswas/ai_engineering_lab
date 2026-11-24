@@ -69,7 +69,13 @@ def split_into_sentences(document_text: str) -> list[str]:
     Returns:
         e.g. ["Refunds", "Ask within 14 days.", "After that, no refund."].
     """
-    raise NotImplementedError("Lesson 4.3, exercise 1: split_into_sentences")
+    log.debug("start: max %d", MAX_CHUNK_CHARACTERS)
+    sentences: list[str] = []
+    for paragraph in split_into_paragraphs(document_text):
+        sentences.extend(re.split(SENTENCE_END_REGEX, paragraph))
+
+    log.debug("result: %d sentences", len(sentences))
+    return sentences
 
 
 @debug
@@ -94,7 +100,25 @@ def pack_pieces(pieces: list[str], max_characters: int, joiner: str) -> list[str
     Raises:
         ValueError: max_characters is 0 or less.
     """
-    raise NotImplementedError("Lesson 4.3, exercise 2: pack_pieces")
+    if max_characters < 1:
+        raise ValueError("max_characters is 0 or less")
+    log.debug("start: %d pieces", len(pieces))
+    chunks: list[str] = []
+    current_chunk = ""
+    for piece in pieces:
+        joined_chunk = current_chunk + joiner + piece
+        if current_chunk == "":
+            current_chunk = piece
+        elif len(joined_chunk) <= max_characters:
+            current_chunk = joined_chunk
+        else:
+            chunks.append(current_chunk)
+            current_chunk = piece
+    if current_chunk != "":
+        chunks.append(current_chunk)
+    log.debug("result: %d chunks", len(chunks))
+    return chunks
+
 
 
 @debug
@@ -110,7 +134,11 @@ def chunk_by_sentences(document_text: str, max_characters: int) -> list[str]:
     Returns:
         e.g. ["A b. C d.", "E f."].
     """
-    raise NotImplementedError("Lesson 4.3, exercise 3: chunk_by_sentences")
+    log.debug("start: max %d", max_characters)
+    sentences = split_into_sentences(document_text)
+    chunks = pack_pieces(sentences, max_characters, " ")
+    log.debug("result: %d sentences -> %d chunks", len(sentences), len(chunks))
+    return chunks
 
 
 @debug
@@ -129,7 +157,25 @@ def chunk_by_paragraphs(document_text: str, max_characters: int) -> list[str]:
     Returns:
         e.g. ["Refunds\\n\\nAsk within 14 days.", "Sync\\n\\nEvery 60 seconds."].
     """
-    raise NotImplementedError("Lesson 4.3, exercise 4: chunk_by_paragraphs")
+    log.debug("start: max %d", max_characters)
+    pieces: list[str] = []
+    waiting_headings = ""
+    for paragraph in split_into_paragraphs(document_text):
+        if is_heading(paragraph):
+            if waiting_headings == "":
+                waiting_headings = paragraph
+            else:
+                waiting_headings = waiting_headings + "\n\n" + paragraph
+        elif waiting_headings == "":
+            pieces.append(paragraph)
+        else:
+            pieces.append(waiting_headings + "\n\n" + paragraph)
+            waiting_headings = ""
+    if waiting_headings != "":
+        pieces.append(waiting_headings)  # a heading at the very end: its own piece
+    chunks = pack_pieces(pieces, max_characters, "\n\n")
+    log.debug("result: %d pieces -> %d chunks", len(pieces), len(chunks))
+    return chunks
 
 
 @debug
@@ -150,7 +196,33 @@ def chunk_recursively(document_text: str, max_characters: int, separators: list[
     Returns:
         e.g. ["Aa bb. ", "Cc dd."]: "".join(chunks) gives back document_text exactly.
     """
-    raise NotImplementedError("Lesson 4.3, exercise 5: chunk_recursively")
+    log.debug("start: %d characters, separators=%r", len(document_text), separators)
+    if document_text == "":
+        log.debug("result: empty text, 0 chunks")
+        return []
+    if len(document_text) <= max_characters:
+        log.debug("result: fits, 1 chunk")
+        return [document_text]
+    if len(separators) == 0:  # nothing left to cut at: cut by size
+        size_chunks: list[str] = []
+        for start in range(0, len(document_text), max_characters):
+            size_chunks.append(document_text[start:start + max_characters])
+        log.debug("result: no separator left, %d chunks by size", len(size_chunks))
+        return size_chunks
+    separator = separators[0]
+    pieces = document_text.split(separator)
+    small_pieces: list[str] = []
+    for piece_number in range(len(pieces)):
+        piece = pieces[piece_number]
+        if piece_number < len(pieces) - 1:  # put the separator back: no character lost
+            piece = piece + separator
+        if len(piece) <= max_characters:
+            small_pieces.append(piece)
+        else:
+            small_pieces.extend(chunk_recursively(piece, max_characters, separators[1:]))
+    chunks = pack_pieces(small_pieces, max_characters, "")
+    log.debug("result: %d chunks", len(chunks))
+    return chunks
 
 
 @debug
@@ -175,4 +247,23 @@ def chunk_by_meaning(sentences: list[str], neighbor_similarities: list[float], c
     Raises:
         ValueError: neighbor_similarities is not one shorter than sentences.
     """
-    raise NotImplementedError("Lesson 4.3, exercise 6: chunk_by_meaning")
+    log.debug("start: %d sentences, cut below %.3f", len(sentences), cut_below)
+    if len(sentences) == 0:
+        log.debug("result: no sentences, 0 chunks")
+        return []
+    if len(neighbor_similarities) != len(sentences) - 1:
+        raise ValueError("neighbor_similarities is not one shorter than sentences")
+    chunks: list[str] = []
+    current_chunk = sentences[0]
+    for sentence_number in range(1, len(sentences)):
+        joined_chunk = current_chunk + " " + sentences[sentence_number]
+        is_new_topic = neighbor_similarities[sentence_number - 1] < cut_below
+        if is_new_topic or len(joined_chunk) > max_characters:
+            chunks.append(current_chunk)
+            current_chunk = sentences[sentence_number]
+        else:
+            current_chunk = joined_chunk
+    chunks.append(current_chunk)
+    log.debug("result: %d chunks", len(chunks))
+    return chunks
+
