@@ -2,6 +2,15 @@
 
 Newest first. One entry per change: what, replaces what, why.
 
+## 2026-11-25 — 4.4: Chroma with nomic, plus a built-in model comparison
+- What: lesson 4.4 stores chunks in Chroma with Ollama nomic-embed-text
+  vectors (as 4.1–4.3). One extra part runs the same 12 questions with
+  Chroma's built-in embedding model.
+- Why: same vectors keep the 4.3 scores comparable; the comparison
+  covers the interview gap "compare embedding models" (INTERVIEW_NOTES
+  2026-11-23). `chromadb` install: user OK; user runs `uv add` (Claude's
+  run was blocked by the permission check).
+
 ## 2026-11-25 — 4.3: Claude gave code for 2 stubs; file kept at 269 lines
 - What: user wrote `split_into_sentences`, `pack_pieces`,
   `chunk_by_sentences`, `chunk_recursively` (adapted from the example
