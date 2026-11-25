@@ -19,6 +19,8 @@ Newest first. One entry per change: what, replaces what, why.
   process: each test uses a random collection name.
 - Measured: see STATUS 2026-11-25. Both models 12/12: the eval is too
   easy to separate them; harder questions in 5.2.
+- `LESSON_4_4.md` is 308 lines (max 250): user chose to keep it whole
+  (as 4.3's 271).
 
 ## 2026-11-25 — 4.4: Chroma with nomic, plus a built-in model comparison
 - What: lesson 4.4 stores chunks in Chroma with Ollama nomic-embed-text
