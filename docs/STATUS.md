@@ -4,7 +4,8 @@ Updated: 2026-11-25
 
 ## Now
 - 1.1–1.7 + 1.9 + 2.1–2.6 + 3.1–3.4 + 4.1–4.3 done. Overall 20.6% (phase
-  01: 87%, 02: 100%, 03: 100%, 04: 29%). Next: 4.4 Chroma vector DB.
+  01: 87%, 02: 100%, 03: 100%, 04: 29%). Lesson 4.4 Chroma written;
+  user does its exercises next.
 - assistant v2 works (`uv run python -m assistant`, `--debug` for the
   log): 4 tools + gate. Code by Claude, in CODE_STYLE.md. User to read it.
   Lesson rules checked by a hook.
@@ -15,13 +16,14 @@ Updated: 2026-11-25
   2026-12-10), Intermediate 60 h, Advanced 63 h. Order: PLAN.md.
 
 ## Queue
-g. Claude: write lesson 4.4 Chroma vector DB (needs `chromadb`, user OK
-   to install first).
+g. User: lesson 4.4 exercises, 5 stubs in `04_rag/4_4_chroma/chroma_store_4_4.py`
+   (`uv run pytest 04_rag/4_4_chroma -v`). Read LESSON_4_4.md first.
+j. Other PC (BISWAS): `uv sync --system-certs` (chromadb added in 4.4).
+   Part 3's first run there downloads Chroma's model (79 MB).
 i. Claude: 3.3 `test_ask_real` fails (tool call written as text, 2 of 2
    runs) since Ollama 0.40.17. Look into it (user to decide when).
 c. User: read assistant v2 (start with assistant/README.md, "How one
    turn runs"). Restyled 2026-11-15; try `--debug` to see the call order.
-f. Other PC (10284Sudee): `uv sync` (pypdf added in 4.2).
 d. Open (user to decide): add a Claude API topic (~2 h, paid key)?
    "AI workflow integration" = 8.1 + 8.3 (+6 h) or 6.5 (+4 h)?
 e. Optional: compare gemma4 E2B vs qwen3:4b on this PC (user to decide).
@@ -32,10 +34,27 @@ h. Open (user to decide): interview gaps in `docs/INTERVIEW_NOTES.md`
    Plus 2026-11-21 TCS post (T1–T2): tables in PDFs, an "inference +
    serving" topic (~3 h guess). Plus 2026-11-22 post (A1–A15): RAG vs
    fine-tuning (~1 h), cloud deploy (~3 h). Plus 2026-11-23 post (W1–W9):
-   compare embedding models (~1 h), "what went wrong" lines. INTERVIEW_NOTES
+   "what went wrong" lines (embedding models: done in 4.4). INTERVIEW_NOTES
    Open 1–7.
 
 ## Done
+- 2026-11-25 — lesson 4.4 written (10284Sudee, chromadb 1.5.9 added by
+  `uv add`, user OK; Ollama 0.40.18, nomic-embed-text): 3 examples +
+  `handbook_4_4.py` (18 section chunks) + `fakes_4_4.py` + 5 stubs + 21
+  tests (2 files, 1 real Ollama). Measured: store 1st run 5.55–5.64 s
+  (18 embedded), 2nd 0.34 s (0), 666 KB on disk; Chroma 12/12 right
+  1st, same top 3 as numpy 12/12; l2 distances = 2x cosine, same order;
+  filter "Export and import" finds the export rule (not in top 3
+  without); add() of a known id changes nothing, update() does. Models:
+  nomic 768, 3.94–5.69 s vs MiniLM 384, 1.82–2.38 s, both 12/12;
+  MiniLM ignores text after 256 word pieces (0.026 → 0.026, nomic 0.409
+  → 0.439). MiniLM download 79.3 MB, 2 min 15 s. Reference 21 passed in
+  6.33–8.54 s (4 runs), 20 without Ollama 1.61–1.83 s; stubs 14 failed +
+  7 errors; pyright 0, lesson rules 0. lesson-reviewer: 15 findings, all
+  fixed (one blamed LESSON's position 10; 10 is right, the docstring's
+  11 was wrong). Full suite: 308 passed, 15 failed, 7 errors
+  in 107.93 s = 4.4 stubs + 3.3 `test_ask_real` (queue i). Note: uv here
+  is 0.11.2 (CLAUDE.md says 0.13.6); `uv add` worked.
 - 2026-11-25 — topic 4.3 done (BISWAS; user 4 of 6 stubs, Claude gave
   code for 2, DECISIONS same day): 36 passed, pyright 0. REVIEW_04 4.3
   (6 quiz), +4 AI and +4 Python keywords. Basic level: 35 h left. Full

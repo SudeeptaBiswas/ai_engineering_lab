@@ -58,7 +58,7 @@ ingestion fails. Don't write "production-ready" unless you can answer these.
 
 | # | Question | Status | Where / note |
 |---|---|---|---|
-| P1 | User uploads a new document: what happens? | covered | 4.1 by hand; 4.4 (Chroma), 4.6 planned |
+| P1 | User uploads a new document: what happens? | covered | 4.1 by hand; 4.4 Chroma: only chunk ids not stored yet get embedded (run 2: 0 of 18); 4.6 planned |
 | P2 | Same document uploaded twice (dedup) | gap | idea: chunk id = content hash, so re-upload overwrites |
 | P3 | Existing document updated (versioning) | gap | idea: doc_id + version in metadata, delete old then add new |
 | P4 | Remove outdated embeddings (stale content) | gap | = P3; delete by doc_id metadata |
@@ -135,10 +135,10 @@ Your measured numbers are the story.
 | W5 | An approach that didn't work; a decision you changed | covered | 4.3: 9 short-phrase questions showed no difference, so the eval moved to 12 whole answer sentences. DECISIONS.md logs more |
 | W6 | A trade-off you accepted | covered | 4.3: meaning cut 12/12 but embeds 93 sentences first (3.9–5.0 s); paragraphs + headings also 12/12, so kept the cheap way |
 | W7 | Agent selected the wrong tool | partly | 3.3: model skipped the tool for "A-1001"; 6.2, 6.11 planned |
-| W8 | Did you compare embedding models? | gap | only nomic-embed-text used; idea: rerun the 4.3 eval with a 2nd model (~1 h guess, 4.4 or 5.2) |
+| W8 | Did you compare embedding models? | covered | 4.4 part 3: nomic-embed-text vs all-MiniLM-L6-v2 on the 4.3 eval: both 12/12; 768 vs 384 numbers, MiniLM ~2x faster, but it drops text after 256 word pieces. Harder eval: 5.2 |
 | W9 | How did you know it improved? | partly | 4.3: 12-question eval, same score in 2 runs; 5.1–5.2 planned |
 
-Count: 4 covered, 3 partly, 2 gaps (W4 repeats F14; new gap W8).
+Count: 5 covered, 3 partly, 1 gap (W4 repeats F14; W8 covered by 4.4, 2026-11-25).
 Closing ad ignored.
 
 ## Open (user to decide)
@@ -153,6 +153,9 @@ Closing ad ignored.
 4. From the 2026-11-19 post: add "production ingestion" to 4.4 or 10.2 —
    content-hash ids, doc_id + version, delete stale, idempotent re-run,
    per-user filter, ingest counts (~2–3 h guess). Closes P2–P6.
+   4.4 (2026-11-25) covers part: stable ids, re-run embeds only new ids,
+   update one chunk, metadata filter. Still open: content hash, version,
+   delete stale, per-user filter.
 5. From the 2026-11-21 post: tables in PDFs (T1.8) in 4.3 or 4.11, and
    an "inference + serving" topic in phase 08 (KV cache, batching,
    distillation, vLLM, latency metrics, autoscaling; ~3 h guess).
@@ -161,7 +164,7 @@ Closing ad ignored.
    4.6 or 10.1), and cloud deploy basics, one of AWS / Azure, after 8.4
    (~3 h guess).
 7. From the 2026-11-23 post: compare 2 embedding models on the 4.3 eval
-   (~1 h guess, in 4.4 or 5.2), and a "what went wrong" line per topic
+   (done in 4.4, 2026-11-25), and a "what went wrong" line per topic
    in REVIEW (failure, why, fix, trade-off) to tell in interviews (~0 h,
    written when a topic finishes).
 If yes: add to TOPICS + PLAN, and log it in DECISIONS.

@@ -17,3 +17,6 @@ venv/
 .idea/
 Thumbs.db
 .DS_Store
+
+# Vector databases built by lessons (4.4+): rebuilt from the text on any PC
+chroma_db*/

@@ -2,6 +2,24 @@
 
 Newest first. One entry per change: what, replaces what, why.
 
+## 2026-11-25 — 4.4 written: section chunks, given helper, no cross-folder imports
+- What: `chromadb` 1.5.9 added (`uv add`, user OK this session; ran on
+  10284Sudee). Chunks = one handbook section each (a long one gives 2),
+  heading in front and stored as metadata: 18 chunks, not 4.3's 16.
+  The text is read from `../4_3_chunking/handbook_4_3.txt` (as 4.2 reads
+  4.1's); the 12 questions are copied into `handbook_4_4.py`, so the
+  scores compare. Collections use `"cosine"` (Chroma's default is l2);
+  `anonymized_telemetry=False` (its sender is empty in 1.5.9).
+  `.gitignore`: `chroma_db*/` (rebuilt from the text on any PC, ~6 s).
+- Rejected: importing 4.3 code (folders are not packages; running a
+  script puts only its own folder on the path); 4.3's 16 chunks (a
+  chunk could hold 2 sections, so one heading per chunk was not true).
+- Exercises: 5 stubs on a fake embed function + 3-number vectors, so 20
+  of 21 tests need no Ollama. EphemeralClients share memory in one
+  process: each test uses a random collection name.
+- Measured: see STATUS 2026-11-25. Both models 12/12: the eval is too
+  easy to separate them; harder questions in 5.2.
+
 ## 2026-11-25 — 4.4: Chroma with nomic, plus a built-in model comparison
 - What: lesson 4.4 stores chunks in Chroma with Ollama nomic-embed-text
   vectors (as 4.1–4.3). One extra part runs the same 12 questions with
